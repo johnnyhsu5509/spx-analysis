@@ -1,0 +1,616 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>SPX 日線分析 | 2026/06/03</title>
+<style>
+:root{--bg:#0a0a0a;--bg2:#111111;--bg3:#181818;--gold:#f5c842;--cyan:#00d4ff;--green:#00ff88;--red:#ff4466;--yellow:#ffd700;--white:#e8e8e8;--muted:#888;--border:#2a2a2a;}
+*{margin:0;padding:0;box-sizing:border-box;}
+body{background:var(--bg);color:var(--white);font-family:'Courier New',monospace;font-size:13px;line-height:1.5;}
+.header{background:linear-gradient(135deg,#0a0800,#1a0800);border-bottom:2px solid var(--red);padding:18px 24px;display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:10px;}
+.header-title{font-size:22px;font-weight:bold;color:var(--gold);letter-spacing:3px;}
+.header-sub{color:var(--muted);font-size:11px;margin-top:4px;}
+.price-big{font-size:36px;font-weight:bold;color:var(--red);}
+.price-chg{font-size:16px;color:var(--red);margin-left:12px;}
+.verify-block{display:flex;gap:16px;flex-wrap:wrap;padding:10px 24px;background:#001a00;border-bottom:1px solid #00ff8844;font-size:11px;}
+.v-ok{color:var(--green);font-weight:bold;}
+.badge-row{display:flex;gap:10px;flex-wrap:wrap;padding:10px 24px;background:var(--bg2);border-bottom:1px solid var(--border);}
+.badge{padding:4px 12px;border-radius:20px;font-size:11px;font-weight:bold;}
+.br{background:#2a0010;color:var(--red);border:1px solid var(--red);}
+.bo{background:#2a1200;color:#ff8844;border:1px solid #ff8844;}
+.bg2c{background:#2a1f00;color:var(--gold);border:1px solid var(--gold);}
+.bw{background:#1a1a1a;color:var(--white);border:1px solid #444;}
+.container{padding:16px 24px;}
+.grid2{display:grid;grid-template-columns:1fr 1fr;gap:14px;margin-bottom:14px;}
+.grid3{display:grid;grid-template-columns:1fr 1fr 1fr;gap:14px;margin-bottom:14px;}
+.grid4{display:grid;grid-template-columns:repeat(4,1fr);gap:14px;margin-bottom:14px;}
+.grid8{display:grid;grid-template-columns:repeat(4,1fr);gap:10px;margin-bottom:14px;}
+.card{background:var(--bg2);border:1px solid var(--border);border-radius:8px;padding:14px;}
+.card-title{font-size:11px;color:var(--gold);letter-spacing:2px;text-transform:uppercase;margin-bottom:10px;border-bottom:1px solid var(--border);padding-bottom:6px;}
+.kline-wrap{position:relative;height:200px;background:var(--bg3);border-radius:6px;overflow:hidden;margin-bottom:6px;}
+canvas{position:absolute;top:0;left:0;}
+.gauge-wrap{display:flex;flex-direction:column;align-items:center;padding:8px 0;}
+.gauge-value{font-size:36px;font-weight:bold;text-align:center;color:var(--red);}
+.gauge-label{font-size:12px;color:var(--muted);text-align:center;margin-top:2px;}
+.factor-row{display:flex;align-items:center;gap:8px;margin-bottom:7px;}
+.factor-name{width:130px;font-size:10px;color:var(--muted);}
+.factor-bar-wrap{flex:1;height:8px;background:#2a2a2a;border-radius:4px;}
+.factor-bar{height:8px;border-radius:4px;background:var(--red);}
+.factor-score{width:36px;text-align:right;font-size:11px;color:var(--red);}
+.ind-card{background:var(--bg3);border-radius:6px;padding:10px;text-align:center;border:1px solid var(--border);}
+.ind-label{font-size:10px;color:var(--muted);letter-spacing:1px;}
+.ind-value{font-size:22px;font-weight:bold;margin:4px 0;}
+.ind-signal{font-size:10px;padding:2px 8px;border-radius:10px;display:inline-block;font-weight:bold;}
+.sig-bull{background:#002a15;color:var(--green);border:1px solid var(--green);}
+.sig-bear{background:#2a0010;color:var(--red);border:1px solid var(--red);}
+.sig-neutral{background:#2a2200;color:var(--yellow);border:1px solid var(--yellow);}
+.ma-row{display:flex;justify-content:space-between;align-items:center;padding:7px 0;border-bottom:1px solid #1a1a1a;}
+.ma-name{width:50px;color:var(--gold);font-size:11px;font-weight:bold;}
+.ma-val{flex:1;font-size:13px;}
+.ma-dev{font-size:11px;padding:2px 8px;border-radius:10px;font-weight:bold;}
+.ma-dev-neg{background:#2a0010;color:var(--red);border:1px solid var(--red);}
+.ma-dev-pos{background:#002a15;color:var(--green);border:1px solid var(--green);}
+.ma-judge{font-size:10px;color:var(--muted);}
+.g-cell{background:var(--bg3);border:1px solid var(--border);border-radius:6px;padding:10px;text-align:center;}
+.g-cell.triggered{border-color:var(--red);background:#2a0010;box-shadow:0 0 8px rgba(255,68,102,0.3);}
+.g-cell.warn{border-color:var(--yellow);background:#1a1200;}
+.g-num{font-size:20px;font-weight:bold;margin-bottom:4px;}
+.g-desc{font-size:9px;color:var(--muted);line-height:1.3;}
+.g-status{font-size:9px;font-weight:bold;margin-top:4px;}
+.dim-block{margin-bottom:14px;background:var(--bg3);border-radius:8px;padding:12px;}
+.dim-header{display:flex;align-items:center;gap:8px;margin-bottom:8px;}
+.dim-title{font-size:13px;color:var(--gold);font-weight:bold;}
+.dim-signal{font-size:11px;padding:2px 8px;border-radius:10px;}
+.dim-content{font-size:11px;color:#bbb;line-height:1.8;padding-left:4px;}
+.signal-item{display:flex;align-items:center;gap:8px;font-size:11px;padding:4px 0;border-bottom:1px solid #1a1a1a;}
+.dot{width:8px;height:8px;border-radius:50%;flex-shrink:0;}
+.dot-b{background:var(--green);}
+.dot-s{background:var(--red);}
+.sig-bar{display:flex;height:14px;border-radius:7px;overflow:hidden;margin:10px 0;}
+.sig-bar-b{background:var(--green);}
+.sig-bar-s{background:var(--red);}
+table{width:100%;border-collapse:collapse;font-size:11px;}
+th{background:#1a0800;color:var(--gold);padding:8px;text-align:left;border:1px solid #2a2a2a;font-weight:bold;}
+td{padding:7px 8px;border:1px solid #1a1a1a;color:#ccc;vertical-align:top;}
+tr:nth-child(even) td{background:#0f0f0f;}
+.sl{font-weight:bold;font-size:10px;padding:2px 6px;border-radius:4px;}
+.sl-r{background:#2a0010;color:var(--red);}
+.sl-g{background:#002a15;color:var(--green);}
+.sl-c{background:#002233;color:var(--cyan);}
+.sl-y{background:#2a2200;color:var(--yellow);}
+.pill-row{display:flex;gap:8px;flex-wrap:wrap;}
+.pill{padding:5px 14px;border-radius:20px;font-size:11px;font-weight:bold;}
+.pill-s{background:#002a15;color:var(--green);border:1px solid #00ff8855;}
+.pill-r{background:#2a0010;color:var(--red);border:1px solid #ff446655;}
+.watch-block{background:var(--bg3);border:1px solid #333;border-radius:8px;padding:14px;}
+.watch-num{font-size:28px;font-weight:bold;color:var(--gold);margin-bottom:4px;}
+.watch-title{font-size:13px;color:var(--white);font-weight:bold;margin-bottom:6px;}
+.watch-trigger{font-size:11px;color:#aaa;margin-bottom:4px;}
+.watch-result{font-size:11px;color:var(--red);}
+.disclaimer{text-align:center;color:var(--muted);font-size:10px;padding:16px;border-top:1px solid var(--border);margin-top:8px;}
+.section-title{font-size:12px;color:var(--gold);letter-spacing:2px;text-transform:uppercase;margin:16px 0 8px;border-left:3px solid var(--gold);padding-left:10px;}
+svg{display:block;}
+</style>
+</head>
+<body>
+
+<!-- HEADER -->
+<div class="header">
+  <div>
+    <div class="header-title">◈ SPX 日線分析儀表板</div>
+    <div class="header-sub">分析日：2026/06/03（Tuesday）｜產出：2026/06/04 10:56 台灣時間</div>
+  </div>
+  <div style="text-align:right;">
+    <div style="display:flex;align-items:baseline;gap:6px;">
+      <span class="price-big">7,553.68</span>
+      <span class="price-chg">▼ -56.10（-0.74%）</span>
+    </div>
+    <div style="font-size:11px;color:var(--muted);margin-top:4px;">9日連漲結束 ｜ 前收 7,609.78</div>
+  </div>
+</div>
+
+<!-- 三關驗證欄 -->
+<div class="verify-block">
+  <span class="v-ok">✅ 關卡① 時間戳</span><span style="color:#666;"> yfinance 數據日期 2026/06/03，距今 1 天，通過</span>
+  <span class="v-ok">✅ 關卡② 雙源交叉</span><span style="color:#666;"> ^SPX=7553.68 ≈ ^GSPC=7553.68，差異 0.000%，通過</span>
+  <span class="v-ok">✅ 關卡③ 邏輯自洽</span><span style="color:#666;"> SPX 跌 -0.74%，VIX 升 +1.84%，方向反向，通過</span>
+</div>
+
+<!-- BADGES -->
+<div class="badge-row">
+  <span class="badge br">🔴 9日連漲終結</span>
+  <span class="badge br">伊美衝突升溫</span>
+  <span class="badge bo">Broadcom -5%</span>
+  <span class="badge bo">CrowdStrike -10%</span>
+  <span class="badge bg2c">VIX 16.06 ↑1.84%</span>
+  <span class="badge bw">ES期貨 -0.14%</span>
+  <span class="badge br">MACD 死叉</span>
+  <span class="badge br">KD 死叉</span>
+</div>
+
+<div class="container">
+
+<!-- K線圖 + 拉回機率 -->
+<div class="grid2">
+
+  <!-- K線圖 -->
+  <div class="card">
+    <div class="card-title">📈 日線K線圖（近30日）</div>
+    <div class="kline-wrap">
+      <canvas id="klineCanvas"></canvas>
+    </div>
+    <div style="display:flex;gap:16px;font-size:10px;color:var(--muted);flex-wrap:wrap;">
+      <span>開 <b style="color:var(--white)">7,605</b></span>
+      <span>高 <b style="color:var(--green)">7,605</b></span>
+      <span>低 <b style="color:var(--red)">7,551</b></span>
+      <span>收 <b style="color:var(--red)">7,554</b></span>
+      <span>量 <b style="color:var(--cyan)">34.6億</b>（量縮）</span>
+    </div>
+    <div style="font-size:10px;color:#555;margin-top:6px;">── MA5  ·· ATH線 7,621</div>
+  </div>
+
+  <!-- 拉回機率儀表盤 -->
+  <div class="card">
+    <div class="card-title">⚠️ 拉回機率評分</div>
+    <div class="gauge-wrap">
+      <svg width="200" height="110" viewBox="0 0 200 110">
+        <defs>
+          <linearGradient id="gaugeGrad" x1="0%" y1="0%" x2="100%" y2="0%">
+            <stop offset="0%" style="stop-color:#00ff88"/>
+            <stop offset="50%" style="stop-color:#ffd700"/>
+            <stop offset="100%" style="stop-color:#ff4466"/>
+          </linearGradient>
+        </defs>
+        <!-- 背景弧 -->
+        <path d="M 20 100 A 80 80 0 0 1 180 100" fill="none" stroke="#222" stroke-width="16" stroke-linecap="round"/>
+        <!-- 填色弧（74%） -->
+        <path d="M 20 100 A 80 80 0 0 1 180 100" fill="none" stroke="url(#gaugeGrad)" stroke-width="16" stroke-linecap="round"
+              stroke-dasharray="251.33" stroke-dashoffset="65.3"/>
+        <!-- 指針 74% -->
+        <line x1="100" y1="100" x2="34" y2="38" stroke="var(--red)" stroke-width="2.5" stroke-linecap="round"/>
+        <circle cx="100" cy="100" r="5" fill="var(--red)"/>
+        <text x="100" y="90" text-anchor="middle" fill="#888" font-size="10">拉回機率</text>
+      </svg>
+      <div class="gauge-value">74%</div>
+      <div class="gauge-label">中高風險 — 建議輕倉</div>
+    </div>
+    <div style="margin-top:12px;">
+      <div class="factor-row"><span class="factor-name">技術指標過熱</span><div class="factor-bar-wrap"><div class="factor-bar" style="width:72%"></div></div><span class="factor-score">72</span></div>
+      <div class="factor-row"><span class="factor-name">均線乖離率</span><div class="factor-bar-wrap"><div class="factor-bar" style="width:80%"></div></div><span class="factor-score">80</span></div>
+      <div class="factor-row"><span class="factor-name">地緣/總經風險</span><div class="factor-bar-wrap"><div class="factor-bar" style="width:75%"></div></div><span class="factor-score">75</span></div>
+      <div class="factor-row"><span class="factor-name">成交量衰竭</span><div class="factor-bar-wrap"><div class="factor-bar" style="width:65%"></div></div><span class="factor-score">65</span></div>
+      <div class="factor-row"><span class="factor-name">波浪/纏論結構</span><div class="factor-bar-wrap"><div class="factor-bar" style="width:78%"></div></div><span class="factor-score">78</span></div>
+    </div>
+  </div>
+</div>
+
+<!-- 均線系統 -->
+<div class="card" style="margin-bottom:14px;">
+  <div class="card-title">📐 均線系統</div>
+  <div class="ma-row">
+    <span class="ma-name">MA5</span>
+    <span class="ma-val">7,581.42</span>
+    <span class="ma-dev ma-dev-neg">乖離 -0.37%</span>
+    <span style="margin-left:10px;" class="ma-judge">⚠️ 收盤跌破 MA5，短線偏空</span>
+  </div>
+  <div class="ma-row">
+    <span class="ma-name">MA20</span>
+    <span class="ma-val">7,466.22</span>
+    <span class="ma-dev ma-dev-pos">乖離 +1.17%</span>
+    <span style="margin-left:10px;" class="ma-judge">✅ 多頭支撐區（費波 0.618 目標附近）</span>
+  </div>
+  <div class="ma-row">
+    <span class="ma-name">MA50</span>
+    <span class="ma-val">7,119.56</span>
+    <span class="ma-dev ma-dev-pos">乖離 +6.10%</span>
+    <span style="margin-left:10px;" class="ma-judge">⚠️ 乖離偏高，歷史上超 6% 有修正壓力</span>
+  </div>
+  <div class="ma-row" style="border:none;">
+    <span class="ma-name">MA200</span>
+    <span class="ma-val">6,847.72</span>
+    <span class="ma-dev ma-dev-pos" style="background:#2a0a00;color:#ff8844;border-color:#ff8844;">乖離 +10.31%</span>
+    <span style="margin-left:10px;" class="ma-judge">🔴 乖離 >10%，葛蘭威爾賣⑧警戒</span>
+  </div>
+  <div style="font-size:11px;color:#555;margin-top:8px;">排列：MA5 > MA20 > MA50 > MA200 完整多頭｜但收盤已跌破 MA5</div>
+</div>
+
+<!-- 技術指標 -->
+<div class="grid4" style="margin-bottom:14px;">
+  <div class="ind-card">
+    <div class="ind-label">RSI(14)</div>
+    <div class="ind-value" style="color:var(--yellow);">67.0</div>
+    <span class="ind-signal sig-neutral">高位回落</span>
+    <div style="font-size:10px;color:var(--muted);margin-top:6px;">前日 75.5→今 67.0<br>頂背離成形</div>
+  </div>
+  <div class="ind-card">
+    <div class="ind-label">MACD</div>
+    <div class="ind-value" style="color:var(--red);">-5.06</div>
+    <span class="ind-signal sig-bear">死叉確立</span>
+    <div style="font-size:10px;color:var(--muted);margin-top:6px;">MACD 120.75<br>Signal 125.82</div>
+  </div>
+  <div class="ind-card">
+    <div class="ind-label">布林帶位置</div>
+    <div class="ind-value" style="color:var(--yellow);">76.5%</div>
+    <span class="ind-signal sig-neutral">中上軌</span>
+    <div style="font-size:10px;color:var(--muted);margin-top:6px;">上軌 7631<br>中軌 7466｜下軌 7301</div>
+  </div>
+  <div class="ind-card">
+    <div class="ind-label">KD 隨機</div>
+    <div class="ind-value" style="color:var(--red);">K 70.9</div>
+    <span class="ind-signal sig-bear">K＜D 死叉</span>
+    <div style="font-size:10px;color:var(--muted);margin-top:6px;">K=70.9 D=86.8<br>高檔死叉，強烈空訊</div>
+  </div>
+</div>
+
+<!-- 葛蘭威爾 8宮格 -->
+<div class="section-title">葛蘭威爾八大法則</div>
+<div class="grid8">
+  <div class="g-cell">
+    <div class="g-num" style="color:var(--green);">買①</div>
+    <div class="g-desc">均線轉升首次穿越</div>
+    <div class="g-status" style="color:#444;">未觸發</div>
+  </div>
+  <div class="g-cell">
+    <div class="g-num" style="color:var(--green);">買②</div>
+    <div class="g-desc">跌回均線不破支撐</div>
+    <div class="g-status" style="color:#444;">觀察中</div>
+  </div>
+  <div class="g-cell">
+    <div class="g-num" style="color:var(--green);">買③</div>
+    <div class="g-desc">跌破均線迅速拉回</div>
+    <div class="g-status" style="color:#444;">未觸發</div>
+  </div>
+  <div class="g-cell warn">
+    <div class="g-num" style="color:var(--yellow);">買④</div>
+    <div class="g-desc">乖離過大急跌強彈</div>
+    <div class="g-status" style="color:var(--yellow);">⚠️ 醞釀中</div>
+  </div>
+  <div class="g-cell">
+    <div class="g-num" style="color:var(--red);">賣⑤</div>
+    <div class="g-desc">均線走平頂部穿越</div>
+    <div class="g-status" style="color:#444;">未觸發</div>
+  </div>
+  <div class="g-cell triggered">
+    <div class="g-num" style="color:var(--red);">賣⑥</div>
+    <div class="g-desc">反彈均線量縮回落</div>
+    <div class="g-status" style="color:var(--red);">🔴 觸發！</div>
+  </div>
+  <div class="g-cell">
+    <div class="g-num" style="color:var(--red);">賣⑦</div>
+    <div class="g-desc">跌破均線死貓彈失敗</div>
+    <div class="g-status" style="color:#444;">待確認</div>
+  </div>
+  <div class="g-cell triggered">
+    <div class="g-num" style="color:var(--red);">賣⑧</div>
+    <div class="g-desc">MA200乖離過大修正</div>
+    <div class="g-status" style="color:var(--red);">🔴 警戒！</div>
+  </div>
+</div>
+
+<!-- 六維分析明細 -->
+<div class="section-title">六維分析明細</div>
+
+<div class="dim-block">
+  <div class="dim-header">
+    <span class="dim-title">① 價格行為</span>
+    <span class="dim-signal sig-bear">🔴 空頭</span>
+  </div>
+  <div class="dim-content">
+    <b>K線形態：</b>射擊之星（Shooting Star）—— 開盤即為全日最高點（High=Open 7605.35），收盤接近最低（7553.68），陰線吞噬型走勢，賣壓全日主導。<br>
+    <b>量價關係：</b>成交量 34.6億，較前幾日（55-78億）明顯縮量。量縮下跌=恐慌未出現，但主力未積極買入。<br>
+    <b>相對位置：</b>9日連漲後（7353→7609，+3.5%）第一根下跌日，距 ATH 7620.9 收 -0.88%。射擊之星出現在高位為短線反轉訊號。<br>
+    <b>ATH：</b>ATH 7620.9（6/2），今日為 ATH 後首根陰線。
+  </div>
+</div>
+
+<div class="dim-block">
+  <div class="dim-header">
+    <span class="dim-title">② 均線系統</span>
+    <span class="dim-signal sig-neutral">🟡 中性偏空</span>
+  </div>
+  <div class="dim-content">
+    <b>排列：</b>MA5(7581) > MA20(7466) > MA50(7119) > MA200(6847) 完整多頭排列。<br>
+    <b>關鍵警示：</b>收盤 7553.68 已跌破 MA5（7581.42），短線轉為弱勢。若連續 2 日收在 MA5 下方則轉為正式空頭訊號。<br>
+    <b>乖離風險：</b>MA50 乖離 +6.10%（歷史上超 6% 常見修正），MA200 乖離 +10.31%（極度偏離，修正壓力大）。<br>
+    <b>黃金/死亡交叉：</b>MA5 與 MA20 的黃金交叉仍維持（未死叉），但若跌破 7519 則 MA5 下穿 MA20 風險增加。
+  </div>
+</div>
+
+<div class="dim-block">
+  <div class="dim-header">
+    <span class="dim-title">③ 技術指標</span>
+    <span class="dim-signal sig-bear">🔴 空頭</span>
+  </div>
+  <div class="dim-content">
+    <b>RSI(14)：</b>67.04（前日 75.5），高位急速回落 -8.5。RSI 從超買區向下穿越，形成「頂背離預警」。尚未跌破 60，若破 60 確認轉弱。<br>
+    <b>MACD：</b>MACD(120.75) 低於 Signal(125.82)，Histogram -5.06 且持續擴大 → 死叉確立，中線偏空。<br>
+    <b>布林帶：</b>收盤在 76.5% 位置（中上軌間），昨日曾突破上軌後今日回撤，布林收口可能性增加，震盪加劇。<br>
+    <b>KD：</b>K=70.95 遠低於 D=86.83，差距 -15.9，高檔死叉 = 強烈空頭訊號，通常 2-5 日繼續下行。
+  </div>
+</div>
+
+<div class="dim-block">
+  <div class="dim-header">
+    <span class="dim-title">④ 葛蘭威爾</span>
+    <span class="dim-signal sig-bear">🔴 偏空</span>
+  </div>
+  <div class="dim-content">
+    <b>賣⑥ 觸發：</b>價格在 MA5 上方反彈（9日漲幅 3.5%）後量縮回落跌破 MA5，典型賣⑥法則。量縮意味多頭衰竭。<br>
+    <b>賣⑧ 警戒：</b>MA200 乖離率 +10.31%，突破歷史警戒區（>10%）。當乖離過大時市場容易快速修正回均。<br>
+    <b>買④ 醞釀：</b>若後續急跌至 MA20（7466）附近出現量縮止跌，買④法則（乖離過大強彈）將觸發，屆時為做多機會。<br>
+    <b>買②觀察中：</b>若持守 MA20 並量縮止跌，買②法則（跌回均線不破支撐）亦可觸發。
+  </div>
+</div>
+
+<div class="dim-block">
+  <div class="dim-header">
+    <span class="dim-title">⑤ 纏論結構</span>
+    <span class="dim-signal sig-bear">🔴 中樞破位</span>
+  </div>
+  <div class="dim-content">
+    <b>當前筆：</b>下降筆啟動（6/2 高點 7620.9 → 今日收 7553.68，已為第1日下降筆）。<br>
+    <b>中樞識別：</b>前段中樞為 6/1-6/2 橫盤區間（7562-7620）。今日低點 7551.22 跌破中樞下沿（7562）。<br>
+    <b>中樞破位意義：</b>跌破中樞下沿 → 啟動下跌段訊號，下一中樞目標在 5/26-5/29（7519-7580）區間。<br>
+    <b>背馳訊號：</b>RSI 頂背離（75.5→67.0），纏論頂背馳初現，需等第 2 次下跌筆確認是否形成完整背馳。<br>
+    <b>關鍵位：</b>中樞下沿 7519（5/26低）若跌破，下跌段目標 7451（MA20）確立。
+  </div>
+</div>
+
+<div class="dim-block">
+  <div class="dim-header">
+    <span class="dim-title">⑥ 艾略特波浪</span>
+    <span class="dim-signal sig-neutral">🟡 ⑤波末端，ABC修正啟動</span>
+  </div>
+  <div class="dim-content">
+    <b>波浪計數：</b>4/22 起算的五浪推動結構疑似完成。<br>
+    ①浪 7137→7230（+93）｜②浪 7230→7200（-30）｜③浪 7200→7501（+301）｜④浪 7501→7353（-148）｜⑤浪 7353→7609（+256）<br>
+    <b>⑤波完成訊號：</b>今日高點=開盤點（無力創新高），收低 = ⑤浪末端特徵。<br>
+    <b>ABC 修正目標（基準：⑤浪漲幅 7353→7609 = 256點）：</b><br>
+    &nbsp;&nbsp;• 0.382 回撤 = 7609 - 97 = <b style="color:var(--yellow);">7,512</b><br>
+    &nbsp;&nbsp;• 0.500 回撤 = 7609 - 128 = <b style="color:var(--red);">7,481</b><br>
+    &nbsp;&nbsp;• 0.618 回撤 = 7609 - 158 = <b style="color:var(--red);">7,451</b>（= MA20 附近，最強支撐）<br>
+    <b>若突破做多場景：</b>⑤浪延伸目標 = 7609 × 1.618 延伸 ≈ 7,750（前提：必須站回 7609 ATH 之上）。
+  </div>
+</div>
+
+<!-- 多空信號彙整 -->
+<div class="card" style="margin-bottom:14px;">
+  <div class="card-title">⚡ 多空信號彙整</div>
+  <div style="display:grid;grid-template-columns:1fr 1fr;gap:12px;">
+    <div>
+      <div style="color:var(--green);font-size:11px;font-weight:bold;margin-bottom:6px;">多頭訊號 3條</div>
+      <div class="signal-item"><span class="dot dot-b"></span>MA5>MA20>MA50>MA200 完整多頭排列</div>
+      <div class="signal-item"><span class="dot dot-b"></span>RSI 67 尚未跌破 60（多頭存活）</div>
+      <div class="signal-item" style="border:none;"><span class="dot dot-b"></span>布林帶收盤在中軌之上（趨勢未轉空）</div>
+    </div>
+    <div>
+      <div style="color:var(--red);font-size:11px;font-weight:bold;margin-bottom:6px;">空頭訊號 7條</div>
+      <div class="signal-item"><span class="dot dot-s"></span>射擊之星 K線（高位開盤=高點，收近低點）</div>
+      <div class="signal-item"><span class="dot dot-s"></span>MACD 死叉（Histogram -5.06 擴大）</div>
+      <div class="signal-item"><span class="dot dot-s"></span>KD 高檔死叉（K=70 << D=87，差距 -15）</div>
+      <div class="signal-item"><span class="dot dot-s"></span>跌破 MA5（7581），短線轉弱</div>
+      <div class="signal-item"><span class="dot dot-s"></span>纏論中樞下沿（7562）跌破</div>
+      <div class="signal-item"><span class="dot dot-s"></span>MA200 乖離 10.31%（葛⑧警戒）</div>
+      <div class="signal-item" style="border:none;"><span class="dot dot-s"></span>ES 期貨 6/4 盤前 -0.14%（弱勢延續）</div>
+    </div>
+  </div>
+  <div class="sig-bar" style="margin-top:12px;">
+    <div class="sig-bar-b" style="width:30%;"></div>
+    <div class="sig-bar-s" style="width:70%;"></div>
+  </div>
+  <div style="display:flex;justify-content:space-between;font-size:10px;color:var(--muted);">
+    <span>多頭 3/10 (30%)</span>
+    <span>空頭 7/10 (70%)</span>
+  </div>
+</div>
+
+<!-- 交易策略表格 -->
+<div class="card" style="margin-bottom:14px;">
+  <div class="card-title">📋 交易策略表格</div>
+  <table>
+    <thead>
+      <tr>
+        <th>策略</th><th>進場條件</th><th>進場價</th><th>停損</th><th>目標①</th><th>目標②</th><th>風報比</th><th>建議倉位</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><span class="sl sl-r">空單首選</span></td>
+        <td>反彈至 MA5（7581）量縮收陰</td>
+        <td>7,580</td>
+        <td><span style="color:var(--red)">7,625</span></td>
+        <td>7,512（費波0.382）</td>
+        <td>7,481（費波0.500）</td>
+        <td>1:1.5</td>
+        <td>30%</td>
+      </tr>
+      <tr>
+        <td><span class="sl sl-r">積極空</span></td>
+        <td>跌破中樞下沿 7,519 + 量增確認</td>
+        <td>7,515</td>
+        <td><span style="color:var(--red)">7,570</span></td>
+        <td>7,481（費波0.500）</td>
+        <td>7,451（MA20）</td>
+        <td>1:1.8</td>
+        <td>20%</td>
+      </tr>
+      <tr>
+        <td><span class="sl sl-g">等待做多</span></td>
+        <td>跌至 MA20（7,466）量縮+收紅K</td>
+        <td>7,470</td>
+        <td><span style="color:var(--red)">7,410</span></td>
+        <td>7,553（今日收盤）</td>
+        <td>7,609（前高）</td>
+        <td>1:1.4</td>
+        <td>25%</td>
+      </tr>
+      <tr>
+        <td><span class="sl sl-c">突破做多</span></td>
+        <td>站回 ATH 7,621 + 量增</td>
+        <td>7,625</td>
+        <td><span style="color:var(--red)">7,575</span></td>
+        <td>7,680</td>
+        <td>7,750（⑤浪延伸）</td>
+        <td>1:1.1</td>
+        <td>15%</td>
+      </tr>
+    </tbody>
+  </table>
+</div>
+
+<!-- 支撐/阻力 -->
+<div class="card" style="margin-bottom:14px;">
+  <div class="card-title">🎯 關鍵支撐 / 阻力位</div>
+  <div style="margin-bottom:8px;">
+    <span style="font-size:10px;color:var(--green);margin-right:8px;">▼ 支撐</span>
+    <div class="pill-row" style="margin-top:6px;">
+      <span class="pill pill-s">S1｜7,540（今日低點附近）</span>
+      <span class="pill pill-s">S2｜7,512（費波 0.382）</span>
+      <span class="pill pill-s">S3｜7,481（費波 0.500）</span>
+      <span class="pill pill-s">S4｜7,451（費波 0.618 = MA20）</span>
+      <span class="pill pill-s">S5｜7,301（布林下軌）</span>
+    </div>
+  </div>
+  <div>
+    <span style="font-size:10px;color:var(--red);margin-right:8px;">▲ 阻力</span>
+    <div class="pill-row" style="margin-top:6px;">
+      <span class="pill pill-r">R1｜7,581（MA5）</span>
+      <span class="pill pill-r">R2｜7,609（前高）</span>
+      <span class="pill pill-r">R3｜7,621（ATH）</span>
+      <span class="pill pill-r">R4｜7,631（布林上軌）</span>
+    </div>
+  </div>
+</div>
+
+<!-- 下次觀察3關鍵點 -->
+<div class="section-title">🔭 下次需觀察的 3 個關鍵點</div>
+<div class="grid3">
+  <div class="watch-block">
+    <div class="watch-num">①</div>
+    <div class="watch-title">MA5（7,581）能否收復</div>
+    <div class="watch-trigger">📍 觸發條件：次日收盤站回 7,581 以上 + 成交量放大</div>
+    <div class="watch-result">若收復 → 空頭訊號解除，多方重新主導，可輕倉做多<br>若持續在下方 → MA5 壓力確認，下跌段持續</div>
+  </div>
+  <div class="watch-block">
+    <div class="watch-num">②</div>
+    <div class="watch-title">7,519 中樞下沿是否跌破</div>
+    <div class="watch-trigger">📍 觸發條件：收盤跌破 7,519（5/26 低點）</div>
+    <div class="watch-result">若跌破 → 纏論下跌段確立，費波 0.618 目標 7,451（MA20）啟動<br>若守住 → 中樞盤整，等待方向選擇</div>
+  </div>
+  <div class="watch-block">
+    <div class="watch-num">③</div>
+    <div class="watch-title">伊美衝突是否進一步升溫</div>
+    <div class="watch-trigger">📍 觸發條件：油價（WTI）突破 80 美元／VIX 突破 20</div>
+    <div class="watch-result">若升溫（油價上漲+VIX破20）→ 地緣風險溢價爆發，拉回機率升至 85%+<br>若降溫 → 外部壓力解除，技術面支撐收效</div>
+  </div>
+</div>
+
+</div><!-- /container -->
+
+<div class="disclaimer">
+  ⚠️ 本分析僅供學習參考，不構成投資建議。數據來源：yfinance（^SPX、^GSPC、^VIX），三關驗證全通過。<br>
+  分析日：2026/06/03 ｜ 產出時間：2026/06/04 10:56 台灣時間
+</div>
+
+<script>
+// 繪製K線圖
+(function(){
+  const canvas = document.getElementById('klineCanvas');
+  if(!canvas) return;
+  const wrap = canvas.parentElement;
+  canvas.width = wrap.offsetWidth;
+  canvas.height = 200;
+  const ctx = canvas.getContext('2d');
+  const W = canvas.width, H = canvas.height;
+
+  const klines = [
+    {d:'04/22',o:7102.91,h:7138.64,l:7102.91,c:7137.9},{d:'04/23',o:7118.8,h:7147.78,l:7046.55,c:7108.4},
+    {d:'04/24',o:7136.48,h:7168.59,l:7112.82,c:7165.08},{d:'04/27',o:7152.72,h:7178.74,l:7146.72,c:7173.91},
+    {d:'04/28',o:7133.74,h:7152.52,l:7115.17,c:7138.8},{d:'04/29',o:7131.61,h:7145.63,l:7107.86,c:7135.95},
+    {d:'04/30',o:7161.75,h:7219.83,l:7126.15,c:7209.01},{d:'05/01',o:7234.54,h:7272.52,l:7229.32,c:7230.12},
+    {d:'05/04',o:7228.38,h:7244.54,l:7174.12,c:7200.75},{d:'05/05',o:7233.62,h:7273.26,l:7233.62,c:7259.22},
+    {d:'05/06',o:7294.14,h:7369.22,l:7294.14,c:7365.12},{d:'05/07',o:7376.78,h:7385.02,l:7321.25,c:7337.11},
+    {d:'05/08',o:7362.97,h:7401.5,l:7362.97,c:7398.93},{d:'05/11',o:7385.31,h:7428.97,l:7384.2,c:7412.84},
+    {d:'05/12',o:7390.63,h:7409.57,l:7338.54,c:7400.96},{d:'05/13',o:7409.12,h:7460.04,l:7375.13,c:7444.25},
+    {d:'05/14',o:7454.4,h:7517.12,l:7454.4,c:7501.24},{d:'05/15',o:7445.11,h:7454.85,l:7397.5,c:7408.5},
+    {d:'05/18',o:7415.07,h:7434.06,l:7353.17,c:7403.05},{d:'05/19',o:7375.75,h:7395.32,l:7333.68,c:7353.61},
+    {d:'05/20',o:7369.19,h:7435.69,l:7357.46,c:7432.97},{d:'05/21',o:7410.78,h:7465.96,l:7389.48,c:7445.72},
+    {d:'05/22',o:7468.82,h:7506.32,l:7463.29,c:7473.47},{d:'05/26',o:7511.79,h:7539.09,l:7501.1,c:7519.12},
+    {d:'05/27',o:7526.01,h:7530.72,l:7499.72,c:7520.36},{d:'05/28',o:7519.82,h:7568.72,l:7508.04,c:7563.63},
+    {d:'05/29',o:7579.33,h:7599.38,l:7563.55,c:7580.06},{d:'06/01',o:7582.29,h:7617.66,l:7562.61,c:7599.96},
+    {d:'06/02',o:7595.4,h:7620.9,l:7582.99,c:7609.78},{d:'06/03',o:7605.31,h:7605.35,l:7551.22,c:7553.68}
+  ];
+
+  const allH = klines.map(k=>k.h), allL = klines.map(k=>k.l);
+  const maxP = Math.max(...allH)+20, minP = Math.min(...allL)-20;
+  const range = maxP - minP;
+  const toY = p => H - 12 - ((p - minP) / range) * (H - 30);
+
+  const n = klines.length;
+  const bw = Math.max(3, Math.floor((W - 20) / n) - 2);
+  const gap = Math.floor((W - 20) / n);
+
+  // ATH虛線
+  const athY = toY(7620.9);
+  ctx.setLineDash([4,4]);
+  ctx.strokeStyle = '#f5c84266';
+  ctx.lineWidth = 1;
+  ctx.beginPath();
+  ctx.moveTo(0, athY);
+  ctx.lineTo(W, athY);
+  ctx.stroke();
+  ctx.setLineDash([]);
+  ctx.fillStyle = '#f5c84288';
+  ctx.font = '9px Courier New';
+  ctx.fillText('ATH 7621', W-60, athY-3);
+
+  // MA5線
+  ctx.strokeStyle = '#00d4ff88';
+  ctx.lineWidth = 1.5;
+  ctx.setLineDash([]);
+  ctx.beginPath();
+  for(let i=4; i<n; i++){
+    const ma5 = klines.slice(i-4,i+1).reduce((s,k)=>s+k.c,0)/5;
+    const x = 10 + i*gap + gap/2;
+    if(i===4) ctx.moveTo(x, toY(ma5));
+    else ctx.lineTo(x, toY(ma5));
+  }
+  ctx.stroke();
+
+  // K線
+  klines.forEach((k,i)=>{
+    const x = 10 + i*gap + gap/2;
+    const bull = k.c >= k.o;
+    const col = bull ? '#00ff88' : '#ff4466';
+    // 影線
+    ctx.strokeStyle = col;
+    ctx.lineWidth = 1;
+    ctx.beginPath();
+    ctx.moveTo(x, toY(k.h));
+    ctx.lineTo(x, toY(k.l));
+    ctx.stroke();
+    // 實體
+    const top = toY(Math.max(k.o,k.c));
+    const bot = toY(Math.min(k.o,k.c));
+    const bodyH = Math.max(1, bot - top);
+    ctx.fillStyle = bull ? '#00ff8888' : '#ff446688';
+    ctx.strokeStyle = col;
+    ctx.lineWidth = 1;
+    ctx.fillRect(x - bw/2, top, bw, bodyH);
+    ctx.strokeRect(x - bw/2, top, bw, bodyH);
+  });
+
+  // 日期標籤（每5根）
+  ctx.fillStyle = '#555';
+  ctx.font = '8px Courier New';
+  klines.forEach((k,i)=>{
+    if(i%5===0){
+      const x = 10 + i*gap + gap/2;
+      ctx.fillText(k.d, x-10, H-1);
+    }
+  });
+})();
+</script>
+</body>
+</html>
