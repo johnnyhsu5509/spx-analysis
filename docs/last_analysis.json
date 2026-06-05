@@ -1,33 +1,33 @@
 {
-  "trade_date": "2026-06-03",
-  "close": 7553.68,
-  "change_pct": -0.74,
-  "vix": 16.06,
-  "pullback_prob": 74,
+  "trade_date": "2026-06-04",
+  "close": 7584.31,
+  "change_pct": 0.41,
+  "vix": 15.40,
+  "pullback_prob": 64,
   "rating": "中高風險",
   "predictions": {
     "short_bias": "空",
-    "key_resistance": [7581, 7609, 7621],
-    "key_support": [7540, 7512, 7481, 7451],
+    "key_resistance": [7598, 7610, 7640],
+    "key_support": [7560, 7519, 7480, 7416],
     "fib_targets": {
-      "r382": 7512,
-      "r500": 7481,
-      "r618": 7451
+      "r382": 7530,
+      "r500": 7480,
+      "r618": 7416
     },
-    "zhongshu": {"upper": 7609, "lower": 7519},
-    "elliott": "疑似⑤浪末端，ABC修正啟動",
+    "zhongshu": {"upper": 7610, "lower": 7519},
+    "elliott": "B浪末端完成（7516→7584），C浪下跌啟動中，目標7480/7416",
     "strategies": {
-      "short_preferred": {"entry": 7580, "stop": 7625, "t1": 7512, "t2": 7481},
-      "aggressive_short": {"entry": 7515, "stop": 7570, "t1": 7481, "t2": 7451},
-      "long_on_dip": {"entry": 7470, "stop": 7410, "t1": 7553, "t2": 7609},
-      "breakout_long": {"entry": 7625, "stop": 7575, "t1": 7680, "t2": 7750}
+      "short_preferred": {"entry": 7584, "stop": 7625, "t1": 7480, "t2": 7416},
+      "aggressive_short": {"entry": 7610, "stop": 7645, "t1": 7480, "t2": 7416},
+      "long_on_dip": {"entry": 7480, "stop": 7416, "t1": 7560, "t2": 7610},
+      "breakout_long": {"entry": 7645, "stop": 7598, "t1": 7700, "t2": 7780}
     },
     "watch_points": [
-      "MA5（7581）能否收復",
-      "7519中樞下沿是否跌破",
-      "伊美衝突是否升溫（VIX破20）"
+      "7519中樞下沿是否跌破（確認C浪啟動）",
+      "MACD柱狀體是否持續擴大（空頭動能確認）",
+      "科技股是否繼續輪出（Broadcom -15%後是否蔓延）"
     ]
   },
-  "catalysts": ["伊美衝突升溫", "Broadcom Q2 miss -5%", "CrowdStrike財測疲軟 -10%", "Fed Beige Book通膨中強"],
+  "catalysts": ["Broadcom財報 -15%（拖累科技板塊）", "道指創ATH 51561（板塊輪動）", "ES期貨盤前 -0.10%（7550支撐測試）", "MACD死叉擴大（空頭動能持續）"],
   "dashboard_url": "https://johnnyhsu5509.github.io/spx-analysis/"
 }
