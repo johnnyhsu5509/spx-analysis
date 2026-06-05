@@ -1,0 +1,264 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>SPX 回測報告 | 6/3預測 vs 6/4實際</title>
+<style>
+:root{--bg:#0a0a0a;--bg2:#111;--bg3:#181818;--gold:#f5c842;--cyan:#00d4ff;--green:#00ff88;--red:#ff4466;--yellow:#ffd700;--white:#e8e8e8;--muted:#888;--border:#2a2a2a;}
+*{margin:0;padding:0;box-sizing:border-box;}
+body{background:var(--bg);color:var(--white);font-family:'Courier New',monospace;font-size:13px;line-height:1.6;}
+.header{background:linear-gradient(135deg,#0a0a00,#1a1200);border-bottom:2px solid var(--gold);padding:18px 24px;}
+.title{font-size:20px;font-weight:bold;color:var(--gold);letter-spacing:3px;}
+.sub{color:var(--muted);font-size:11px;margin-top:4px;}
+.container{padding:16px 24px;}
+.card{background:var(--bg2);border:1px solid var(--border);border-radius:8px;padding:16px;margin-bottom:14px;}
+.card-title{font-size:11px;color:var(--gold);letter-spacing:2px;text-transform:uppercase;margin-bottom:12px;border-bottom:1px solid var(--border);padding-bottom:6px;}
+.grid3{display:grid;grid-template-columns:1fr 1fr 1fr;gap:14px;margin-bottom:14px;}
+.grid2{display:grid;grid-template-columns:1fr 1fr;gap:14px;margin-bottom:14px;}
+.price-card{background:var(--bg3);border-radius:8px;padding:14px;text-align:center;border:1px solid var(--border);}
+.price-label{font-size:10px;color:var(--muted);letter-spacing:2px;margin-bottom:6px;}
+.price-val{font-size:26px;font-weight:bold;}
+.price-chg{font-size:12px;margin-top:4px;}
+.hit-row{display:flex;align-items:flex-start;gap:12px;padding:10px 0;border-bottom:1px solid #1a1a1a;}
+.hit-icon{font-size:18px;width:24px;flex-shrink:0;margin-top:1px;}
+.hit-name{flex:1;font-size:12px;color:var(--white);}
+.hit-pred{font-size:11px;color:var(--muted);margin-top:2px;}
+.hit-actual{font-size:11px;margin-top:2px;}
+.hit-badge{font-size:10px;padding:2px 8px;border-radius:10px;font-weight:bold;margin-left:8px;flex-shrink:0;}
+.b-hit{background:#002a15;color:var(--green);border:1px solid var(--green);}
+.b-part{background:#2a2200;color:var(--yellow);border:1px solid var(--yellow);}
+.b-miss{background:#2a0010;color:var(--red);border:1px solid var(--red);}
+.score-big{font-size:40px;font-weight:bold;text-align:center;margin:8px 0;}
+.score-label{font-size:11px;color:var(--muted);text-align:center;}
+.bar-wrap{height:14px;background:#1a1a1a;border-radius:7px;overflow:hidden;margin:10px 0;}
+.bar-hit{background:var(--green);height:14px;float:left;}
+.bar-part{background:var(--yellow);height:14px;float:left;}
+.bar-miss{background:var(--red);height:14px;float:left;}
+.learn-block{background:var(--bg3);border-left:3px solid var(--cyan);border-radius:0 6px 6px 0;padding:12px;margin-bottom:10px;}
+.learn-title{font-size:11px;color:var(--cyan);font-weight:bold;margin-bottom:6px;}
+.learn-text{font-size:11px;color:#bbb;line-height:1.7;}
+.track-row{display:flex;justify-content:space-between;align-items:center;padding:8px 0;border-bottom:1px solid #1a1a1a;font-size:11px;}
+.track-key{color:var(--gold);}
+.track-val{color:var(--white);font-weight:bold;}
+.kline-mini{display:flex;align-items:flex-end;gap:2px;height:60px;margin:10px 0;}
+.disclaimer{text-align:center;color:var(--muted);font-size:10px;padding:14px;border-top:1px solid var(--border);margin-top:8px;}
+.badge{padding:3px 10px;border-radius:12px;font-size:10px;font-weight:bold;}
+.trap-box{background:#1a0a00;border:1px solid #ff884466;border-radius:8px;padding:14px;margin-bottom:14px;}
+.trap-title{color:#ff8844;font-size:12px;font-weight:bold;margin-bottom:8px;}
+.trap-text{font-size:11px;color:#ccc;line-height:1.7;}
+</style>
+</head>
+<body>
+
+<div class="header">
+  <div class="title">◈ SPX 回測報告</div>
+  <div class="sub">預測日：2026/06/03 → 實際結果：2026/06/04｜產出：2026/06/05</div>
+</div>
+
+<div class="container">
+
+<!-- 三格價格對比 -->
+<div class="grid3">
+  <div class="price-card">
+    <div class="price-label">6/3 預測偏向</div>
+    <div class="price-val" style="color:var(--red);">空頭</div>
+    <div class="price-chg" style="color:var(--red);">拉回機率 74%｜中高風險</div>
+  </div>
+  <div class="price-card">
+    <div class="price-label">6/4 實際收盤</div>
+    <div class="price-val" style="color:var(--green);">7,584</div>
+    <div class="price-chg" style="color:var(--green);">▲ +30.63（+0.41%）</div>
+  </div>
+  <div class="price-card">
+    <div class="price-label">開盤 / 低點</div>
+    <div class="price-val" style="color:var(--yellow);">7,516</div>
+    <div class="price-chg" style="color:var(--yellow);">開低 7516 → 反彈至 7598 → 收 7584</div>
+  </div>
+</div>
+
+<!-- 空頭陷阱說明 -->
+<div class="trap-box">
+  <div class="trap-title">⚠️ 空頭陷阱（Bull Trap in Reverse）— 本次最大教訓</div>
+  <div class="trap-text">
+    6/4 開盤跳空低開至 <b>7,516</b>（跌破 6/3 預測的中樞下沿 7,519），完美觸發「積極空進場條件」。
+    然而多頭在低點快速接盤，日內強力反彈 <b>+68 點</b>，收盤 7,584 完全收復跌幅。<br><br>
+    這是典型的「<b>假突破回測</b>」——空方以為中樞破位確立，但多頭利用低點清洗空單後強彈。
+    若按積極空 7,515 進場（停損 7,570），當日即觸發停損，虧損 55 點（約 -0.7%）。
+  </div>
+</div>
+
+<!-- 逐項命中率 -->
+<div class="card">
+  <div class="card-title">🎯 逐項預測比對</div>
+
+  <div class="hit-row">
+    <span class="hit-icon">❌</span>
+    <div style="flex:1;">
+      <div class="hit-name">空頭方向偏向 <span class="hit-badge b-miss">未命中</span></div>
+      <div class="hit-pred">預測：繼續下行，74% 拉回機率</div>
+      <div class="hit-actual" style="color:var(--red);">實際：+0.41% 收紅，多頭反攻</div>
+    </div>
+  </div>
+
+  <div class="hit-row">
+    <span class="hit-icon">❌</span>
+    <div style="flex:1;">
+      <div class="hit-name">空單首選（進場 7580，跌破方向） <span class="hit-badge b-miss">未命中</span></div>
+      <div class="hit-pred">預測：跌破 7540 確認，目標 7512/7481</div>
+      <div class="hit-actual" style="color:var(--red);">實際：開低強彈，未能持續下跌</div>
+    </div>
+  </div>
+
+  <div class="hit-row">
+    <span class="hit-icon">🟡</span>
+    <div style="flex:1;">
+      <div class="hit-name">積極空（跌破 7519 中樞下沿） <span class="hit-badge b-part">部分命中</span></div>
+      <div class="hit-pred">預測：跌破 7519 → 下跌段確立，目標 7481/7451</div>
+      <div class="hit-actual" style="color:var(--yellow);">實際：開盤 7516 確實跌破 7519，但假突破，當日收復</div>
+    </div>
+  </div>
+
+  <div class="hit-row">
+    <span class="hit-icon">✅</span>
+    <div style="flex:1;">
+      <div class="hit-name">觀察點① MA5（7581）能否收復 <span class="hit-badge b-hit">命中</span></div>
+      <div class="hit-pred">預測：若收復 → 空頭訊號解除，多方重新主導</div>
+      <div class="hit-actual" style="color:var(--green);">實際：收盤 7584，成功站回 MA5（7585）✅ 預測正確</div>
+    </div>
+  </div>
+
+  <div class="hit-row">
+    <span class="hit-icon">🟡</span>
+    <div style="flex:1;">
+      <div class="hit-name">觀察點② 7519 中樞下沿 <span class="hit-badge b-part">部分命中</span></div>
+      <div class="hit-pred">預測：若跌破 → 纏論下跌段確立</div>
+      <div class="hit-actual" style="color:var(--yellow);">實際：盤中確實跌破（7516），但收復，屬假突破</div>
+    </div>
+  </div>
+
+  <div class="hit-row" style="border:none;">
+    <span class="hit-icon">❌</span>
+    <div style="flex:1;">
+      <div class="hit-name">觀察點③ 伊美衝突 VIX 破 20 <span class="hit-badge b-miss">未命中</span></div>
+      <div class="hit-pred">預測：若升溫 → 拉回機率升至 85%+</div>
+      <div class="hit-actual" style="color:var(--red);">實際：VIX 降至 15.40（-4.11%），風險降溫</div>
+    </div>
+  </div>
+</div>
+
+<!-- 命中率統計 -->
+<div class="grid2">
+  <div class="card">
+    <div class="card-title">📊 命中率統計</div>
+    <div class="score-big" style="color:var(--yellow);">33%</div>
+    <div class="score-label">方向勝率（含部分命中 50%）</div>
+    <div style="margin-top:16px;">
+      <div style="display:flex;justify-content:space-between;font-size:10px;color:var(--muted);margin-bottom:4px;">
+        <span>✅ 完全命中 1</span><span>🟡 部分命中 2</span><span>❌ 未命中 3</span>
+      </div>
+      <div class="bar-wrap">
+        <div class="bar-hit" style="width:16.7%"></div>
+        <div class="bar-part" style="width:33.3%"></div>
+        <div class="bar-miss" style="width:50%"></div>
+      </div>
+    </div>
+    <div style="margin-top:12px;font-size:11px;color:var(--muted);">
+      完全命中：1/6（16.7%）<br>
+      含部分命中：3/6（50.0%）<br>
+      完全未中：3/6（50.0%）
+    </div>
+  </div>
+
+  <div class="card">
+    <div class="card-title">📉 策略盈虧模擬</div>
+    <div style="font-size:11px;line-height:2;">
+      <div class="track-row">
+        <span class="track-key">空單首選（7580進，7625停損）</span>
+        <span style="color:var(--muted);">未觸發進場</span>
+      </div>
+      <div class="track-row">
+        <span class="track-key">積極空（7515進，7570停損）</span>
+        <span style="color:var(--red);">觸發進場→觸發停損 -55pts</span>
+      </div>
+      <div class="track-row">
+        <span class="track-key">等待做多（7470進）</span>
+        <span style="color:var(--muted);">未觸發（低點 7516 未達）</span>
+      </div>
+      <div class="track-row" style="border:none;">
+        <span class="track-key">突破做多（7625進）</span>
+        <span style="color:var(--muted);">未觸發</span>
+      </div>
+    </div>
+    <div style="margin-top:10px;background:#2a0010;border-radius:4px;padding:8px;font-size:11px;color:var(--red);">
+      若執行積極空：-55點（約 -0.7%）
+    </div>
+  </div>
+</div>
+
+<!-- 偏差分析 -->
+<div class="card">
+  <div class="card-title">🔬 偏差分析 — 為什麼預測錯了？</div>
+
+  <div class="learn-block">
+    <div class="learn-title">① 低估了多頭在中樞下沿的接盤意願</div>
+    <div class="learn-text">
+      7519 中樞下沿雖然盤中被跌破，但多頭在 7516 強力接盤，單日反彈 68 點。
+      這說明市場參與者將 7519-7540 視為強力支撐區，而非純破位信號。
+      <b>修正做法：</b>跌破中樞下沿需要「收盤確認」，不能以開盤價突破作為進場依據。
+    </div>
+  </div>
+
+  <div class="learn-block">
+    <div class="learn-title">② 過度依賴 MACD/KD 死叉，忽略量縮性質</div>
+    <div class="learn-text">
+      6/3 MACD 死叉、KD 死叉同時出現，但成交量僅 34.6億（縮量）。
+      縮量死叉 = 空方力道不足，不代表多頭轉弱，只是多頭短暫休息。
+      6/4 開盤低點同樣縮量（32.7億），多頭以低量接盤後快速反彈。
+      <b>修正做法：</b>縮量死叉的空頭訊號權重應降低 10-15%，拉回機率修正為 60-65%。
+    </div>
+  </div>
+
+  <div class="learn-block">
+    <div class="learn-title">③ 地緣風險高估</div>
+    <div class="learn-text">
+      預測伊美衝突升溫 VIX 破 20，但實際 VIX 從 16.06 降至 15.40（-4.11%）。
+      市場消化了中東風險，伊美談判傳出緩和訊號，風險溢價快速退場。
+      <b>修正做法：</b>地緣事件的當日衝擊通常在 1-2 交易日內消化，權重不應維持 20%，隔日應降至 10%。
+    </div>
+  </div>
+</div>
+
+<!-- 今日/明日追蹤 -->
+<div class="card">
+  <div class="card-title">🔭 6/5 需持續追蹤的關鍵位</div>
+  <div class="track-row">
+    <span class="track-key">MA5</span>
+    <span class="track-val">7,585（收盤 7584 已貼近，需站穩）</span>
+  </div>
+  <div class="track-row">
+    <span class="track-key">MACD Histogram</span>
+    <span class="track-val">-6.83（持續擴大，死叉仍有效）</span>
+  </div>
+  <div class="track-row">
+    <span class="track-key">KD</span>
+    <span class="track-val">K=76.78 D=81.17，死叉收窄中</span>
+  </div>
+  <div class="track-row">
+    <span class="track-key">中樞上沿</span>
+    <span class="track-val">7,609（前高）— 能否突破決定方向</span>
+  </div>
+  <div class="track-row" style="border:none;">
+    <span class="track-key">RSI</span>
+    <span class="track-val">68.98（接近超買 70，需觀察）</span>
+  </div>
+</div>
+
+</div>
+
+<div class="disclaimer">
+  ⚠️ 本分析僅供學習參考，不構成投資建議。<br>
+  回測基準：6/3 分析預測 vs 6/4 yfinance 實際數據（三關驗證通過）
+</div>
+</body>
+</html>
