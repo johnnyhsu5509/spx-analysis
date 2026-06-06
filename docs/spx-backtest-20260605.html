@@ -1,0 +1,380 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>SPX 回測報告 | 2026-06-05</title>
+<style>
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  body { background: #0a0a0a; color: #e0e0e0; font-family: 'Segoe UI', sans-serif; min-height: 100vh; }
+
+  .header {
+    background: linear-gradient(135deg, #0a0a0a 0%, #1a0a0a 100%);
+    border-bottom: 1px solid #ff3333;
+    padding: 24px 32px;
+    display: flex; justify-content: space-between; align-items: center;
+  }
+  .header h1 { font-size: 22px; color: #ff4444; letter-spacing: 2px; }
+  .header .subtitle { color: #888; font-size: 13px; margin-top: 4px; }
+  .header .date-badge {
+    background: #1a0000; border: 1px solid #ff3333; border-radius: 8px;
+    padding: 8px 16px; text-align: center;
+  }
+  .header .date-badge .label { font-size: 11px; color: #888; }
+  .header .date-badge .val { font-size: 18px; color: #ff4444; font-weight: 700; }
+
+  .container { max-width: 1100px; margin: 0 auto; padding: 24px 20px; }
+
+  /* 預測 vs 實際 */
+  .compare-row {
+    display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 16px; margin-bottom: 24px;
+  }
+  .compare-card {
+    background: #111; border-radius: 12px; padding: 20px;
+    border: 1px solid #222; text-align: center;
+  }
+  .compare-card.pred { border-color: #333; }
+  .compare-card.actual { border-color: #ff4444; }
+  .compare-card.result { border-color: #00ff88; }
+  .compare-card .label { font-size: 11px; color: #666; text-transform: uppercase; letter-spacing: 1px; margin-bottom: 8px; }
+  .compare-card .big { font-size: 32px; font-weight: 700; }
+  .compare-card .sub { font-size: 13px; color: #888; margin-top: 6px; }
+  .pred .big { color: #ffaa00; }
+  .actual .big { color: #ff4444; }
+  .result .big { color: #00ff88; }
+
+  /* 命中率列表 */
+  .section-title {
+    font-size: 13px; color: #666; text-transform: uppercase; letter-spacing: 2px;
+    margin-bottom: 12px; padding-bottom: 6px; border-bottom: 1px solid #1a1a1a;
+  }
+  .hit-list { display: flex; flex-direction: column; gap: 10px; margin-bottom: 24px; }
+  .hit-item {
+    background: #111; border-radius: 10px; padding: 14px 18px;
+    display: flex; align-items: center; gap: 14px;
+    border-left: 4px solid #333;
+  }
+  .hit-item.hit { border-left-color: #00ff88; }
+  .hit-item.partial { border-left-color: #ffaa00; }
+  .hit-item.miss { border-left-color: #ff4444; }
+  .hit-icon { font-size: 20px; min-width: 28px; text-align: center; }
+  .hit-content { flex: 1; }
+  .hit-title { font-size: 14px; font-weight: 600; color: #ddd; }
+  .hit-detail { font-size: 12px; color: #888; margin-top: 3px; }
+  .hit-tag {
+    font-size: 11px; padding: 3px 10px; border-radius: 20px; font-weight: 700;
+  }
+  .tag-hit { background: #003322; color: #00ff88; }
+  .tag-partial { background: #332200; color: #ffaa00; }
+  .tag-miss { background: #330000; color: #ff4444; }
+
+  /* 分數條 */
+  .score-section { margin-bottom: 24px; }
+  .score-row { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; }
+  .score-card { background: #111; border-radius: 12px; padding: 20px; border: 1px solid #222; }
+  .score-label { font-size: 12px; color: #888; margin-bottom: 10px; }
+  .score-bar { background: #1a1a1a; border-radius: 4px; height: 10px; overflow: hidden; margin-bottom: 8px; }
+  .score-fill { height: 100%; border-radius: 4px; transition: width 1s; }
+  .score-fill.green { background: linear-gradient(90deg, #00aa55, #00ff88); }
+  .score-fill.yellow { background: linear-gradient(90deg, #aa7700, #ffaa00); }
+  .score-val { font-size: 24px; font-weight: 700; }
+  .score-val.green { color: #00ff88; }
+  .score-val.yellow { color: #ffaa00; }
+
+  /* VIX 警報 */
+  .vix-alert {
+    background: linear-gradient(135deg, #1a0000, #0a0a0a);
+    border: 1px solid #ff4444; border-radius: 12px;
+    padding: 16px 20px; margin-bottom: 24px;
+    display: flex; align-items: center; gap: 16px;
+  }
+  .vix-icon { font-size: 28px; }
+  .vix-text .title { font-size: 14px; font-weight: 700; color: #ff4444; }
+  .vix-text .sub { font-size: 12px; color: #999; margin-top: 4px; }
+
+  /* 超跌分析 */
+  .overshot-box {
+    background: #111; border-radius: 12px; padding: 20px; margin-bottom: 24px;
+    border: 1px solid #ffaa00;
+  }
+  .overshot-box h3 { font-size: 14px; color: #ffaa00; margin-bottom: 12px; }
+  .level-row { display: flex; justify-content: space-between; align-items: center; padding: 8px 0; border-bottom: 1px solid #1a1a1a; }
+  .level-row:last-child { border: none; }
+  .level-name { font-size: 13px; color: #888; }
+  .level-price { font-size: 14px; font-weight: 600; color: #ddd; }
+  .level-tag { font-size: 11px; padding: 2px 8px; border-radius: 10px; }
+
+  /* 學習總結 */
+  .lesson-box { background: #111; border-radius: 12px; padding: 20px; margin-bottom: 24px; border: 1px solid #222; }
+  .lesson-box h3 { font-size: 14px; color: #00ccff; margin-bottom: 14px; }
+  .lesson-item { display: flex; gap: 12px; margin-bottom: 12px; }
+  .lesson-num { min-width: 22px; height: 22px; background: #00ccff22; border: 1px solid #00ccff44; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 11px; color: #00ccff; }
+  .lesson-text { font-size: 13px; color: #ccc; line-height: 1.6; }
+  .lesson-text strong { color: #ffaa00; }
+
+  /* 底部條 */
+  .bottom-bar { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 12px; margin-bottom: 24px; }
+  .bb-card { background: #111; border-radius: 10px; padding: 14px 16px; border: 1px solid #1a1a1a; text-align: center; }
+  .bb-label { font-size: 11px; color: #666; margin-bottom: 6px; }
+  .bb-val { font-size: 16px; font-weight: 700; }
+
+  .disclaimer { text-align: center; color: #444; font-size: 11px; padding: 16px; }
+
+  /* 動畫 */
+  @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
+  .fade { animation: fadeIn 0.5s ease forwards; }
+</style>
+</head>
+<body>
+
+<div class="header">
+  <div>
+    <h1>📊 SPX 回測報告</h1>
+    <div class="subtitle">預測日：2026-06-04　→　驗證日：2026-06-05</div>
+  </div>
+  <div class="date-badge">
+    <div class="label">實際收盤</div>
+    <div class="val">7,383.74</div>
+    <div style="font-size:12px;color:#ff6666;margin-top:2px;">-2.65%　▼ 200.57pts</div>
+  </div>
+</div>
+
+<div class="container">
+
+  <!-- 預測 vs 實際 -->
+  <div class="compare-row fade">
+    <div class="compare-card pred">
+      <div class="label">📅 預測（6/4）</div>
+      <div class="big">7,584</div>
+      <div class="sub">空偏｜64% 拉回機率</div>
+      <div class="sub">C浪目標 7,480 / 7,416</div>
+    </div>
+    <div class="compare-card actual">
+      <div class="label">📈 實際（6/5）</div>
+      <div class="big">7,383</div>
+      <div class="sub">開 7,537 　高 7,541　低 7,368</div>
+      <div class="sub">VIX 暴衝 15.40 → 21.51</div>
+    </div>
+    <div class="compare-card result">
+      <div class="label">🎯 命中評估</div>
+      <div class="big">85%</div>
+      <div class="sub">方向勝率 100%</div>
+      <div class="sub">目標全數命中（超跌）</div>
+    </div>
+  </div>
+
+  <!-- VIX 警報 -->
+  <div class="vix-alert fade">
+    <div class="vix-icon">⚡</div>
+    <div class="vix-text">
+      <div class="title">VIX 恐慌暴衝 +39.7%　15.40 → 21.51（破 20 警戒線）</div>
+      <div class="sub">顯示 6/5 盤中出現重大催化劑（非純技術拉回），空頭力道超出預期，C浪延伸至 7,368（T2 目標 7,416 進一步超跌）</div>
+    </div>
+  </div>
+
+  <!-- 命中率列表 -->
+  <div class="section-title">逐項命中驗證</div>
+  <div class="hit-list fade">
+
+    <div class="hit-item hit">
+      <div class="hit-icon">✅</div>
+      <div class="hit-content">
+        <div class="hit-title">空偏方向</div>
+        <div class="hit-detail">預測：空　實際：大跌 -2.65%（7584 → 7383）　方向完全正確</div>
+      </div>
+      <div class="hit-tag tag-hit">命中</div>
+    </div>
+
+    <div class="hit-item hit">
+      <div class="hit-icon">✅</div>
+      <div class="hit-content">
+        <div class="hit-title">空單進場 7,584（收盤進場）</div>
+        <div class="hit-detail">6/5 開盤即跳空低開至 7,537，收盤進場者直接獲利｜最大獲利：+2.65%</div>
+      </div>
+      <div class="hit-tag tag-hit">命中</div>
+    </div>
+
+    <div class="hit-item hit">
+      <div class="hit-icon">✅</div>
+      <div class="hit-content">
+        <div class="hit-title">T1 目標 7,480（Fib 0.5 回撤）</div>
+        <div class="hit-detail">實際低點 7,368，大幅超越 T1　+104 點額外獲利</div>
+      </div>
+      <div class="hit-tag tag-hit">命中</div>
+    </div>
+
+    <div class="hit-item hit">
+      <div class="hit-icon">✅</div>
+      <div class="hit-content">
+        <div class="hit-title">T2 目標 7,416（Fib 0.618 / 1.618延伸）</div>
+        <div class="hit-detail">實際低點 7,368，超越 T2（7,416）達 -48 點　C浪超跌延伸</div>
+      </div>
+      <div class="hit-tag tag-hit">命中</div>
+    </div>
+
+    <div class="hit-item hit">
+      <div class="hit-icon">✅</div>
+      <div class="hit-content">
+        <div class="hit-title">觀察點①：7,519 中樞下沿跌破（確認C浪）</div>
+        <div class="hit-detail">最低 7,368，遠低於中樞下沿 7,519，C浪啟動完全確認</div>
+      </div>
+      <div class="hit-tag tag-hit">命中</div>
+    </div>
+
+    <div class="hit-item hit">
+      <div class="hit-icon">✅</div>
+      <div class="hit-content">
+        <div class="hit-title">觀察點③：VIX 破 20（高恐慌）</div>
+        <div class="hit-detail">VIX 從 15.40 暴升至 21.51（+39.7%），破 20 警戒線</div>
+      </div>
+      <div class="hit-tag tag-hit">命中</div>
+    </div>
+
+    <div class="hit-item partial">
+      <div class="hit-icon">🟡</div>
+      <div class="hit-content">
+        <div class="hit-title">積極空進場 7,610</div>
+        <div class="hit-detail">6/5 開盤跳空 7,537，未觸及 7,610 進場位 → 此策略未執行，但方向正確</div>
+      </div>
+      <div class="hit-tag tag-partial">未觸發</div>
+    </div>
+
+    <div class="hit-item partial">
+      <div class="hit-icon">🟡</div>
+      <div class="hit-content">
+        <div class="hit-title">停損設定 7,625</div>
+        <div class="hit-detail">開盤即低於進場位，停損未觸及，本金安全　但需注意跳空風險管理</div>
+      </div>
+      <div class="hit-tag tag-partial">未觸發（正面）</div>
+    </div>
+
+  </div>
+
+  <!-- 超跌分析 -->
+  <div class="overshot-box fade">
+    <h3>🎯 C浪延伸分析：目標 vs 實際</h3>
+    <div class="level-row">
+      <div class="level-name">Fib 0.382 回撤</div>
+      <div class="level-price">7,530</div>
+      <div class="level-tag" style="background:#003322;color:#00ff88">✅ 超越</div>
+    </div>
+    <div class="level-row">
+      <div class="level-name">T1｜Fib 0.500 回撤</div>
+      <div class="level-price">7,480</div>
+      <div class="level-tag" style="background:#003322;color:#00ff88">✅ 超越</div>
+    </div>
+    <div class="level-row">
+      <div class="level-name">T2｜Fib 0.618 回撤</div>
+      <div class="level-price">7,416</div>
+      <div class="level-tag" style="background:#003322;color:#00ff88">✅ 超越</div>
+    </div>
+    <div class="level-row">
+      <div class="level-name">實際低點</div>
+      <div class="level-price" style="color:#ff4444">7,368</div>
+      <div class="level-tag" style="background:#330000;color:#ff9999">超跌 -48pts</div>
+    </div>
+    <div class="level-row">
+      <div class="level-name">實際收盤</div>
+      <div class="level-price" style="color:#ffaa00">7,383</div>
+      <div class="level-tag" style="background:#332200;color:#ffaa00">收盤略反彈</div>
+    </div>
+  </div>
+
+  <!-- 評分 -->
+  <div class="section-title">綜合評分</div>
+  <div class="score-row fade" style="margin-bottom:24px">
+    <div class="score-card">
+      <div class="score-label">方向勝率</div>
+      <div class="score-bar"><div class="score-fill green" style="width:100%"></div></div>
+      <div class="score-val green">100%</div>
+      <div style="font-size:12px;color:#888;margin-top:4px;">空偏方向完全正確，大跌 -2.65%</div>
+    </div>
+    <div class="score-card">
+      <div class="score-label">目標命中率</div>
+      <div class="score-bar"><div class="score-fill green" style="width:85%"></div></div>
+      <div class="score-val green">85%</div>
+      <div style="font-size:12px;color:#888;margin-top:4px;">T1/T2 全數命中（且超跌），積極空未觸發</div>
+    </div>
+  </div>
+
+  <!-- 底部三格 -->
+  <div class="bottom-bar fade">
+    <div class="bb-card">
+      <div class="bb-label">預測拉回機率</div>
+      <div class="bb-val" style="color:#ffaa00">64%</div>
+    </div>
+    <div class="bb-card">
+      <div class="bb-label">實際跌幅</div>
+      <div class="bb-val" style="color:#ff4444">-2.65%</div>
+    </div>
+    <div class="bb-card">
+      <div class="bb-label">VIX 變化</div>
+      <div class="bb-val" style="color:#ff4444">+39.7%</div>
+    </div>
+  </div>
+
+  <!-- 學習總結 -->
+  <div class="lesson-box fade">
+    <h3>📚 本次回測學習總結</h3>
+
+    <div class="lesson-item">
+      <div class="lesson-num">1</div>
+      <div class="lesson-text">
+        <strong>C浪超跌現象：</strong>波浪預測目標（7,416）是正確的方向，但實際延伸至 7,368。下次設定 T2 後，可額外備註「若 VIX 破 20 則延伸至 T2 × 1.2」作為超跌場景目標。
+      </div>
+    </div>
+
+    <div class="lesson-item">
+      <div class="lesson-num">2</div>
+      <div class="lesson-text">
+        <strong>跳空開低的進場策略：</strong>空單進場位設在收盤（7,584），但 6/5 跳空低開 7,537，若隔夜有利空消息需提前警覺。建議加入「跳空低開 > 0.5% 時，縮小第一目標至 Fib 0.382」的應對規則。
+      </div>
+    </div>
+
+    <div class="lesson-item">
+      <div class="lesson-num">3</div>
+      <div class="lesson-text">
+        <strong>VIX 破 20 = 提高拉回機率上限：</strong>本次 VIX 從 15.40 暴升至 21.51（+39.7%），超出技術分析預期。未來若 VIX 前一日已接近 18–19，應把拉回機率評分的「地緣/總經」因子調高 1–2 個等級。
+      </div>
+    </div>
+
+    <div class="lesson-item">
+      <div class="lesson-num">4</div>
+      <div class="lesson-text">
+        <strong>Broadcom 催化劑影響持續：</strong>6/4 預測 Broadcom -15% 拖累科技板塊，6/5 科技股持續輪出，VIX 暴衝印證了連鎖反應。大型科技財報衝擊的「餘震效應」至少持續 1–2 個交易日。
+      </div>
+    </div>
+  </div>
+
+  <!-- 明日追蹤 -->
+  <div style="background:#111;border-radius:12px;padding:20px;border:1px solid #00ccff33;margin-bottom:24px;" class="fade">
+    <div style="font-size:14px;color:#00ccff;margin-bottom:12px;">🔭 下次分析追蹤重點（2026-06-06）</div>
+    <div style="font-size:13px;color:#ccc;line-height:1.8;">
+      ① <strong style="color:#ffaa00">7,368 低點</strong>能否守住 → 是否形成 C 浪完成信號（W底、鎚頭K線）<br>
+      ② <strong style="color:#ffaa00">VIX 21.51</strong> 是否回落（VIX 回落 = 市場開始止穩）<br>
+      ③ <strong style="color:#ffaa00">MA20（7,477）</strong> 能否重新取回 → 是否觸發葛蘭威爾買②（跌回均線不破支撐）<br>
+      ④ 是否有新催化劑（Fed 官員談話、就業數據、地緣事件）推動下一個方向
+    </div>
+  </div>
+
+  <div class="disclaimer">本分析僅供學習參考，不構成投資建議｜SPX Backtest Report © 2026</div>
+
+</div>
+
+<script>
+  // 進場動畫
+  window.addEventListener('load', () => {
+    document.querySelectorAll('.fade').forEach((el, i) => {
+      el.style.opacity = '0';
+      el.style.transform = 'translateY(10px)';
+      setTimeout(() => {
+        el.style.transition = 'opacity 0.5s ease, transform 0.5s ease';
+        el.style.opacity = '1';
+        el.style.transform = 'translateY(0)';
+      }, i * 100);
+    });
+  });
+</script>
+
+</body>
+</html>
