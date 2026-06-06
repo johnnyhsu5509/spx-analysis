@@ -1,33 +1,33 @@
-{
-  "trade_date": "2026-06-04",
-  "close": 7584.31,
-  "change_pct": 0.41,
-  "vix": 15.40,
-  "pullback_prob": 64,
-  "rating": "中高風險",
+﻿{
+  "trade_date": "2026-06-05",
+  "close": 7383.74,
+  "change_pct": -2.64,
+  "vix": 21.51,
+  "pullback_prob": 47,
+  "rating": "中性",
   "predictions": {
-    "short_bias": "空",
-    "key_resistance": [7598, 7610, 7640],
-    "key_support": [7560, 7519, 7480, 7416],
+    "short_bias": "中性（反彈偏多）",
+    "key_resistance": [7480, 7519, 7546, 7610],
+    "key_support": [7368, 7358, 7299, 7156],
     "fib_targets": {
-      "r382": 7530,
-      "r500": 7480,
-      "r618": 7416
+      "r382": 7418,
+      "r500": 7358,
+      "r618": 7299
     },
-    "zhongshu": {"upper": 7610, "lower": 7519},
-    "elliott": "B浪末端完成（7516→7584），C浪下跌啟動中，目標7480/7416",
+    "zhongshu": {"upper": 7541, "lower": 7368},
+    "elliott": "②浪ABC完成（C浪收7384，Fib0.5=7358精準觸及），③浪上漲準備中，目標8200-8400",
     "strategies": {
-      "short_preferred": {"entry": 7584, "stop": 7625, "t1": 7480, "t2": 7416},
-      "aggressive_short": {"entry": 7610, "stop": 7645, "t1": 7480, "t2": 7416},
-      "long_on_dip": {"entry": 7480, "stop": 7416, "t1": 7560, "t2": 7610},
-      "breakout_long": {"entry": 7645, "stop": 7598, "t1": 7700, "t2": 7780}
+      "bounce_long": {"entry": 7383, "stop": 7300, "t1": 7480, "t2": 7546},
+      "confirm_long": {"entry": 7420, "stop": 7355, "t1": 7519, "t2": 7580},
+      "breakdown_short": {"entry": 7355, "stop": 7420, "t1": 7299, "t2": 7156},
+      "breakout_long": {"entry": 7520, "stop": 7455, "t1": 7609, "t2": 7700}
     },
     "watch_points": [
-      "7519中樞下沿是否跌破（確認C浪啟動）",
-      "MACD柱狀體是否持續擴大（空頭動能確認）",
-      "科技股是否繼續輪出（Broadcom -15%後是否蔓延）"
+      "7368低點能否守住（底分型確認）",
+      "VIX 21.51 是否回落19以下",
+      "MA20（7480）能否重新取回"
     ]
   },
-  "catalysts": ["Broadcom財報 -15%（拖累科技板塊）", "道指創ATH 51561（板塊輪動）", "ES期貨盤前 -0.10%（7550支撐測試）", "MACD死叉擴大（空頭動能持續）"],
+  "catalysts": ["Broadcom AI展望未上調→半導體崩跌", "Nasdaq -4%（最大跌幅自2025關稅）", "5月就業超強→10Y殖利率4.54%", "ES盤前 -0.31%"],
   "dashboard_url": "https://johnnyhsu5509.github.io/spx-analysis/"
 }
