@@ -1,33 +1,32 @@
 ﻿{
   "trade_date": "2026-06-08",
-  "close": 7383.74,
-  "change_pct": -2.64,
-  "vix": 21.51,
-  "pullback_prob": 45,
-  "rating": "中性偏多",
+  "close": 7405.73,
+  "change_pct": 0.30,
+  "vix": 18.92,
+  "pullback_prob": 40,
+  "rating": "偏多",
   "predictions": {
-    "short_bias": "中性偏多（超賣反彈首選）",
-    "key_resistance": [7420, 7480, 7519, 7546],
-    "key_support": [7368, 7358, 7299, 7156],
+    "short_bias": "偏多（③浪醞釀，等MA20確認）",
+    "key_resistance": [7466, 7480, 7507, 7519, 7609],
+    "key_support": [7395, 7368, 7358, 7175],
     "fib_targets": {
-      "r382": 7418,
-      "r500": 7358,
-      "r618": 7299
+      "wave3_short": 7677,
+      "wave3_long": 8178
     },
-    "zhongshu": {"upper": 7541, "lower": 7368},
-    "elliott": "②浪Fib0.5=7358精準觸及，底分型確認後③浪目標8200-8400",
+    "zhongshu": {"upper": 7466, "lower": 7395},
+    "elliott": "②浪完成(7368)，③浪啟動中，a=+98，b=-61，c待突破7466→7519",
     "strategies": {
-      "bounce_long": {"entry": 7383, "stop": 7300, "t1": 7480, "t2": 7546},
-      "confirm_long": {"entry": 7420, "stop": 7355, "t1": 7519, "t2": 7580},
-      "breakdown_short": {"entry": 7355, "stop": 7420, "t1": 7299, "t2": 7156},
-      "breakout_long": {"entry": 7520, "stop": 7455, "t1": 7609, "t2": 7700}
+      "breakout_long": {"entry": 7480, "stop": 7420, "t1": 7519, "t2": 7609},
+      "hold_long": {"entry": 7405, "stop": 7390, "t1": 7480, "t2": 7519},
+      "breakdown_short": {"entry": 7365, "stop": 7420, "t1": 7299, "t2": 7175},
+      "wave3_long": {"entry": 7520, "stop": 7455, "t1": 7677, "t2": 8178}
     },
     "watch_points": [
-      "7368日低能否守住（底分型確認）",
-      "VIX 21.51 是否回落19以下",
-      "MACD柱狀-21.50是否開始收窄"
+      "收復MA20（7480）+ 量能>4B = ③浪確認",
+      "量能是否放大（連三日低量）",
+      "MACD柱-29.25是否開始收窄"
     ]
   },
-  "catalysts": ["半導體崩跌餘波（Broadcom/Marvell/Micron）", "10Y殖利率4.54%持壓", "KD K=5.99極度超賣反彈壓力", "預測市場55%上漲機率", "週末無新利空"],
+  "catalysts": ["Micron +10%、Marvell +9%（加入S&P500）晶片反彈", "Amazon-Corning光纖協議", "ES盤前+0.71%（AI熱情重燃）", "伊美停火脆弱（地緣未消）", "MACD柱-29.25持續惡化"],
   "dashboard_url": "https://johnnyhsu5509.github.io/spx-analysis/"
 }
