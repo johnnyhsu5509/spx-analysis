@@ -28,9 +28,17 @@ description: |
 
 ## 每日例行：完整流程（依序完成，不可跳過）
 
+### 路徑說明（跨電腦通用）
+
+本系統的 repo 為 `https://github.com/johnnyhsu5509/spx-analysis`。
+- 主力機（Johnny 桌機）clone 位置：`D:\LICHUNG_Agent\STOCK\spx-gh\`
+- 其它電腦：先找本機 clone 位置（搜尋 `spx-analysis` 資料夾，內含 `docs/`、`scripts/`）；找不到就先 `git clone`
+- 下文 `{repo}` 代表 clone 根目錄；腳本一律在 `{repo}\scripts\`，輸出 txt 也在同資料夾
+- 開始工作前先 `git pull` 確保最新；推送即同步所有電腦
+
 ### Step 0 — 讀取上次預測
 
-從 `D:\LICHUNG_Agent\STOCK\spx-gh\docs\last_analysis.json` 讀取上次分析的：
+從 `{repo}\docs\last_analysis.json` 讀取上次分析的：
 - 拉回機率、評級
 - 關鍵支撐/阻力位
 - 策略（進場/停損/目標）
@@ -39,7 +47,7 @@ description: |
 
 ### Step 1 — 用 Python 抓取最新實際數據（不用 web search 抓價格）
 
-執行 `D:\LICHUNG_Agent\STOCK\SPX\fetch_today.py`：
+執行 `{repo}\scripts\fetch_today.py`：
 - yfinance 抓 ^GSPC、^VIX（300天，供 MA200）
 - 計算 MA5/20/50/200、RSI(14)、MACD、布林帶、KD
 - 輸出到 `today_data.txt`（**禁止 print 中文**，cp950 會亂碼，一律寫 txt 後用 Read 讀）
@@ -135,10 +143,9 @@ description: |
 
 檔名與推送：
 ```
-本機：D:\LICHUNG_Agent\STOCK\SPX\spx-daily-YYYYMMDD.html
-複製：D:\LICHUNG_Agent\STOCK\spx-gh\docs\spx-daily-YYYYMMDD.html
-同時覆蓋：docs\index.html
-更新：docs\last_analysis.json（含本次全部預測，供明天回測）
+產出：{repo}\docs\spx-daily-YYYYMMDD.html
+同時覆蓋：{repo}\docs\index.html
+更新：{repo}\docs\last_analysis.json（含本次全部預測，供明天回測）
 git add + commit + push（PowerShell 用分號串接，不能用 &&）
 ```
 
@@ -187,7 +194,7 @@ git add + commit + push（PowerShell 用分號串接，不能用 &&）
 
 ### 模式一：期貨確認（觸發詞：「期貨確認」「看一下期貨」「ES怎樣」）
 
-1. 執行 `D:\LICHUNG_Agent\STOCK\SPX\check_es.py` → Read `es_check.txt`
+1. 執行 `{repo}\scripts\check_es.py` → Read 同資料夾 `es_check.txt`
 2. 判斷標準：
    - ES ≥ +0.3% → 偏多開盤
    - ES ≤ -0.3% → 偏空開盤
@@ -204,7 +211,7 @@ git add + commit + push（PowerShell 用分號串接，不能用 &&）
 
 ⚠️ 需在台灣時間 22:00 後執行（第一根30分K收完）。
 
-1. 執行 `D:\LICHUNG_Agent\STOCK\SPX\check_open30.py` → Read `open30_check.txt`
+1. 執行 `{repo}\scripts\check_open30.py` → Read 同資料夾 `open30_check.txt`
 2. 判斷第一根 30分K：
    - 方向（UP/DOWN）+ 收盤位置 vs 開盤
    - 量能（與近日同時段比較）

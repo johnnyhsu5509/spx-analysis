@@ -1,0 +1,3 @@
+scripts/*.txt
+!scripts/requirements.txt
+__pycache__/
