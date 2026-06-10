@@ -1,0 +1,368 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>SPX 回測報告 | 2026-06-09</title>
+<style>
+  *{margin:0;padding:0;box-sizing:border-box;}
+  body{background:#0a0a0a;color:#e0e0e0;font-family:'Segoe UI',sans-serif;}
+
+  .header{background:linear-gradient(135deg,#0a0a0a,#1a0000);border-bottom:2px solid #ff4444;padding:22px 30px;display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:12px;}
+  .header h1{font-size:21px;color:#ff4444;letter-spacing:2px;}
+  .header .sub{font-size:12px;color:#666;margin-top:4px;}
+  .badge{background:#1a0000;border:1px solid #ff4444;border-radius:10px;padding:10px 18px;text-align:center;}
+  .badge .label{font-size:11px;color:#888;}
+  .badge .val{font-size:26px;font-weight:700;color:#ff4444;}
+  .badge .sub2{font-size:12px;color:#ff6666;margin-top:2px;}
+
+  .container{max-width:1100px;margin:0 auto;padding:22px 20px;}
+
+  /* 緊急警報 */
+  .alert-top{background:linear-gradient(135deg,#1a0000,#0a0a0a);border:2px solid #ff4444;border-radius:14px;padding:20px 24px;margin-bottom:22px;display:flex;gap:18px;align-items:flex-start;}
+  .alert-top .icon{font-size:32px;}
+  .alert-top .txt h2{font-size:16px;color:#ff4444;margin-bottom:8px;}
+  .alert-top .txt p{font-size:13px;color:#ccc;line-height:1.8;}
+
+  /* 對比卡 */
+  .compare-row{display:grid;grid-template-columns:1fr 1fr 1fr;gap:14px;margin-bottom:22px;}
+  .ccard{background:#111;border-radius:12px;padding:20px;border:1px solid #222;text-align:center;}
+  .ccard.pred{border-color:#ffaa0066;}
+  .ccard.actual{border-color:#ff444466;}
+  .ccard.score{border-color:#00ccff66;}
+  .ccard .clabel{font-size:11px;color:#666;text-transform:uppercase;letter-spacing:1px;margin-bottom:8px;}
+  .ccard .cbig{font-size:28px;font-weight:700;}
+  .pred .cbig{color:#ffaa00;}
+  .actual .cbig{color:#ff4444;}
+  .score .cbig{color:#00ccff;}
+  .ccard .csub{font-size:12px;color:#888;margin-top:6px;line-height:1.7;}
+
+  .section-title{font-size:12px;color:#666;text-transform:uppercase;letter-spacing:2px;margin-bottom:12px;padding-bottom:6px;border-bottom:1px solid #1a1a1a;}
+
+  /* 波浪重評 */
+  .wave-box{background:#111;border-radius:12px;padding:20px;margin-bottom:22px;border:2px solid #ffaa00;}
+  .wave-box h3{font-size:15px;color:#ffaa00;margin-bottom:14px;}
+  .wave-scenario{display:grid;grid-template-columns:1fr 1fr 1fr;gap:12px;}
+  .ws{background:#1a1a0a;border-radius:10px;padding:14px;border:1px solid #ffaa0033;}
+  .ws .wt{font-size:13px;font-weight:700;color:#ffaa00;margin-bottom:8px;}
+  .ws .wi{font-size:12px;color:#aaa;line-height:1.7;}
+  .ws.likely{border-color:#ffaa00;background:#221a00;}
+  .ws.risky{border-color:#ff444444;background:#1a0000;}
+
+  /* 命中列表 */
+  .hit-list{display:flex;flex-direction:column;gap:10px;margin-bottom:22px;}
+  .hit-item{background:#111;border-radius:10px;padding:14px 18px;display:flex;align-items:center;gap:14px;border-left:4px solid #333;}
+  .hit-item.hit{border-left-color:#00ff88;}
+  .hit-item.partial{border-left-color:#ffaa00;}
+  .hit-item.miss{border-left-color:#ff4444;}
+  .hit-icon{font-size:20px;min-width:28px;text-align:center;}
+  .hit-content{flex:1;}
+  .hit-title{font-size:14px;font-weight:600;color:#ddd;}
+  .hit-detail{font-size:12px;color:#888;margin-top:3px;}
+  .hit-tag{font-size:11px;padding:3px 10px;border-radius:20px;font-weight:700;white-space:nowrap;}
+  .tag-hit{background:#003322;color:#00ff88;}
+  .tag-partial{background:#332200;color:#ffaa00;}
+  .tag-miss{background:#330000;color:#ff4444;}
+
+  /* 評分 */
+  .score-row{display:grid;grid-template-columns:1fr 1fr;gap:14px;margin-bottom:22px;}
+  .score-card{background:#111;border-radius:12px;padding:20px;border:1px solid #222;}
+  .slabel{font-size:12px;color:#888;margin-bottom:10px;}
+  .score-bar{background:#1a1a1a;border-radius:4px;height:10px;overflow:hidden;margin-bottom:8px;}
+  .score-fill{height:100%;border-radius:4px;}
+  .fill-red{background:linear-gradient(90deg,#880000,#ff4444);}
+  .fill-yellow{background:linear-gradient(90deg,#aa7700,#ffaa00);}
+  .score-val{font-size:26px;font-weight:700;}
+  .red{color:#ff4444;} .yellow{color:#ffaa00;} .green{color:#00ff88;}
+
+  /* 三大改進建議 */
+  .improve-box{background:#111;border-radius:14px;padding:22px;margin-bottom:22px;border:1px solid #00ccff33;}
+  .improve-box h3{font-size:15px;color:#00ccff;margin-bottom:16px;}
+  .improve-item{background:#0a0a1a;border-radius:10px;padding:16px;margin-bottom:12px;border-left:4px solid #00ccff;}
+  .improve-item:last-child{margin:0;}
+  .improve-item .it{font-size:14px;font-weight:700;color:#00ccff;margin-bottom:8px;}
+  .improve-item .id{font-size:13px;color:#aaa;line-height:1.7;}
+  .improve-item .rule{background:#001122;border:1px solid #00ccff44;border-radius:8px;padding:10px 14px;margin-top:10px;font-size:13px;color:#00ccff;}
+
+  /* 底部 */
+  .bottom-bar{display:grid;grid-template-columns:repeat(4,1fr);gap:12px;margin-bottom:22px;}
+  .bb{background:#111;border-radius:10px;padding:14px 16px;border:1px solid #1a1a1a;text-align:center;}
+  .bb .bl{font-size:11px;color:#666;margin-bottom:6px;}
+  .bb .bv{font-size:18px;font-weight:700;}
+
+  /* 下次追蹤 */
+  .next-box{background:#111;border-radius:12px;padding:20px;margin-bottom:22px;border:1px solid #ffaa0033;}
+  .next-box h3{font-size:14px;color:#ffaa00;margin-bottom:12px;}
+  .ni{display:flex;gap:12px;margin-bottom:10px;font-size:13px;color:#ccc;}
+  .nn{min-width:22px;height:22px;background:#332200;border:1px solid #ffaa0044;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:11px;color:#ffaa00;}
+
+  .disclaimer{text-align:center;color:#444;font-size:11px;padding:16px;}
+
+  @keyframes fadeUp{from{opacity:0;transform:translateY(10px);}to{opacity:1;transform:translateY(0);}}
+  .fade{animation:fadeUp 0.5s ease forwards;opacity:0;}
+</style>
+</head>
+<body>
+
+<div class="header">
+  <div>
+    <h1>⚠️ SPX 回測報告（含改進建議）</h1>
+    <div class="sub">預測日：2026-06-08　→　驗證日：2026-06-09</div>
+  </div>
+  <div class="badge">
+    <div class="label">實際收盤</div>
+    <div class="val">7,386.65</div>
+    <div class="sub2">日高 7,483 → 日低 7,237　VIX 19.87↑</div>
+  </div>
+</div>
+
+<div class="container">
+
+  <!-- 緊急警報 -->
+  <div class="alert-top fade">
+    <div class="icon">🚨</div>
+    <div class="txt">
+      <h2>②浪底部被跌破！波浪結構需重新評估</h2>
+      <p>
+        6/9 日低 <strong style="color:#ff4444">7,237</strong>，已跌破前②浪低點 7,368（超跌 -131pts）。<br>
+        觸發原因：Trump 在停火期間突然威脅「可能重啟伊朗軍事打擊」→ 市場恐慌拋售。<br>
+        分析中已標注「伊美停火脆弱」+ 「MACD -29.25 惡化」兩個警示，但偏多評級壓過了這兩個信號。<br>
+        <strong style="color:#ffaa00">本次最核心教訓：警示信號被正確識別，但最終評級未能如實反映風險。</strong>
+      </p>
+    </div>
+  </div>
+
+  <!-- 對比卡 -->
+  <div class="compare-row fade" style="animation-delay:0.05s">
+    <div class="ccard pred">
+      <div class="clabel">📅 預測（6/8 分析）</div>
+      <div class="cbig">偏多 40%</div>
+      <div class="csub">拉回機率 40%（偏多）<br>MA20（7,480）突破=③浪確認<br>停損 7,420｜目標 7,519</div>
+    </div>
+    <div class="ccard actual">
+      <div class="clabel">📈 實際（6/9）</div>
+      <div class="cbig">7,386</div>
+      <div class="csub">開 7,438　高 7,483（觸MA20！）<br>低 <strong>7,237</strong>（跌破②浪底！）<br>收 7,386（-0.26%）　VIX 19.87</div>
+    </div>
+    <div class="ccard score">
+      <div class="clabel">🎯 命中評估</div>
+      <div class="cbig">35%</div>
+      <div class="csub">方向勝率 0%<br>警示信號命中 100%<br>停損策略失效（7,237爆破）</div>
+    </div>
+  </div>
+
+  <!-- 命中列表 -->
+  <div class="section-title">逐項命中驗證</div>
+  <div class="hit-list fade" style="animation-delay:0.1s">
+
+    <div class="hit-item miss">
+      <div class="hit-icon">❌</div>
+      <div class="hit-content">
+        <div class="hit-title">方向判斷：偏多（40%下行）</div>
+        <div class="hit-detail">實際盤中暴跌至 7,237（-2.27%）、收盤 7,386（-0.26%）— 方向完全錯誤</div>
+      </div>
+      <div class="hit-tag tag-miss">未命中</div>
+    </div>
+
+    <div class="hit-item partial">
+      <div class="hit-icon">🟡</div>
+      <div class="hit-content">
+        <div class="hit-title">MA20（7,480）突破進場條件</div>
+        <div class="hit-detail">日高 7,483 確實觸及 7,480，但量縮（2.98B→3.50B仍不足）+ 地緣爆發 → 假突破，隨即暴跌 -250pts</div>
+      </div>
+      <div class="hit-tag tag-partial">假突破</div>
+    </div>
+
+    <div class="hit-item miss">
+      <div class="hit-icon">❌</div>
+      <div class="hit-content">
+        <div class="hit-title">停損 7,420（突破做多策略）</div>
+        <div class="hit-detail">若以7,480進場：最低7,237，虧損 -243pts（-3.2%）。停損 7,420 完全無法保護</div>
+      </div>
+      <div class="hit-tag tag-miss">停損爆破</div>
+    </div>
+
+    <div class="hit-item hit">
+      <div class="hit-icon">✅</div>
+      <div class="hit-content">
+        <div class="hit-title">警示①：MACD 柱 -29.25 惡化（分析中已標注）</div>
+        <div class="hit-detail">空頭動能確實未退，6/9 繼續惡化，此警示信號完全正確</div>
+      </div>
+      <div class="hit-tag tag-hit">警示命中</div>
+    </div>
+
+    <div class="hit-item hit">
+      <div class="hit-icon">✅</div>
+      <div class="hit-content">
+        <div class="hit-title">警示②：伊美停火「脆弱」，地緣風險未消（分析中已標注）</div>
+        <div class="hit-detail">Trump 威脅重啟伊朗軍事打擊 → 直接引爆 -2.27% 盤中暴跌，警示完全正確</div>
+      </div>
+      <div class="hit-tag tag-hit">警示命中</div>
+    </div>
+
+    <div class="hit-item miss">
+      <div class="hit-icon">❌</div>
+      <div class="hit-content">
+        <div class="hit-title">ES 盤前 +0.71% → 看多信號</div>
+        <div class="hit-detail">盤前樂觀信號在盤中被地緣新聞完全逆轉，盤前期貨不可作為當日方向的唯一依據</div>
+      </div>
+      <div class="hit-tag tag-miss">信號失效</div>
+    </div>
+
+    <div class="hit-item hit">
+      <div class="hit-icon">✅</div>
+      <div class="hit-content">
+        <div class="hit-title">「量縮突破不可信」規則（分析中已提醒）</div>
+        <div class="hit-detail">分析已寫出此規則，但策略仍設了突破進場。規則正確，執行層沒落實。</div>
+      </div>
+      <div class="hit-tag tag-hit">規則正確，未執行</div>
+    </div>
+
+  </div>
+
+  <!-- 評分 -->
+  <div class="section-title">綜合評分</div>
+  <div class="score-row fade" style="animation-delay:0.15s">
+    <div class="score-card">
+      <div class="slabel">方向勝率</div>
+      <div class="score-bar"><div class="score-fill fill-red" style="width:0%"></div></div>
+      <div class="score-val red">0%</div>
+      <div style="font-size:12px;color:#888;margin-top:4px;">偏多方向錯誤，實際盤中暴跌 -2.27%</div>
+    </div>
+    <div class="score-card">
+      <div class="slabel">警示信號命中率</div>
+      <div class="score-bar"><div class="score-fill" style="width:100%;background:linear-gradient(90deg,#00aa55,#00ff88)"></div></div>
+      <div class="score-val" style="color:#00ff88">100%</div>
+      <div style="font-size:12px;color:#888;margin-top:4px;">所有警示信號全部命中，但被偏多評級壓制</div>
+    </div>
+  </div>
+
+  <!-- 底部四格 -->
+  <div class="bottom-bar fade" style="animation-delay:0.18s">
+    <div class="bb"><div class="bl">預測下行機率</div><div class="bv yellow">40%</div></div>
+    <div class="bb"><div class="bl">實際日低跌幅</div><div class="bv red">-2.27%</div></div>
+    <div class="bb"><div class="bl">②浪底超跌</div><div class="bv red">-131pts</div></div>
+    <div class="bb"><div class="bl">VIX 變化</div><div class="bv red">+5.0%↑</div></div>
+  </div>
+
+  <!-- 波浪重評 -->
+  <div class="wave-box fade" style="animation-delay:0.2s">
+    <h3>⚠️ 波浪結構重新評估（7,237跌破②浪底7,368）</h3>
+    <div class="wave-scenario">
+      <div class="ws likely">
+        <div class="wt">方案A（最可能）②浪延伸</div>
+        <div class="wi">
+          ②浪尚未完成，今日 7,237 是②浪延伸段<br>
+          Fib 0.618 = <strong>7,299</strong>（已跌破）<br>
+          Fib 0.786 = <strong>7,215</strong>（次一支撐）<br>
+          若反彈未能守住 7,368 → 繼續往 7,215<br>
+          <span style="color:#ffaa00">收盤 7,386 高於 7,368 → 仍有反轉機會</span>
+        </div>
+      </div>
+      <div class="ws">
+        <div class="wt">方案B 洗盤後③浪啟動</div>
+        <div class="wi">
+          7,237 是地緣觸發的「假跌破」洗盤<br>
+          收盤回到 7,386（高於前底7,368）<br>
+          若明日強力反彈 + 量能放大<br>
+          → ③浪可能直接啟動<br>
+          <span style="color:#666">需要收盤站上 7,480 確認</span>
+        </div>
+      </div>
+      <div class="ws risky">
+        <div class="wt">方案C 大型修正（高風險）</div>
+        <div class="wi">
+          ①浪頂部 7,609 起的修正比預期深<br>
+          Fib 1.0 = 7,108（起漲點）<br>
+          若跌破 7,108 → 重新評估大結構<br>
+          <span style="color:#ff6666">目前機率最低，需密切觀察</span>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- 三大改進建議 -->
+  <div class="improve-box fade" style="animation-delay:0.25s">
+    <h3>💡 三大系統改進建議</h3>
+
+    <div class="improve-item">
+      <div class="it">① MACD柱 &lt;-20 + 地緣風險存在 = 禁止偏多</div>
+      <div class="id">
+        本次分析同時出現兩個警示：MACD 柱 -29.25（分析已標注）+ 伊美停火「脆弱」（分析已標注）。
+        這兩個信號同時存在時，無論 RSI/KD 多麼超賣，都不應設定「偏多」評級。
+        超賣可以做「技術彈」，但不能做「方向性多頭」。
+      </div>
+      <div class="rule">
+        📌 新規則：MACD柱 &lt;-15 且 地緣事件評分 &gt;15/20 時<br>
+        → 自動將方向評級降為「中性」，移除所有突破做多策略
+      </div>
+    </div>
+
+    <div class="improve-item">
+      <div class="it">② 地緣因子：「脆弱停火」= 自動 18/20 滿分</div>
+      <div class="id">
+        原本地緣/總經佔 20%，「脆弱停火」給了約 13/20。但實際上只要存在「軍事威脅隨時可能升溫」的狀態，
+        就應該是接近滿分。一句 Trump 的話直接讓市場跌 2%+，這不是小風險。
+      </div>
+      <div class="rule">
+        📌 新規則：地緣評分標準<br>
+        • 完全穩定 → 5/20<br>
+        • 緊張但未升溫 → 12/20<br>
+        • <strong>脆弱停火 / 威脅言論 → 18/20（此次應用）</strong><br>
+        • 主動衝突 → 20/20（滿分）
+      </div>
+    </div>
+
+    <div class="improve-item">
+      <div class="it">③ 突破進場：量能是必要條件，非參考條件</div>
+      <div class="id">
+        分析已寫「量縮突破不可信」，但策略仍設「突破 7,480 進場」。
+        這造成矛盾：文字說不可信，策略卻讓人進場。
+        下次量能條件必須進入進場邏輯，而不只是文字提醒。
+      </div>
+      <div class="rule">
+        📌 新規則：突破做多必要條件（ALL 必須同時滿足）<br>
+        ✓ 價格突破關鍵均線<br>
+        ✓ 當日量能 &gt;4B（或高於5日均量）<br>
+        ✓ MACD柱縮窄（非擴大中）<br>
+        缺少任何一項 → 不進場，等待
+      </div>
+    </div>
+  </div>
+
+  <!-- 下次追蹤 -->
+  <div class="next-box fade" style="animation-delay:0.3s">
+    <h3>🔭 下次分析追蹤重點（2026-06-10）</h3>
+    <div class="ni">
+      <div class="nn">1</div>
+      <div><strong style="color:#ffaa00">7,368（前②浪底）能否守住</strong>：收盤需穩定高於 7,368，否則②浪延伸至 7,215（Fib 0.786）</div>
+    </div>
+    <div class="ni">
+      <div class="nn">2</div>
+      <div><strong style="color:#ffaa00">Trump 伊朗言論是否繼續升溫</strong>：若持續威脅 → VIX 再破 21 → 繼續下跌；若降溫 → 反彈機會</div>
+    </div>
+    <div class="ni">
+      <div class="nn">3</div>
+      <div><strong style="color:#ffaa00">MACD 柱是否開始收窄</strong>：-29.25 是關鍵，若縮至 -20 以內才考慮做多方向</div>
+    </div>
+    <div class="ni">
+      <div class="nn">4</div>
+      <div><strong style="color:#ffaa00">量能是否放大（>4B）</strong>：連四日低量，反彈無量=不可信</div>
+    </div>
+  </div>
+
+  <div class="disclaimer">本分析僅供學習參考，不構成投資建議　｜　SPX Backtest © 2026</div>
+</div>
+
+<script>
+document.querySelectorAll('.fade').forEach((el,i)=>{
+  const d=parseFloat(el.style.animationDelay||'0');
+  setTimeout(()=>{
+    el.style.transition='opacity 0.5s ease, transform 0.5s ease';
+    el.style.opacity='1';
+    el.style.transform='translateY(0)';
+  },d*1000+i*50);
+});
+</script>
+</body>
+</html>
