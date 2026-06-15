@@ -1,0 +1,82 @@
+{
+  "generated_at": "2026-06-15 11:14",
+  "date_range": "2021-10-18 ~ 2026-06-05",
+  "samples": 1163,
+  "pullback_def": "未來N日盤中低點 <= 訊號日收盤 -0.75%",
+  "base_rate": {
+    "1d": 33.53,
+    "3d": 53.57,
+    "5d": 61.65
+  },
+  "model_metrics_vs_horizon": {
+    "1d": {
+      "auc": 0.663,
+      "brier": 0.2894
+    },
+    "3d": {
+      "auc": 0.618,
+      "brier": 0.2462
+    },
+    "5d": {
+      "auc": 0.611,
+      "brier": 0.2286
+    }
+  },
+  "regime_5d_rates": {
+    "vix": {
+      "vix_16_20": {
+        "n": 390,
+        "rate": 63.08
+      },
+      "vix_ge20": {
+        "n": 409,
+        "rate": 71.15
+      },
+      "vix_lt16": {
+        "n": 364,
+        "rate": 49.45
+      }
+    },
+    "trend": {
+      "above_ma200": {
+        "n": 871,
+        "rate": 56.95
+      },
+      "below_ma200": {
+        "n": 292,
+        "rate": 75.68
+      }
+    },
+    "ext": {
+      "ma20_normal": {
+        "n": 915,
+        "rate": 59.89
+      },
+      "ma20_over3": {
+        "n": 137,
+        "rate": 60.58
+      },
+      "ma20_under3": {
+        "n": 111,
+        "rate": 77.48
+      }
+    }
+  },
+  "fetch_today_constants": {
+    "BASE_5D": 61.65,
+    "vix": {
+      "vix_16_20": 63.08,
+      "vix_ge20": 71.15,
+      "vix_lt16": 49.45
+    },
+    "trend": {
+      "above_ma200": 56.95,
+      "below_ma200": 75.68
+    },
+    "ext": {
+      "ma20_normal": 59.89,
+      "ma20_over3": 60.58,
+      "ma20_under3": 77.48
+    }
+  }
+}

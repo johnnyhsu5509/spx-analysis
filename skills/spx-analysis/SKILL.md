@@ -52,7 +52,7 @@ description: |
 - 計算 MA5/20/50/200、RSI(14)、MACD、布林帶、KD
 - 輸出到 `today_data.txt`（**禁止 print 中文**，cp950 會亂碼，一律寫 txt 後用 Read 讀）
 - 近5日 OHLCV 一併輸出，供回測比對
-- **regime 區塊**：VIX/MA200/MA20 三維分類 + 各自歷史 5D 拉回率 + 與基準率(60.43%)的超額（Step 4 客觀對照用）
+- **regime 區塊**：VIX/MA200/MA20 三維分類 + 各自歷史 5D 拉回率 + 與基準率(61.65%)的超額（Step 4 客觀對照用）
 
 新聞催化劑（地緣、Fed、財報）可另用 web search 補充，但**價格與指標一律以 Python 抓的為準**。
 
@@ -125,12 +125,12 @@ description: |
 
 ### Step 4.5 — Regime 客觀對照（第二視角，必做）
 
-讀取 `today_data.txt` 的 `regime` 區塊，與上面的主觀評分**並列呈現**。這是基於 Codex 1031 樣本回測（VIX/趨勢/MA20 三維），純客觀、與主觀六維獨立，目的是交叉驗證、避免單邊偏誤。
+讀取 `today_data.txt` 的 `regime` 區塊，與上面的主觀評分**並列呈現**。這是基於本機 `backtest.py` 1163 樣本回測（VIX/趨勢/MA20 三維），純客觀、與主觀六維獨立，目的是交叉驗證、避免單邊偏誤。
 
 呈現方式（報告與回覆都要列出）：
 ```
 主觀拉回機率：XX%（六維評分）
-客觀 regime 平均：XX%（vs 基準 60.43%，超額 ±X.Xpp）
+客觀 regime 平均：XX%（vs 基準 61.65%，超額 ±X.Xpp）
   ├ VIX：{regime} → XX.X%（±X.Xpp）
   ├ 趨勢：{regime} → XX.X%（±X.Xpp）
   └ MA20：{regime} → XX.X%（±X.Xpp）
@@ -142,9 +142,10 @@ description: |
 - regime 三維內部若彼此分歧（如 VIX 偏空但趨勢偏多）→ 視為中性，以主觀評分為主、保守看待
 
 **重要提醒（regime 的已知限制，引用時要記得）：**
-- 歷史 5D 拉回率多在 50–78%，其中 60% 左右是市場「基準率」→ 看的是**超額（vs_base）**，不是絕對值
-- regime 對 5D 較有效、1D 較弱；事件日曆類因子已證實無效，不採用
+- 歷史 5D 拉回率多在 49–78%，其中 62% 左右是市場「基準率」→ 看的是**超額（vs_base）**，不是絕對值
+- 模型鑑別力 AUC：1D=0.66（最準）、3D=0.62、5D=0.61 → **以 1D 為主決策**，5D 當結構參考；事件日曆類因子已證實無效，不採用
 - regime 是「結構傾向」不是「明日預測」，仍以白天主觀評分定方向、定倉位
+- 數字會漂移：**每季重跑 `{repo}\scripts\backtest.py`**，依產出的 `docs\regime_baseline.json` 更新 `fetch_today.py` 的 regime 常數（base rate + 各 bucket 拉回率）。回測同時輸出 AUC/Brier，可確認 regime 是否仍有鑑別力
 
 ### Step 5 — 交易策略表格（報告第三區）
 
