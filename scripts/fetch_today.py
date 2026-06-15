@@ -70,6 +70,43 @@ if not spx_close.empty:
     vix_close = raw_vix["Close"].squeeze()
     vix_val = float(vix_close.iloc[-1]) if not vix_close.empty else 0
 
+    # === Regime 分類 ===
+    # 歷史 5D 拉回率來自 Codex 回測 1031 樣本（2022-2026，定義：5日內盤中低點 <= 前收 -0.75%）
+    # 全體基準率 = 60.43%。超額 = 該 regime 拉回率 - 基準率。
+    BASE_5D = 60.43
+    ma20_v = sma(20)
+    ma200_v = sma(200)
+    ma20_ext = (close - ma20_v) / ma20_v * 100
+
+    if vix_val < 16:
+        vix_reg, vix_rate = "VIX<16（低波動）", 50.28
+    elif vix_val < 20:
+        vix_reg, vix_rate = "VIX 16-20（中波動）", 62.32
+    else:
+        vix_reg, vix_rate = "VIX>=20（高波動）", 69.39
+
+    if close >= ma200_v:
+        trend_reg, trend_rate = "SPX 在 MA200 之上（多頭結構）", 55.68
+    else:
+        trend_reg, trend_rate = "SPX 在 MA200 之下（空頭結構）", 75.40
+
+    if ma20_ext >= 3:
+        ext_reg, ext_rate = "距 MA20 +3% 以上（過度延伸）", 62.28
+    elif ma20_ext <= -3:
+        ext_reg, ext_rate = "距 MA20 -3% 以下（深跌）", 78.49
+    else:
+        ext_reg, ext_rate = "距 MA20 +/-3% 內（正常）", 58.13
+
+    regime_avg = round((vix_rate + trend_rate + ext_rate) / 3, 1)
+    regime = {
+        "base_5d_pullback": BASE_5D,
+        "vix": {"regime": vix_reg, "pullback_5d": vix_rate, "vs_base": round(vix_rate - BASE_5D, 1)},
+        "trend": {"regime": trend_reg, "pullback_5d": trend_rate, "vs_base": round(trend_rate - BASE_5D, 1)},
+        "ma20_ext": {"regime": ext_reg, "pullback_5d": ext_rate, "vs_base": round(ext_rate - BASE_5D, 1), "ext_pct": round(ma20_ext, 2)},
+        "regime_avg_5d": regime_avg,
+        "regime_avg_vs_base": round(regime_avg - BASE_5D, 1)
+    }
+
     result = {
         "trade_date": str(raw_spx.index[-1].date()),
         "close": round(close, 2),
@@ -93,6 +130,7 @@ if not spx_close.empty:
         "bb_pct": round(bb_pct, 1),
         "kd_k": round(float(k.iloc[-1]), 2),
         "kd_d": round(float(d.iloc[-1]), 2),
+        "regime": regime,
         "recent_5": recent
     }
 
