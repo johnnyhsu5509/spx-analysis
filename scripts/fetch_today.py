@@ -4,6 +4,7 @@ import os
 from datetime import datetime, timedelta
 
 OUT_DIR = os.path.dirname(os.path.abspath(__file__))
+REPO = os.path.dirname(OUT_DIR)
 
 end = datetime.today() + timedelta(days=1)
 start = end - timedelta(days=300)
@@ -71,32 +72,42 @@ if not spx_close.empty:
     vix_val = float(vix_close.iloc[-1]) if not vix_close.empty else 0
 
     # === Regime 分類 ===
-    # 歷史 5D 拉回率來自本機 backtest.py（1163 樣本，2021-2026，定義：5日內盤中低點 <= 訊號日收盤 -0.75%）
-    # 全體基準率 = 61.65%。超額 = 該 regime 拉回率 - 基準率。
-    # 數字會漂移，每季重跑 backtest.py 後依 docs/regime_baseline.json 更新此區常數。
-    BASE_5D = 61.65
+    # 歷史拉回率由 backtest.py 產出並存入 docs/regime_baseline.json，此處直接讀取。
+    # 每季重跑 backtest.py 即自動更新，無需手改本檔。缺檔時用內建 fallback。
+    # 定義：5日內盤中低點 <= 訊號日收盤 -0.75%；超額 = 該 regime 拉回率 - 全體基準率。
+    DEFAULT_C = {"BASE_5D": 61.65,
+                 "vix": {"vix_lt16": 49.45, "vix_16_20": 63.08, "vix_ge20": 71.15},
+                 "trend": {"above_ma200": 56.95, "below_ma200": 75.68},
+                 "ext": {"ma20_over3": 60.58, "ma20_normal": 59.89, "ma20_under3": 77.48}}
+    try:
+        with open(os.path.join(REPO, "docs", "regime_baseline.json"), encoding="utf-8") as bf:
+            C = json.load(bf).get("fetch_today_constants", DEFAULT_C)
+    except Exception:
+        C = DEFAULT_C
+
+    BASE_5D = C["BASE_5D"]
     ma20_v = sma(20)
     ma200_v = sma(200)
     ma20_ext = (close - ma20_v) / ma20_v * 100
 
     if vix_val < 16:
-        vix_reg, vix_rate = "VIX<16（低波動）", 49.45
+        vix_reg, vix_rate = "VIX<16（低波動）", C["vix"]["vix_lt16"]
     elif vix_val < 20:
-        vix_reg, vix_rate = "VIX 16-20（中波動）", 63.08
+        vix_reg, vix_rate = "VIX 16-20（中波動）", C["vix"]["vix_16_20"]
     else:
-        vix_reg, vix_rate = "VIX>=20（高波動）", 71.15
+        vix_reg, vix_rate = "VIX>=20（高波動）", C["vix"]["vix_ge20"]
 
     if close >= ma200_v:
-        trend_reg, trend_rate = "SPX 在 MA200 之上（多頭結構）", 56.95
+        trend_reg, trend_rate = "SPX 在 MA200 之上（多頭結構）", C["trend"]["above_ma200"]
     else:
-        trend_reg, trend_rate = "SPX 在 MA200 之下（空頭結構）", 75.68
+        trend_reg, trend_rate = "SPX 在 MA200 之下（空頭結構）", C["trend"]["below_ma200"]
 
     if ma20_ext >= 3:
-        ext_reg, ext_rate = "距 MA20 +3% 以上（過度延伸）", 60.58
+        ext_reg, ext_rate = "距 MA20 +3% 以上（過度延伸）", C["ext"]["ma20_over3"]
     elif ma20_ext <= -3:
-        ext_reg, ext_rate = "距 MA20 -3% 以下（深跌）", 77.48
+        ext_reg, ext_rate = "距 MA20 -3% 以下（深跌）", C["ext"]["ma20_under3"]
     else:
-        ext_reg, ext_rate = "距 MA20 +/-3% 內（正常）", 59.89
+        ext_reg, ext_rate = "距 MA20 +/-3% 內（正常）", C["ext"]["ma20_normal"]
 
     regime_avg = round((vix_rate + trend_rate + ext_rate) / 3, 1)
     regime = {
