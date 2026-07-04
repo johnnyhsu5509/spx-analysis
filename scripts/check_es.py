@@ -51,16 +51,43 @@ try:
 except Exception as e:
     result["es_error"] = str(e)
 
-# ---- 隱含 SPX 開盤（用現貨前收 × ES 變動近似）----
+# ---- 隱含 SPX 開盤（方案A：ES點數錨定法，基差自動抵銷，免疫季度換倉）----
 try:
     with open(os.path.join(OUT_DIR, "today_data.txt"), encoding="utf-8") as f:
-        spx_close = json.load(f)["close"]
-    if es_pct is not None:
-        result["implied_spx_open"] = {
+        td = json.load(f)
+    spx_close = td["close"]
+    spx_date = td["trade_date"]
+    est = None
+    try:
+        import pandas as pd
+        es_intra = yf.Ticker("ES=F").history(period="5d", interval="15m", prepost=True).dropna(subset=["Close"])
+        if len(es_intra):
+            anchor_ts = pd.Timestamp(spx_date).tz_localize("America/New_York") + pd.Timedelta(hours=16)
+            diffs = abs(es_intra.index - anchor_ts)
+            pos = int(diffs.argmin())
+            if diffs[pos] <= pd.Timedelta(hours=2):
+                es_anchor = float(es_intra["Close"].iloc[pos])
+                es_now = float(es_intra["Close"].iloc[-1])
+                pt_chg = es_now - es_anchor
+                est = {
+                    "approx": round(spx_close + pt_chg, 1),
+                    "spx_prev_close": spx_close,
+                    "es_at_prior_close": round(es_anchor, 2),
+                    "es_pt_chg": round(pt_chg, 2),
+                    "method": "point_anchor",
+                    "note": "方案A：ES點數錨定，基差已抵銷"
+                }
+    except Exception:
+        pass
+    if est is None and es_pct is not None:   # fallback：退回舊百分比法並標記
+        est = {
             "approx": round(spx_close * (1 + es_pct / 100), 1),
             "spx_prev_close": spx_close,
-            "note": "近似值(以ES%套現貨前收，未扣基差)"
+            "method": "pct_fallback_degraded",
+            "note": "近似值(以ES%套現貨前收，未扣基差)——錨點抓取失敗時的降級模式"
         }
+    if est is not None:
+        result["implied_spx_open"] = est
 except Exception:
     pass
 
