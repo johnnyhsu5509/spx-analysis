@@ -19,16 +19,17 @@
     {"report_date": "2026-06-30", "basis_close": 7440.43, "pullback_prob": 49, "bias": "中性偏多", "actual_date": "2026-06-30", "actual_pct": 0.79, "actual_dir": "up", "grade": "hit"},
     {"report_date": "2026-07-01", "basis_close": 7499.36, "pullback_prob": 57, "bias": "中性(不追高)", "actual_date": "2026-07-01", "actual_pct": -0.22, "actual_dir": "flat", "grade": "hit"},
     {"report_date": "2026-07-02", "basis_close": 7483.23, "pullback_prob": 62, "bias": "中性偏空", "actual_date": "2026-07-02", "actual_pct": 0.00, "actual_dir": "flat", "grade": "half"},
-    {"report_date": "2026-07-03", "basis_close": 7483.24, "pullback_prob": 60, "bias": "中性偏空", "actual_date": "2026-07-06(pending)", "actual_pct": null, "actual_dir": null, "grade": "pending"}
+    {"report_date": "2026-07-03", "basis_close": 7483.24, "pullback_prob": 60, "bias": "中性偏空", "actual_date": "2026-07-06", "actual_pct": 0.72, "actual_dir": "up", "grade": "miss"},
+    {"report_date": "2026-07-07", "basis_close": 7537.43, "pullback_prob": 45, "bias": "中性偏多", "actual_date": "2026-07-07(pending)", "actual_pct": null, "actual_dir": null, "grade": "pending"}
   ],
   "summary": {
-    "graded": 12,
+    "graded": 13,
     "hits": 5,
     "half": 6,
-    "miss": 1,
-    "rolling_direction_score_pct": 66.7,
-    "as_of": "2026-07-03",
-    "honest_note": "機械化計分 66.7%，低於每日報告敘事的 70-93%——差距來自：敘事版把『正確未觸發』算命中、且項目由分析者事後挑選。此帳本才是系統真實 edge 的基準線。另一觀察：拉回機率三週僅在 49-64 窄帶震盪，鑑別度有限，中性判讀(hit靠遇flat)貢獻了不少分數。",
+    "miss": 2,
+    "rolling_direction_score_pct": 61.5,
+    "as_of": "2026-07-07",
+    "honest_note": "機械化計分 61.5%（新增miss：7/3中性偏空預測、實際7/6上漲0.72%，headline方向錯，但報告內elliott方案A+C合計65%看漲情景其實命中——顯示headline偏向與多情景權重可能脫節，已寫入rule16候補追蹤）。拉回機率窄帶震盪、鑑別度有限的觀察持續有效。",
     "seed_note": "帳本自 2026-06-16 起建(更早的 6/11-6/13 缺精確立場紀錄，不回補)"
   }
 }
