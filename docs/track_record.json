@@ -6,6 +6,13 @@
     "grade": "方向對=hit(1分)、方向錯=miss(0分)、其餘(偏向遇flat或中性遇方向)=half(0.5分)",
     "note": "『正確未觸發』的策略單另計、不算hit；此表只計方向判斷。滾動勝率=總分/已判定筆數"
   },
+  "brier_rules": {
+    "purpose": "追蹤拉回機率的『機率報得準不準』，不只方向對錯。目標：逼系統敢報極端值、終結45-64窄帶躺平（2026-07-07啟用）",
+    "formula": "brier = (p - outcome)²，p = pullback_prob/100，outcome：down=1、up=0、flat排除不計",
+    "caveat": "pullback_prob名義上是5D拉回機率，但此處按每日迴圈的實際用法對『次日方向』計分；flat日排除會縮小樣本，解讀時注意",
+    "benchmark": "永遠報50%的無腦基準=0.25。低於0.25才代表機率有資訊量；越低越好",
+    "discrimination_note": "同時觀察報價分布：若機率永遠在45-64窄帶，即使brier達標也視為鑑別度不足"
+  },
   "entries": [
     {"report_date": "2026-06-16", "basis_close": 7554.29, "pullback_prob": 60, "bias": "中性偏空", "actual_date": "2026-06-16", "actual_pct": -0.57, "actual_dir": "down", "grade": "hit"},
     {"report_date": "2026-06-17", "basis_close": 7511.35, "pullback_prob": 58, "bias": "中性(FOMC二元)", "actual_date": "2026-06-17", "actual_pct": -1.21, "actual_dir": "down", "grade": "half"},
@@ -28,6 +35,25 @@
     "half": 6,
     "miss": 2,
     "rolling_direction_score_pct": 61.5,
+    "brier": {
+      "as_of": "2026-07-07",
+      "included": 8,
+      "excluded_flat": 5,
+      "per_entry": [
+        {"report_date": "2026-06-16", "p": 0.60, "outcome": 1, "brier": 0.1600},
+        {"report_date": "2026-06-17", "p": 0.58, "outcome": 1, "brier": 0.1764},
+        {"report_date": "2026-06-18", "p": 0.64, "outcome": 0, "brier": 0.4096},
+        {"report_date": "2026-06-19", "p": 0.52, "outcome": 1, "brier": 0.2304},
+        {"report_date": "2026-06-23", "p": 0.54, "outcome": 1, "brier": 0.2116},
+        {"report_date": "2026-06-29", "p": 0.49, "outcome": 0, "brier": 0.2401},
+        {"report_date": "2026-06-30", "p": 0.49, "outcome": 0, "brier": 0.2401},
+        {"report_date": "2026-07-03", "p": 0.60, "outcome": 0, "brier": 0.3600}
+      ],
+      "mean_brier": 0.2535,
+      "benchmark_50pct": 0.25,
+      "prob_range_observed": "45-64",
+      "honest_read": "首次計算=0.2535，比『永遠報50%』的無腦基準(0.25)還差0.0035——證實拉回機率目前沒有機率層面的資訊量，窄帶躺平+方向錯時代價大(6/18報64%遇漲、7/3報60%遇漲各貢獻0.41/0.36)。改善方向：有把握時敢報<35%或>75%，沒把握時就老實報50%附近，不要用55-62假裝有觀點"
+    },
     "as_of": "2026-07-07",
     "honest_note": "機械化計分 61.5%（新增miss：7/3中性偏空預測、實際7/6上漲0.72%，headline方向錯，但報告內elliott方案A+C合計65%看漲情景其實命中——顯示headline偏向與多情景權重可能脫節，已寫入rule16候補追蹤）。拉回機率窄帶震盪、鑑別度有限的觀察持續有效。",
     "seed_note": "帳本自 2026-06-16 起建(更早的 6/11-6/13 缺精確立場紀錄，不回補)"
