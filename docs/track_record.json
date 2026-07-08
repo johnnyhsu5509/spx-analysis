@@ -27,17 +27,18 @@
     {"report_date": "2026-07-01", "basis_close": 7499.36, "pullback_prob": 57, "bias": "中性(不追高)", "actual_date": "2026-07-01", "actual_pct": -0.22, "actual_dir": "flat", "grade": "hit"},
     {"report_date": "2026-07-02", "basis_close": 7483.23, "pullback_prob": 62, "bias": "中性偏空", "actual_date": "2026-07-02", "actual_pct": 0.00, "actual_dir": "flat", "grade": "half"},
     {"report_date": "2026-07-03", "basis_close": 7483.24, "pullback_prob": 60, "bias": "中性偏空", "actual_date": "2026-07-06", "actual_pct": 0.72, "actual_dir": "up", "grade": "miss"},
-    {"report_date": "2026-07-07", "basis_close": 7537.43, "pullback_prob": 45, "bias": "中性偏多", "actual_date": "2026-07-07(pending)", "actual_pct": null, "actual_dir": null, "grade": "pending"}
+    {"report_date": "2026-07-07", "basis_close": 7537.43, "pullback_prob": 45, "bias": "中性偏多", "actual_date": "2026-07-07", "actual_pct": -0.45, "actual_dir": "down", "grade": "miss"},
+    {"report_date": "2026-07-08", "basis_close": 7503.85, "pullback_prob": 65, "bias": "偏空", "actual_date": "2026-07-08(pending)", "actual_pct": null, "actual_dir": null, "grade": "pending"}
   ],
   "summary": {
-    "graded": 13,
+    "graded": 14,
     "hits": 5,
     "half": 6,
-    "miss": 2,
-    "rolling_direction_score_pct": 61.5,
+    "miss": 3,
+    "rolling_direction_score_pct": 57.1,
     "brier": {
-      "as_of": "2026-07-07",
-      "included": 8,
+      "as_of": "2026-07-08",
+      "included": 9,
       "excluded_flat": 5,
       "per_entry": [
         {"report_date": "2026-06-16", "p": 0.60, "outcome": 1, "brier": 0.1600},
@@ -47,15 +48,16 @@
         {"report_date": "2026-06-23", "p": 0.54, "outcome": 1, "brier": 0.2116},
         {"report_date": "2026-06-29", "p": 0.49, "outcome": 0, "brier": 0.2401},
         {"report_date": "2026-06-30", "p": 0.49, "outcome": 0, "brier": 0.2401},
-        {"report_date": "2026-07-03", "p": 0.60, "outcome": 0, "brier": 0.3600}
+        {"report_date": "2026-07-03", "p": 0.60, "outcome": 0, "brier": 0.3600},
+        {"report_date": "2026-07-07", "p": 0.45, "outcome": 1, "brier": 0.3025}
       ],
-      "mean_brier": 0.2535,
+      "mean_brier": 0.259,
       "benchmark_50pct": 0.25,
-      "prob_range_observed": "45-64",
-      "honest_read": "首次計算=0.2535，比『永遠報50%』的無腦基準(0.25)還差0.0035——證實拉回機率目前沒有機率層面的資訊量，窄帶躺平+方向錯時代價大(6/18報64%遇漲、7/3報60%遇漲各貢獻0.41/0.36)。改善方向：有把握時敢報<35%或>75%，沒把握時就老實報50%附近，不要用55-62假裝有觀點"
+      "prob_range_observed": "45-65",
+      "honest_read": "mean=0.259持續輸給無腦基準0.25。7/7報45%(偏多側)遇跌再貢獻0.3025——連兩筆都是『離開50%的方向押錯邊』。窄帶紀律已於7/8起執行（本次報65%走出窄帶），續觀察敢報極端後brier是否改善"
     },
-    "as_of": "2026-07-07",
-    "honest_note": "機械化計分 61.5%（新增miss：7/3中性偏空預測、實際7/6上漲0.72%，headline方向錯，但報告內elliott方案A+C合計65%看漲情景其實命中——顯示headline偏向與多情景權重可能脫節，已寫入rule16候補追蹤）。拉回機率窄帶震盪、鑑別度有限的觀察持續有效。",
+    "as_of": "2026-07-08",
+    "honest_note": "機械化計分57.1%、連兩筆miss（7/3偏空遇漲、7/7偏多遇跌=兩次都追著前一天的方向翻面然後被打臉）。兩次miss中elliott情景權重都比headline準（7/3方案A+C=65%看漲命中、7/7方案B拉回測7,483-7,500精準命中收7,503.85）→rule16候補已二次驗證。headline連續反向錯誤也提示：可能在『追認最近一天走勢』而非領先判斷。",
     "seed_note": "帳本自 2026-06-16 起建(更早的 6/11-6/13 缺精確立場紀錄，不回補)"
   }
 }
