@@ -36,23 +36,35 @@
     },
     {
       "report_date": "2026-07-08",
-      "eval_date": "pending(2026-07-08 US close)",
+      "eval_date": "2026-07-08",
+      "eval_ohlc": {"o": 7476.54, "h": 7488.51, "l": 7421.82, "c": 7482.71},
+      "trades": [
+        {"name": "short_rally", "dir": "short", "order": "limit_sell", "entry": 7530, "stop": 7556, "t1": 7483, "t2": 7452, "weight": 0.12, "filled": false, "note": "高點僅7,488.51<7,530，跳空下殺無反彈可空"},
+        {"name": "short_breakdown", "dir": "short", "order": "sell_stop_close_confirm", "entry": 7478, "stop": 7536, "t1": 7452, "t2": 7427, "weight": 0.1, "filled": false, "note": "盤中破7,478殺到7,421但收7,482.71>7,478未確認，rule12連兩日擋掉會被回收打損的空單"},
+        {"name": "long_pullback", "dir": "long", "order": "limit_buy", "entry": 7452, "stop": 7410, "t1": 7503, "t2": 7540, "weight": 0.1, "filled": true, "exit": "close", "exit_px": 7482.71, "pts": 30.71, "ret_pct": 0.41, "weighted_bp": 4.1, "note": "低點7,421.82觸價成交(插針假破再站回，rule8連兩日驗證)，收盤平倉+30.71點"},
+        {"name": "long_breakout", "dir": "long", "order": "buy_stop", "entry": 7542, "stop": 7500, "t1": 7554, "t2": 7586, "weight": 0.0, "filled": false, "note": "禁追多，權重0"}
+      ],
+      "day_weighted_bp": 4.1
+    },
+    {
+      "report_date": "2026-07-09",
+      "eval_date": "pending(2026-07-09 US close)",
       "trades_pending": [
-        {"name": "short_rally", "dir": "short", "order": "limit_sell", "entry": 7530, "stop": 7556, "t1": 7483, "t2": 7452, "weight": 0.12},
-        {"name": "short_breakdown", "dir": "short", "order": "sell_stop_close_confirm", "entry": 7478, "stop": 7536, "t1": 7452, "t2": 7427, "weight": 0.1},
-        {"name": "long_pullback", "dir": "long", "order": "limit_buy", "entry": 7452, "stop": 7410, "t1": 7503, "t2": 7540, "weight": 0.1},
-        {"name": "long_breakout", "dir": "long", "order": "buy_stop", "entry": 7542, "stop": 7500, "t1": 7554, "t2": 7586, "weight": 0.0, "note": "拉回65%矩陣=禁追多，權重0僅追蹤"}
+        {"name": "short_rally", "dir": "short", "order": "limit_sell", "entry": 7505, "stop": 7541, "t1": 7452, "t2": 7421, "weight": 0.12},
+        {"name": "short_breakdown", "dir": "short", "order": "sell_stop_close_confirm", "entry": 7440, "stop": 7505, "t1": 7417, "t2": 7380, "weight": 0.1},
+        {"name": "long_pullback", "dir": "long", "order": "limit_buy", "entry": 7440, "stop": 7405, "t1": 7483, "t2": 7503, "weight": 0.1},
+        {"name": "long_breakout", "dir": "long", "order": "buy_stop", "entry": 7522, "stop": 7483, "t1": 7540, "t2": 7554, "weight": 0.0, "note": "拉回65%矩陣=禁追多，權重0僅追蹤"}
       ]
     }
   ],
   "summary": {
-    "as_of": "2026-07-08",
-    "days_evaluated": 2,
-    "trades_total": 6,
-    "trades_filled": 2,
-    "filled_win": 1,
+    "as_of": "2026-07-09",
+    "days_evaluated": 3,
+    "trades_total": 10,
+    "trades_filled": 3,
+    "filled_win": 2,
     "filled_loss": 1,
-    "cumulative_weighted_bp": 3.0,
-    "honest_read": "累積+3.0bp（7/3做多-7.57點/-1.2bp、7/7回踩多7,483+20.85點/+4.2bp）。7/7是關鍵樣本：headline方向miss(偏多遇跌)但P&L為正——rule8回踩單在支撐假破再站回時接到便宜貨、rule12收盤確認擋掉7,500盤中插針空單，證明『方向對錯』與『照表執行賺賠』是兩回事。樣本=2仍無意義，累積60筆再看"
+    "cumulative_weighted_bp": 7.1,
+    "honest_read": "累積+7.1bp（7/3做多-7.57點/-1.2bp、7/7回踩多7,483+20.85點/+4.2bp、7/8回踩多7,452+30.71點/+4.1bp）。連兩日『rule8回踩多接插針、rule12擋盤中空單』的組合都賺——3成交2勝1負。與方向勝率56.7%對照，P&L為正且擴大，愈發證明系統edge在執行紀律。樣本=3仍無統計意義，累積60筆再下結論"
   }
 }

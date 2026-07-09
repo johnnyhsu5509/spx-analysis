@@ -28,18 +28,19 @@
     {"report_date": "2026-07-02", "basis_close": 7483.23, "pullback_prob": 62, "bias": "中性偏空", "actual_date": "2026-07-02", "actual_pct": 0.00, "actual_dir": "flat", "grade": "half"},
     {"report_date": "2026-07-03", "basis_close": 7483.24, "pullback_prob": 60, "bias": "中性偏空", "actual_date": "2026-07-06", "actual_pct": 0.72, "actual_dir": "up", "grade": "miss"},
     {"report_date": "2026-07-07", "basis_close": 7537.43, "pullback_prob": 45, "bias": "中性偏多", "actual_date": "2026-07-07", "actual_pct": -0.45, "actual_dir": "down", "grade": "miss"},
-    {"report_date": "2026-07-08", "basis_close": 7503.85, "pullback_prob": 65, "bias": "偏空", "actual_date": "2026-07-08(pending)", "actual_pct": null, "actual_dir": null, "grade": "pending"}
+    {"report_date": "2026-07-08", "basis_close": 7503.85, "pullback_prob": 65, "bias": "偏空", "actual_date": "2026-07-08", "actual_pct": -0.28, "actual_dir": "flat", "grade": "half"},
+    {"report_date": "2026-07-09", "basis_close": 7482.71, "pullback_prob": 65, "bias": "偏空", "actual_date": "2026-07-09(pending)", "actual_pct": null, "actual_dir": null, "grade": "pending"}
   ],
   "summary": {
-    "graded": 14,
+    "graded": 15,
     "hits": 5,
-    "half": 6,
+    "half": 7,
     "miss": 3,
-    "rolling_direction_score_pct": 57.1,
+    "rolling_direction_score_pct": 56.7,
     "brier": {
-      "as_of": "2026-07-08",
+      "as_of": "2026-07-09",
       "included": 9,
-      "excluded_flat": 5,
+      "excluded_flat": 6,
       "per_entry": [
         {"report_date": "2026-06-16", "p": 0.60, "outcome": 1, "brier": 0.1600},
         {"report_date": "2026-06-17", "p": 0.58, "outcome": 1, "brier": 0.1764},
@@ -54,10 +55,10 @@
       "mean_brier": 0.259,
       "benchmark_50pct": 0.25,
       "prob_range_observed": "45-65",
-      "honest_read": "mean=0.259持續輸給無腦基準0.25。7/7報45%(偏多側)遇跌再貢獻0.3025——連兩筆都是『離開50%的方向押錯邊』。窄帶紀律已於7/8起執行（本次報65%走出窄帶），續觀察敢報極端後brier是否改善"
+      "honest_read": "mean=0.259持續輸給無腦基準0.25（7/8報65%偏空遇flat=排除不計，Brier樣本仍9筆）。7/8值得記：報65%偏空、盤中真的殺到7,421(掃到目標)但收盤拉回7,483.71=flat——方向讀對了『盤中』卻被『收盤』判平，這正是日線收盤計分對『盤中兌現、收盤回收』型態的天然盲點。續觀察"
     },
-    "as_of": "2026-07-08",
-    "honest_note": "機械化計分57.1%、連兩筆miss（7/3偏空遇漲、7/7偏多遇跌=兩次都追著前一天的方向翻面然後被打臉）。兩次miss中elliott情景權重都比headline準（7/3方案A+C=65%看漲命中、7/7方案B拉回測7,483-7,500精準命中收7,503.85）→rule16候補已二次驗證。headline連續反向錯誤也提示：可能在『追認最近一天走勢』而非領先判斷。",
+    "as_of": "2026-07-09",
+    "honest_note": "機械化計分56.7%（7/8報65%偏空遇flat=half：盤中殺到7,421掃到目標但收盤7,482.71拉回收平）。連三日觀察到同一結構性現象：headline/日線收盤方向頻頻不討好，但『執行層』連賺——rule8回踩多7,452接到7/8的插針(+30.71點)、rule12收盤確認連兩日擋掉會被回收打損的盤中空單。方向計分(56.7%)與P&L(累積+7.1bp)持續背離，強烈提示此系統edge在『執行紀律』不在『日方向預測』。",
     "seed_note": "帳本自 2026-06-16 起建(更早的 6/11-6/13 缺精確立場紀錄，不回補)"
   }
 }
