@@ -29,17 +29,18 @@
     {"report_date": "2026-07-03", "basis_close": 7483.24, "pullback_prob": 60, "bias": "中性偏空", "actual_date": "2026-07-06", "actual_pct": 0.72, "actual_dir": "up", "grade": "miss"},
     {"report_date": "2026-07-07", "basis_close": 7537.43, "pullback_prob": 45, "bias": "中性偏多", "actual_date": "2026-07-07", "actual_pct": -0.45, "actual_dir": "down", "grade": "miss"},
     {"report_date": "2026-07-08", "basis_close": 7503.85, "pullback_prob": 65, "bias": "偏空", "actual_date": "2026-07-08", "actual_pct": -0.28, "actual_dir": "flat", "grade": "half"},
-    {"report_date": "2026-07-09", "basis_close": 7482.71, "pullback_prob": 65, "bias": "偏空", "actual_date": "2026-07-09(pending)", "actual_pct": null, "actual_dir": null, "grade": "pending"}
+    {"report_date": "2026-07-09", "basis_close": 7482.71, "pullback_prob": 65, "bias": "偏空", "actual_date": "2026-07-09", "actual_pct": 0.81, "actual_dir": "up", "grade": "miss"},
+    {"report_date": "2026-07-10", "basis_close": 7543.64, "pullback_prob": 45, "bias": "中性偏多", "actual_date": "2026-07-10(pending)", "actual_pct": null, "actual_dir": null, "grade": "pending"}
   ],
   "summary": {
-    "graded": 15,
+    "graded": 16,
     "hits": 5,
     "half": 7,
-    "miss": 3,
-    "rolling_direction_score_pct": 56.7,
+    "miss": 4,
+    "rolling_direction_score_pct": 53.1,
     "brier": {
-      "as_of": "2026-07-09",
-      "included": 9,
+      "as_of": "2026-07-10",
+      "included": 10,
       "excluded_flat": 6,
       "per_entry": [
         {"report_date": "2026-06-16", "p": 0.60, "outcome": 1, "brier": 0.1600},
@@ -50,15 +51,16 @@
         {"report_date": "2026-06-29", "p": 0.49, "outcome": 0, "brier": 0.2401},
         {"report_date": "2026-06-30", "p": 0.49, "outcome": 0, "brier": 0.2401},
         {"report_date": "2026-07-03", "p": 0.60, "outcome": 0, "brier": 0.3600},
-        {"report_date": "2026-07-07", "p": 0.45, "outcome": 1, "brier": 0.3025}
+        {"report_date": "2026-07-07", "p": 0.45, "outcome": 1, "brier": 0.3025},
+        {"report_date": "2026-07-09", "p": 0.65, "outcome": 0, "brier": 0.4225}
       ],
-      "mean_brier": 0.259,
+      "mean_brier": 0.2754,
       "benchmark_50pct": 0.25,
       "prob_range_observed": "45-65",
-      "honest_read": "mean=0.259持續輸給無腦基準0.25（7/8報65%偏空遇flat=排除不計，Brier樣本仍9筆）。7/8值得記：報65%偏空、盤中真的殺到7,421(掃到目標)但收盤拉回7,483.71=flat——方向讀對了『盤中』卻被『收盤』判平，這正是日線收盤計分對『盤中兌現、收盤回收』型態的天然盲點。續觀察"
+      "honest_read": "mean惡化至0.2754、明顯輸給無腦基準0.25。核心病灶浮現：連四筆『離開50%的方向押錯邊』(6/18、7/3、7/7、7/9)，其中7/9報65%偏空遇大漲+0.81%貢獻0.4225。我過去一週過度錨定『10Y利率壓科技』單一敘事，但市場在10Y高檔下連漲三天=大輪動承接力+AI基本面強過利率壓力。教訓：單一宏觀敘事不可壓過價格行為(連三日突破/更高低點被我當雜訊)。今日起turn多。"
     },
-    "as_of": "2026-07-09",
-    "honest_note": "機械化計分56.7%（7/8報65%偏空遇flat=half：盤中殺到7,421掃到目標但收盤7,482.71拉回收平）。連三日觀察到同一結構性現象：headline/日線收盤方向頻頻不討好，但『執行層』連賺——rule8回踩多7,452接到7/8的插針(+30.71點)、rule12收盤確認連兩日擋掉會被回收打損的盤中空單。方向計分(56.7%)與P&L(累積+7.1bp)持續背離，強烈提示此系統edge在『執行紀律』不在『日方向預測』。",
+    "as_of": "2026-07-10",
+    "honest_note": "機械化計分跌破55至53.1%（7/9報65%偏空遇大漲+0.81%=第四次miss）。殘酷但重要的事實：過去一週(7/3-7/9)headline方向4錯，全錯在同一個病灶——過度錨定『10Y利率壓科技』單一空方敘事，把連三日的突破/更高低點當雜訊。市場用三天證明:10Y高檔下大輪動承接+AI基本面強過利率壓力。今日(7/10)turn多、拉回機率降至45%。但同期P&L仍+7.1bp未回吐(執行層靠rule8接回踩、rule12/開盤確認擋空單，把方向錯誤的傷害擋在門外)——這再次印證edge在執行紀律。方向判斷本身需要根本檢討：勿讓單一宏觀敘事凌駕價格行為。",
     "seed_note": "帳本自 2026-06-16 起建(更早的 6/11-6/13 缺精確立場紀錄，不回補)"
   }
 }

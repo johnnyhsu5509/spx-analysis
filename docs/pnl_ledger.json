@@ -48,23 +48,36 @@
     },
     {
       "report_date": "2026-07-09",
-      "eval_date": "pending(2026-07-09 US close)",
+      "eval_date": "2026-07-09",
+      "eval_ohlc": {"o": 7491.6, "h": 7546.89, "l": 7481.73, "c": 7543.64},
+      "execution_override": "開盤確認(睡前檢查)明確否決全部空單——首根30分反向長紅+量能正常+突破7,505，劇本作廢。故機械觸發的空單在實戰不執行，day實際P&L=0",
+      "trades": [
+        {"name": "short_rally", "dir": "short", "order": "limit_sell", "entry": 7505, "stop": 7541, "mech_result": "High7546.89觸價成交後觸7541停損, 機械-36點/-5.76bp", "weight": 0.12, "executed": false, "note": "★三層確認價值實例：開盤確認反向長紅已否決此空單，實戰未執行、避免-5.76bp虧損"},
+        {"name": "short_breakdown", "dir": "short", "order": "sell_stop_close_confirm", "entry": 7440, "weight": 0.1, "filled": false, "note": "收盤7543.64遠高於7440，未觸發"},
+        {"name": "long_pullback", "dir": "long", "order": "limit_buy", "entry": 7440, "weight": 0.1, "filled": false, "note": "低點7481.73>7440，未跌到接多價"},
+        {"name": "long_breakout", "dir": "long", "order": "buy_stop", "entry": 7522, "mech_result": "High7546.89觸價、收7543.64=+21.64點", "weight": 0.0, "filled": true, "note": "★機會成本實例：偏空矩陣禁追多權重0，錯失+21.64點——headline方向錯的真實代價"}
+      ],
+      "day_weighted_bp": 0.0
+    },
+    {
+      "report_date": "2026-07-10",
+      "eval_date": "pending(2026-07-10 US close)",
       "trades_pending": [
-        {"name": "short_rally", "dir": "short", "order": "limit_sell", "entry": 7505, "stop": 7541, "t1": 7452, "t2": 7421, "weight": 0.12},
-        {"name": "short_breakdown", "dir": "short", "order": "sell_stop_close_confirm", "entry": 7440, "stop": 7505, "t1": 7417, "t2": 7380, "weight": 0.1},
-        {"name": "long_pullback", "dir": "long", "order": "limit_buy", "entry": 7440, "stop": 7405, "t1": 7483, "t2": 7503, "weight": 0.1},
-        {"name": "long_breakout", "dir": "long", "order": "buy_stop", "entry": 7522, "stop": 7483, "t1": 7540, "t2": 7554, "weight": 0.0, "note": "拉回65%矩陣=禁追多，權重0僅追蹤"}
+        {"name": "long_pullback", "dir": "long", "order": "limit_buy", "entry": 7505, "stop": 7470, "t1": 7554, "t2": 7588, "weight": 0.15, "note": "轉多後主策略：回測7,505接多(rule8)"},
+        {"name": "long_breakout", "dir": "long", "order": "buy_stop", "entry": 7556, "stop": 7515, "t1": 7588, "t2": 7609, "weight": 0.1, "note": "站穩過前高7,554追多(需帶量)"},
+        {"name": "short_fade", "dir": "short", "order": "limit_sell", "entry": 7588, "stop": 7615, "t1": 7543, "t2": 7505, "weight": 0.08, "note": "逆勢小倉：接近超買至布林上軌承壓空"},
+        {"name": "short_breakdown", "dir": "short", "order": "sell_stop_close_confirm", "entry": 7483, "stop": 7548, "t1": 7448, "t2": 7424, "weight": 0.0, "note": "轉多後空單降級：僅收盤跌破樞紐7,483才啟用，權重0追蹤"}
       ]
     }
   ],
   "summary": {
-    "as_of": "2026-07-09",
-    "days_evaluated": 3,
-    "trades_total": 10,
+    "as_of": "2026-07-10",
+    "days_evaluated": 4,
+    "trades_total": 14,
     "trades_filled": 3,
     "filled_win": 2,
     "filled_loss": 1,
     "cumulative_weighted_bp": 7.1,
-    "honest_read": "累積+7.1bp（7/3做多-7.57點/-1.2bp、7/7回踩多7,483+20.85點/+4.2bp、7/8回踩多7,452+30.71點/+4.1bp）。連兩日『rule8回踩多接插針、rule12擋盤中空單』的組合都賺——3成交2勝1負。與方向勝率56.7%對照，P&L為正且擴大，愈發證明系統edge在執行紀律。樣本=3仍無統計意義，累積60筆再下結論"
+    "honest_read": "累積維持+7.1bp（7/9淨0）。7/9是三層確認的雙面教材：開盤確認擋掉會虧-5.76bp的short_rally空單(★價值)、但偏空矩陣也擋掉會賺+21.64bp的突破多單(★機會成本)，一擋一漏淨0。這天完美示範了『白天方向錯、晚上執行層把傷害控制在0』——headline連四天不準，P&L卻沒回吐，就是靠開盤確認這道閘門。系統的錢是紀律賺的、不是方向賺的。樣本=4仍無統計意義，累積60筆再下結論"
   }
 }
