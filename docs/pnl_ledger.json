@@ -74,23 +74,35 @@
     },
     {
       "report_date": "2026-07-11",
-      "eval_date": "pending(2026-07-11 US close)",
+      "eval_date": "2026-07-13",
+      "eval_ohlc": {"o": 7547.53, "h": 7565.37, "l": 7506.41, "c": 7515.34},
+      "trades": [
+        {"name": "long_pullback", "dir": "long", "order": "limit_buy", "entry": 7554, "stop": 7505, "t1": 7588, "t2": 7609, "weight": 0.12, "filled": true, "exit": "close", "exit_px": 7515.34, "pts": -38.66, "ret_pct": -0.51, "weighted_bp": -6.1, "note": "回測7,554接多成交但止穩失敗：低7,506.41距停損7,505僅1.41點未觸、收盤強平吃下-38.66點——首次rule8型態虧損(前兩次+20.85/+30.71)；10Y破4.60+半導體-5.2%的環境下支撐接多勝率下降"},
+        {"name": "long_breakout", "dir": "long", "order": "buy_stop", "entry": 7590, "weight": 0.08, "filled": false, "note": "高7,565.37未觸價"},
+        {"name": "short_fade", "dir": "short", "order": "limit_sell", "entry": 7603, "weight": 0.08, "filled": false},
+        {"name": "short_breakdown", "dir": "short", "order": "sell_stop_close_confirm", "entry": 7505, "weight": 0.0, "filled": false, "note": "收7,515.34>7,505未確認(差10點守住整理線)"}
+      ],
+      "day_weighted_bp": -6.1
+    },
+    {
+      "report_date": "2026-07-14",
+      "eval_date": "pending(2026-07-14 US close)",
       "trades_pending": [
-        {"name": "long_pullback", "dir": "long", "order": "limit_buy", "entry": 7554, "stop": 7505, "t1": 7588, "t2": 7609, "weight": 0.12, "note": "回測舊前高7,554(突破點回測、rule8錨定)"},
-        {"name": "long_breakout", "dir": "long", "order": "buy_stop", "entry": 7590, "stop": 7554, "t1": 7609, "t2": 7650, "weight": 0.08, "note": "過昨高7,580/7,588需帶量+半導體同步(7/10教訓)"},
-        {"name": "short_fade", "dir": "short", "order": "limit_sell", "entry": 7603, "stop": 7630, "t1": 7554, "t2": 7505, "weight": 0.08, "note": "布林上軌7,603承壓、超買fade(系統模擬用)"},
-        {"name": "short_breakdown", "dir": "short", "order": "sell_stop_close_confirm", "entry": 7505, "stop": 7570, "t1": 7463, "t2": 7430, "weight": 0.0, "note": "收盤破7,505才啟用，權重0追蹤(系統模擬用)"}
+        {"name": "short_rally", "dir": "short", "order": "limit_sell", "entry": 7554, "stop": 7590, "t1": 7506, "t2": 7483, "weight": 0.12, "note": "反彈至跌破點7,554承壓空(系統模擬用)"},
+        {"name": "short_breakdown", "dir": "short", "order": "sell_stop_close_confirm", "entry": 7505, "stop": 7556, "t1": 7470, "t2": 7430, "weight": 0.1, "note": "收盤破7,505整理失敗(rule12；用戶版=減碼訊號)"},
+        {"name": "long_pullback", "dir": "long", "order": "limit_buy", "entry": 7483, "stop": 7448, "t1": 7554, "t2": 7588, "weight": 0.1, "note": "深回測樞紐7,483接多(rule8)"},
+        {"name": "long_breakout", "dir": "long", "order": "buy_stop", "entry": 7556, "stop": 7505, "t1": 7588, "t2": 7609, "weight": 0.0, "note": "偏空65%矩陣=禁追多，權重0追蹤；需10Y回落+半導體止血才啟用"}
       ]
     }
   ],
   "summary": {
-    "as_of": "2026-07-11",
-    "days_evaluated": 5,
-    "trades_total": 18,
-    "trades_filled": 3,
+    "as_of": "2026-07-14",
+    "days_evaluated": 6,
+    "trades_total": 22,
+    "trades_filled": 4,
     "filled_win": 2,
-    "filled_loss": 1,
-    "cumulative_weighted_bp": 7.1,
-    "honest_read": "累積維持+7.1bp（7/10淨0）。開盤確認已三次擋掉會虧的單(7/9空單-5.76bp、7/10突破多-5.4bp)、一次擋掉會賺的(7/9突破多+21.64bp)——3:1的攔截比初步支持『五紅線是正期望閘門』。7/10另一課：rule8接多價7,505差3.16點沒接到(低7,508)，錨定支撐本身有時就是差一步，這是該規則的已知成本、不改。樣本=5仍無統計意義"
+    "filled_loss": 2,
+    "cumulative_weighted_bp": 1.0,
+    "honest_read": "累積回落至+1.0bp（7/13：7,554接多-6.1bp，rule8型態首虧）。教訓待觀察：rule8回踩接多在『支撐被反覆測試+利率創高+類股崩』環境勝率下降——7/7、7/8賺的是插針急回收，7/13虧的是陰跌不回頭；環境過濾(rule15警報中是否停用回踩接多)列為觀察題，累積更多樣本再定。閘門攔截紀錄不變(3:1)。樣本=6仍無統計意義"
   }
 }
