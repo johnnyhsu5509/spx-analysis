@@ -32,17 +32,18 @@
     {"report_date": "2026-07-09", "basis_close": 7482.71, "pullback_prob": 65, "bias": "偏空", "actual_date": "2026-07-09", "actual_pct": 0.81, "actual_dir": "up", "grade": "miss"},
     {"report_date": "2026-07-10", "basis_close": 7543.64, "pullback_prob": 45, "bias": "中性偏多", "actual_date": "2026-07-10", "actual_pct": 0.42, "actual_dir": "up", "grade": "hit"},
     {"report_date": "2026-07-11", "basis_close": 7575.39, "pullback_prob": 50, "bias": "中性(高檔整理)", "actual_date": "2026-07-13", "actual_pct": -0.79, "actual_dir": "down", "grade": "half"},
-    {"report_date": "2026-07-14", "basis_close": 7515.34, "pullback_prob": 65, "bias": "偏空", "actual_date": "2026-07-14(pending)", "actual_pct": null, "actual_dir": null, "grade": "pending"}
+    {"report_date": "2026-07-14", "basis_close": 7515.34, "pullback_prob": 65, "bias": "偏空", "actual_date": "2026-07-14", "actual_pct": 0.38, "actual_dir": "up", "grade": "miss"},
+    {"report_date": "2026-07-15", "basis_close": 7543.59, "pullback_prob": 48, "bias": "中性偏多", "actual_date": "2026-07-15(pending)", "actual_pct": null, "actual_dir": null, "grade": "pending"}
   ],
   "summary": {
-    "graded": 18,
+    "graded": 19,
     "hits": 6,
     "half": 8,
-    "miss": 4,
-    "rolling_direction_score_pct": 55.6,
+    "miss": 5,
+    "rolling_direction_score_pct": 52.6,
     "brier": {
-      "as_of": "2026-07-14",
-      "included": 12,
+      "as_of": "2026-07-15",
+      "included": 13,
       "excluded_flat": 6,
       "per_entry": [
         {"report_date": "2026-06-16", "p": 0.60, "outcome": 1, "brier": 0.1600},
@@ -56,15 +57,16 @@
         {"report_date": "2026-07-07", "p": 0.45, "outcome": 1, "brier": 0.3025},
         {"report_date": "2026-07-09", "p": 0.65, "outcome": 0, "brier": 0.4225},
         {"report_date": "2026-07-10", "p": 0.45, "outcome": 0, "brier": 0.2025},
-        {"report_date": "2026-07-11", "p": 0.50, "outcome": 1, "brier": 0.2500}
+        {"report_date": "2026-07-11", "p": 0.50, "outcome": 1, "brier": 0.2500},
+        {"report_date": "2026-07-14", "p": 0.65, "outcome": 0, "brier": 0.4225}
       ],
-      "mean_brier": 0.2671,
+      "mean_brier": 0.2791,
       "benchmark_50pct": 0.25,
       "prob_range_observed": "45-65",
-      "honest_read": "mean微幅改善至0.2671仍高於基準0.25。7/11老實報50%遇跌=中性貢獻0.25(窄帶紀律的『沒把握就報50』運作正常，方向雖沒賺到分、機率上沒說謊)。7/14報65%偏空——本次與上週7/9那筆65%的差異:這次價格行為(跌回7,554下+較低高點)與宏觀(10Y破4.60)同向,通過rule18檢查。"
+      "honest_read": "mean惡化至0.2791(vs基準0.25)。系統性問題浮現：兩筆65%偏空(7/9、7/14)全miss、各賠0.4225，是Brier最大拖累——兩次都通過rule18(價格行為+宏觀同向)仍錯，共同點是『均線全多頭排列+收盤未破MA20』的多頭結構硬吃掉利空(7/14軟CPI一夜逆轉10Y破位敘事)。教訓寫入rule20候補：多頭結構未破時偏空報價上限60%。trend regime(-4.7pp)其實一直在客觀提示這件事。"
     },
-    "as_of": "2026-07-14",
-    "honest_note": "55.6%（7/11中性遇跌-0.79%=half）。7/13的亮點在路徑：方案C預測『10Y續升→跌破7,554測7,508/7,505』，實際10Y破4.60、低點7,506.41=情景路徑連三日精準(rule16轉正後持續有效)；watch_point『升破4.60=回測上修』『連兩日半導體背離=獨走風險』雙雙預先示警命中。P&L回落至+1.0bp：7,554回測接多單成交後收盤-38.66點(-6.1bp)，停損7,505差1.41點沒觸=單日強平制度吃下全部帳面損(已知模擬限制)。",
+    "as_of": "2026-07-15",
+    "honest_note": "52.6%（7/14偏空65%遇+0.38%=miss）。miss的機制：賭的是CPI前防禦+10Y破位續壓，實際CPI溫和(月減0.4%)一夜逆轉利率敘事、半導體第三輪如前兩輪節奏1日止穩(+2.94%)——『半導體1-2日止穩』watch_point本身有預告，但headline沒給它足夠權重。亮點：7,554阻力精準(高7,557.44刺穿3點收回)、7,505整理線守住(低7,513)、方案B區間震盪35%實際兌現。P&L +2.7bp(7,554反彈空單成交收盤+10.41點=方向錯但點位對，空單模擬照樣賺)。",
     "seed_note": "帳本自 2026-06-16 起建(更早的 6/11-6/13 缺精確立場紀錄，不回補)"
   }
 }
