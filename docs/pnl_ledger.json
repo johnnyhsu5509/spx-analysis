@@ -98,23 +98,35 @@
     },
     {
       "report_date": "2026-07-15",
-      "eval_date": "pending(2026-07-15 US close)",
+      "eval_date": "2026-07-15",
+      "eval_ohlc": {"o": 7571.72, "h": 7581.5, "l": 7526.95, "c": 7572.4},
+      "trades": [
+        {"name": "long_breakout", "dir": "long", "order": "buy_stop", "entry": 7556, "entry_adj": 7571.72, "stop": 7505, "t1": 7588, "t2": 7609, "weight": 0.15, "filled": true, "exit": "close", "exit_px": 7572.4, "pts": 0.68, "ret_pct": 0.01, "weighted_bp": 0.1, "note": "跳空開7,571.72直接越過7,556→以開盤價成交(gap fill調整,不以entry計避免灌水)，收盤平倉+0.68點；實戰上五紅線『跳空不追』會否決、等回測——盤中確實回踩7,526.95再站回，回測進場者拿到更好價"},
+        {"name": "long_pullback", "dir": "long", "order": "limit_buy", "entry": 7505, "weight": 0.12, "filled": false, "note": "低7,526.95>7,505未觸價"},
+        {"name": "short_rally", "dir": "short", "order": "limit_sell", "entry": 7588, "weight": 0.08, "filled": false, "note": "高7,581.5未及7,588、差6.5點"},
+        {"name": "short_breakdown", "dir": "short", "order": "sell_stop_close_confirm", "entry": 7505, "weight": 0.1, "filled": false, "note": "收7,572.4遠高於7,505未觸發"}
+      ],
+      "day_weighted_bp": 0.1
+    },
+    {
+      "report_date": "2026-07-16",
+      "eval_date": "pending(2026-07-16 US close)",
       "trades_pending": [
-        {"name": "long_breakout", "dir": "long", "order": "buy_stop", "entry": 7556, "stop": 7505, "t1": 7588, "t2": 7609, "weight": 0.15, "note": "收復7,554確認追多(中性偏多48%矩陣解鎖，rule3量能條件開盤確認)"},
-        {"name": "long_pullback", "dir": "long", "order": "limit_buy", "entry": 7505, "stop": 7470, "t1": 7554, "t2": 7588, "weight": 0.12, "note": "回測整理線7,505接多(rule8，rule15警報降級後恢復適用)"},
-        {"name": "short_rally", "dir": "short", "order": "limit_sell", "entry": 7588, "stop": 7620, "t1": 7554, "t2": 7513, "weight": 0.08, "note": "前高帶7,588均值回歸空(系統模擬用)"},
-        {"name": "short_breakdown", "dir": "short", "order": "sell_stop_close_confirm", "entry": 7505, "stop": 7556, "t1": 7470, "t2": 7448, "weight": 0.1, "note": "收盤破7,505整理失敗(rule12；用戶版=減碼訊號)"}
+        {"name": "long_pullback", "dir": "long", "order": "limit_buy", "entry": 7554, "stop": 7525, "t1": 7588, "t2": 7609, "weight": 0.12, "note": "回測收復線7,554接多(rule8錨定，昨日已示範7,527插針站回)"},
+        {"name": "long_breakout", "dir": "long", "order": "buy_stop", "entry": 7590, "stop": 7554, "t1": 7609, "t2": 7640, "weight": 0.1, "note": "過前高帶7,588追多(rule3:MACD柱放大✓需帶量；TSM法說開好才啟用)"},
+        {"name": "short_rally", "dir": "short", "order": "limit_sell", "entry": 7609, "stop": 7645, "t1": 7554, "t2": 7527, "weight": 0.08, "note": "ATH雙頂帶7,609掛空(系統模擬用)"},
+        {"name": "short_breakdown", "dir": "short", "order": "sell_stop_close_confirm", "entry": 7554, "stop": 7590, "t1": 7527, "t2": 7505, "weight": 0.1, "note": "收盤跌回7,554下方=假收復(rule12；用戶版=警戒訊號，破7,505才是減碼)"}
       ]
     }
   ],
   "summary": {
-    "as_of": "2026-07-15",
-    "days_evaluated": 7,
-    "trades_total": 26,
-    "trades_filled": 5,
-    "filled_win": 3,
+    "as_of": "2026-07-16",
+    "days_evaluated": 8,
+    "trades_total": 30,
+    "trades_filled": 6,
+    "filled_win": 4,
     "filled_loss": 2,
-    "cumulative_weighted_bp": 2.7,
-    "honest_read": "累積回升至+2.7bp（7/14：7,554反彈空+1.7bp）。有意思的分化：headline方向連錯(7/9、7/14兩筆65%偏空全miss)，但策略表點位持續賺錢——7,554這條線先當支撐接多虧(7/13)、再當阻力掛空賺(7/14)，關鍵位設計是系統目前最有價值的部分，headline機率是最弱的部分。權重0追蹤單7/14避開-12.44點(vs 7/9錯失+21.64)，禁追多1勝1負。樣本=7仍無統計意義"
+    "cumulative_weighted_bp": 2.8,
+    "honest_read": "累積+2.8bp（7/15：突破多gap fill僅+0.1bp）。gap fill調整首次適用：跳空開越過buy_stop進場價時以開盤價計成交(7,571.72非7,556)，不灌+16點假利潤。7,554一條線三種身分都驗過：支撐接多虧(7/13)、阻力掛空賺(7/14)、收復後回踩站回(7/15)——本週價格對這條線的尊重程度是策略表最大的alpha來源。樣本=8仍無統計意義"
   }
 }
