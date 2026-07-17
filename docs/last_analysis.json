@@ -7,8 +7,8 @@
   "pullback_prob": 60,
   "rating": "偏空（rule20上限60：TSM毛利擠壓恐慌+假收復確認+隔夜RISK_OFF）：7/16開7,558.8殺至7,504.02(插針7,505僅0.98點)收7,533.77(-0.51%)跌回7,554下方=假收復兌現；TSM財報創紀錄但capex上修引發毛利擠壓恐慌、SOXX-4.21%大破551.7第四輪確認、SMH疑似頭肩頂；隔夜ES-0.93%/NQ-2.27%、隱含開盤~7,519、backdrop-2 RISK_OFF。惟收盤仍在MA20(7,477)上方、均線全多頭、7,505四次插針全被回收——偏空但按rule20不報極端值，收盤破位後才升級",
   "macro_layer": {
-    "es_pct": -0.93, "nq_pct": -2.27, "us10y_pct": 4.569, "us10y_bps": 2.4,
-    "dxy_pct": 0.22, "vix": 16.73, "backdrop_score": -2, "backdrop": "RISK_OFF偏空(亞洲薄盤讀數09:04，21:00後複查)"
+    "es_pct": -1.2, "nq_pct": -2.61, "us10y_pct": 4.569, "us10y_bps": 2.4,
+    "dxy_pct": 0.27, "vix": 16.73, "backdrop_score": -3, "backdrop": "RISK_OFF偏空(11:50複查：ES-1.2%惡化中、隱含開盤~7,499已低於7,505整理線，21:00後再複查)"
   },
   "sector_rotation": {
     "theme": "半導體毛利擠壓恐慌（TSM capex上修→AI建置ROI質疑）",
