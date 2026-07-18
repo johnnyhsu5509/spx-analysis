@@ -122,27 +122,40 @@
     },
     {
       "report_date": "2026-07-17",
-      "eval_date": "pending(2026-07-17 US close)",
+      "eval_date": "2026-07-17",
+      "eval_ohlc": {"o": 7447.52, "h": 7498.47, "l": 7431.26, "c": 7457.69},
+      "trades": [
+        {"name": "short_breakdown_0716_carry", "dir": "short", "entry_px": 7533.77, "stop": 7590, "t1": 7527, "t2": 7505, "weight": 0.1, "filled": true, "exit": "gap_open", "exit_px": 7447.52, "pts": 86.25, "ret_pct": 1.14, "weighted_bp": 11.4, "note": "★帳本最大單筆：7/16假收復空(收盤價7,533.77進場)遇7/17跳空開7,447.52——跳空穿越雙目標以開盤價出場(+86.25點/+11.4bp)。rule12收盤確認型態的完整勝利：等收盤確認才進的空單吃到整段跳空"},
+        {"name": "short_rally", "dir": "short", "order": "limit_sell", "entry": 7554, "weight": 0.1, "filled": false, "note": "高7,498.47未及7,554"},
+        {"name": "short_breakdown", "dir": "short", "order": "sell_stop_close_confirm", "entry": 7505, "stop": 7538, "t1": 7476, "t2": 7448, "weight": 0.12, "filled": true, "entry_px": 7457.69, "exit": "carry_to_next_day", "note": "收7,457.69<7,505確認→以收盤價進場持倉至週一判定；注意：進場價已遠低於名目entry(跳空日的close-confirm接近追空)，此型態的gap風險雙向"},
+        {"name": "long_pullback", "dir": "long", "order": "limit_buy", "entry": 7477, "stop": 7448, "weight": 0.06, "filled": false, "invalid": true, "note": "跳空開7,447.52已在停損7,448下方=單子作廢不進場(開盤價低於停損的limit單無效)；rule8b前置條件的保護第一次以『作廢』形式體現"},
+        {"name": "long_breakout", "dir": "long", "order": "buy_stop", "entry": 7556, "weight": 0.0, "filled": false}
+      ],
+      "day_weighted_bp": 11.4
+    },
+    {
+      "report_date": "2026-07-18",
+      "eval_date": "pending(2026-07-20 US close)",
       "carry_over": [
-        {"name": "short_breakdown_0716", "dir": "short", "entry_px": 7533.77, "stop": 7590, "t1": 7527, "t2": 7505, "weight": 0.1, "note": "7/16收盤進場的假收復空單，以7/17 OHLC判定出場"}
+        {"name": "short_breakdown_0717", "dir": "short", "entry_px": 7457.69, "stop": 7505, "t1": 7431, "t2": 7421, "weight": 0.12, "note": "7/17收盤進場的破位空單，以7/20 OHLC判定；停損收緊至7,505(舊整理線收復=空單邏輯失效)"}
       ],
       "trades_pending": [
-        {"name": "short_rally", "dir": "short", "order": "limit_sell", "entry": 7554, "stop": 7580, "t1": 7505, "t2": 7483, "weight": 0.1, "note": "反彈至7,554舊撐轉壓掛空(系統模擬用)"},
-        {"name": "short_breakdown", "dir": "short", "order": "sell_stop_close_confirm", "entry": 7505, "stop": 7538, "t1": 7476, "t2": 7448, "weight": 0.12, "note": "收盤破7,505整理線失敗(rule12五度測試；用戶版=減碼訊號)"},
-        {"name": "long_pullback", "dir": "long", "order": "limit_buy", "entry": 7477, "stop": 7448, "t1": 7533, "t2": 7554, "weight": 0.06, "note": "MA20接多——rule8b環境過濾生效：rule15全面警報中倉位減半(0.12→0.06)且需當日半導體止穩否則不進"},
-        {"name": "long_breakout", "dir": "long", "order": "buy_stop", "entry": 7556, "stop": 7505, "t1": 7588, "t2": 7609, "weight": 0.0, "note": "偏空60%矩陣=禁追多，權重0追蹤"}
+        {"name": "short_rally", "dir": "short", "order": "limit_sell", "entry": 7505, "stop": 7538, "t1": 7457, "t2": 7431, "weight": 0.1, "note": "反彈至舊整理線7,505(破位轉壓)掛空(系統模擬用)"},
+        {"name": "short_breakdown", "dir": "short", "order": "sell_stop_close_confirm", "entry": 7421, "stop": 7460, "t1": 7395, "t2": 7365, "weight": 0.1, "note": "收盤破7,421雙底帶=二次探底失敗(rule12；用戶版=二次減碼/防禦升級訊號)"},
+        {"name": "long_pullback", "dir": "long", "order": "limit_buy", "entry": 7421, "stop": 7395, "t1": 7479, "t2": 7505, "weight": 0.08, "note": "雙底帶7,421接多(rule8錨定+C=A測量目標已達)——rule8b：rule15警報中半倉(0.15→0.08)，需當日半導體同步止穩"},
+        {"name": "long_breakout", "dir": "long", "order": "buy_stop", "entry": 7481, "stop": 7448, "t1": 7505, "t2": 7554, "weight": 0.08, "note": "收復MA20/MA50帶(7,465-7,479)追多，需帶量+半導體同步(五紅線)"}
       ]
     }
   ],
   "summary": {
-    "as_of": "2026-07-17",
-    "days_evaluated": 9,
-    "trades_total": 34,
-    "trades_filled": 8,
-    "filled_win": 4,
+    "as_of": "2026-07-18",
+    "days_evaluated": 10,
+    "trades_total": 38,
+    "trades_filled": 9,
+    "filled_win": 5,
     "filled_loss": 3,
-    "cumulative_weighted_bp": -1.8,
+    "cumulative_weighted_bp": 9.6,
     "open_positions": 1,
-    "honest_read": "累積轉負-1.8bp（7/16：7,554接多-4.6bp，rule8警報環境第三次證偽）+一口在途空單(7,533.77浮盈中)。rule8環境過濾正式轉正rule8b：警報環境0勝2敗合計-10.7bp、正常環境2勝0敗+8.3bp，機制清楚(警報中支撐是陰跌不回頭不是插針)——質化條件寫了但機械模擬不執行它，正是這本帳要抓的『如果照表操作』的真實代價。樣本=9仍無統計意義"
+    "honest_read": "累積大幅轉正+9.6bp（7/17：假收復空跳空獲利+11.4bp=帳本最大單筆）。rule12『收盤確認』的完整價值鏈本週跑完：擋掉四次盤中插針假訊號(不虧) → 收盤真確認後進場 → 吃到跳空整段(大賺)。gap雙向對照：跳空幫了空單(+86.25)也作廢了多單(7,477單開盤已在停損下)；新在途空單7,457.69進場屬追空型態，週一反彈是其主要風險(停損收緊7,505)。樣本=10仍無統計意義"
   }
 }

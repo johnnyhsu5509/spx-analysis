@@ -35,17 +35,18 @@
     {"report_date": "2026-07-14", "basis_close": 7515.34, "pullback_prob": 65, "bias": "偏空", "actual_date": "2026-07-14", "actual_pct": 0.38, "actual_dir": "up", "grade": "miss"},
     {"report_date": "2026-07-15", "basis_close": 7543.59, "pullback_prob": 48, "bias": "中性偏多", "actual_date": "2026-07-15", "actual_pct": 0.38, "actual_dir": "up", "grade": "hit"},
     {"report_date": "2026-07-16", "basis_close": 7572.4, "pullback_prob": 52, "bias": "中性(TSM法說二元)", "actual_date": "2026-07-16", "actual_pct": -0.51, "actual_dir": "down", "grade": "half"},
-    {"report_date": "2026-07-17", "basis_close": 7533.77, "pullback_prob": 60, "bias": "偏空(rule20上限)", "actual_date": "2026-07-17(pending)", "actual_pct": null, "actual_dir": null, "grade": "pending"}
+    {"report_date": "2026-07-17", "basis_close": 7533.77, "pullback_prob": 60, "bias": "偏空(rule20上限)", "actual_date": "2026-07-17", "actual_pct": -1.01, "actual_dir": "down", "grade": "hit"},
+    {"report_date": "2026-07-18", "basis_close": 7457.69, "pullback_prob": 54, "bias": "中性偏空(築底vs續跌)", "actual_date": "2026-07-20(pending)", "actual_pct": null, "actual_dir": null, "grade": "pending"}
   ],
   "summary": {
-    "graded": 21,
-    "hits": 7,
+    "graded": 22,
+    "hits": 8,
     "half": 9,
     "miss": 5,
-    "rolling_direction_score_pct": 54.8,
+    "rolling_direction_score_pct": 56.8,
     "brier": {
-      "as_of": "2026-07-17",
-      "included": 15,
+      "as_of": "2026-07-18",
+      "included": 16,
       "excluded_flat": 6,
       "per_entry": [
         {"report_date": "2026-06-16", "p": 0.60, "outcome": 1, "brier": 0.1600},
@@ -62,15 +63,16 @@
         {"report_date": "2026-07-11", "p": 0.50, "outcome": 1, "brier": 0.2500},
         {"report_date": "2026-07-14", "p": 0.65, "outcome": 0, "brier": 0.4225},
         {"report_date": "2026-07-15", "p": 0.48, "outcome": 0, "brier": 0.2304},
-        {"report_date": "2026-07-16", "p": 0.52, "outcome": 1, "brier": 0.2304}
+        {"report_date": "2026-07-16", "p": 0.52, "outcome": 1, "brier": 0.2304},
+        {"report_date": "2026-07-17", "p": 0.60, "outcome": 1, "brier": 0.1600}
       ],
-      "mean_brier": 0.2726,
+      "mean_brier": 0.2655,
       "benchmark_50pct": 0.25,
       "prob_range_observed": "45-65",
-      "honest_read": "mean續改善至0.2726。7/16老實報52%中性(TSM二元開獎前不假裝有方向)遇跌-0.51%=Brier 0.2304優於基準——事件開獎前收窄報價的紀律連兩日有效。7/17首次在rule20上限處報60%偏空：隔夜ES-0.93%+半導體margin shock+RISK_OFF為真實證據，非窄帶躺平；此筆是rule20『上限60』與『有據可依才報偏空』的關鍵測試。"
+      "honest_read": "mean續改善至0.2655(連三日下降0.2791→0.2756→0.2726→0.2655)。7/17在rule20上限報60%偏空遇-1.01%=Brier 0.16為帳本最佳單筆之一——『有已發生證據(隔夜ES-0.93%+margin shock)才報上限』的紀律得到正回饋。近四筆(48/52/60/54)全部有據可依、無窄帶躺平，報價紀律成形中。7/18報54%中性偏空：C=A測量目標已達+雙底帶7,421在下+半導體相對止穩 vs MACD轉負+破MA20/50，證據真實兩面。"
     },
-    "as_of": "2026-07-17",
-    "honest_note": "54.8%（7/16中性52%遇-0.51%=half）。7/16真正的亮點是路徑：方案C『TSM開壞→SOXX破551.7→指數跌回7,554下測7,527/7,505』全程精準兌現(SOXX 530.5大破、收7,533.77、低7,504.02)——rule16情景路徑再度比headline有價值。rule12第四次驗證：7,505盤中插針0.98點(7,504.02)收盤又回收，四次插針全被洗。7,588修剪單第四次未成交(高7,570.74)。TSM法說=『財報創紀錄但capex上修→毛利擠壓恐慌』，好財報被賣=敘事轉向AI ROI質疑，屬結構性訊號非單日噪音。",
+    "as_of": "2026-07-18",
+    "honest_note": "56.8%（7/17偏空60%遇-1.01%=hit）。7/17整體是系統最好的一天：headline hit+Brier 0.16、方案A路徑精準(收盤破7,505→測MA20/MA50,低7,431)、減碼訊號按預定計畫觸發(收盤破7,505)、開盤確認的『站回7,505才算假跌破』保留條款正確(V轉在7,498夭折)、模擬空單跳空獲利+86.25點。rule16情景路徑六連精準。新格局：收盤首次跌破MA20+MA50、MACD柱轉負=中期趨勢受損，rule20上限條件解除；但C=A測量目標(7,449)已達、7,421雙底帶在下、記憶體股止跌=築底vs續跌的兩面局。",
     "seed_note": "帳本自 2026-06-16 起建(更早的 6/11-6/13 缺精確立場紀錄，不回補)"
   }
 }
