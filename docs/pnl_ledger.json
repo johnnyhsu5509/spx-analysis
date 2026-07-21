@@ -135,27 +135,38 @@
     },
     {
       "report_date": "2026-07-18",
-      "eval_date": "pending(2026-07-20 US close)",
-      "carry_over": [
-        {"name": "short_breakdown_0717", "dir": "short", "entry_px": 7457.69, "stop": 7505, "t1": 7431, "t2": 7421, "weight": 0.12, "note": "7/17收盤進場的破位空單，以7/20 OHLC判定；停損收緊至7,505(舊整理線收復=空單邏輯失效)"}
+      "eval_date": "2026-07-20",
+      "eval_ohlc": {"o": 7489.18, "h": 7513.23, "l": 7440.53, "c": 7443.28},
+      "execution_override": "long_breakout(7,481)於7/20盤前更新已依五紅線『不追跳空』明確否決——開7,489.18跳空越過進場價，實戰不執行；機械模擬另計不入當日總額",
+      "trades": [
+        {"name": "short_breakdown_0717_carry", "dir": "short", "entry_px": 7457.69, "stop": 7505, "t1": 7431, "t2": 7421, "weight": 0.12, "filled": true, "exit": "stop", "exit_px": 7505, "pts": -47.31, "ret_pct": -0.63, "weighted_bp": -7.6, "note": "高7,513.23觸停損7,505出場-47.31點——諷刺的是當日收7,443.28(若不停損為+14.4點)。這正是『追空型態』的代價：7/17收盤7,457.69進場已離破位點很遠，緩衝不足以承受隔日反彈；close-confirm型態在跳空日進場的gap風險雙向，此筆為反面樣本"},
+        {"name": "short_rally", "dir": "short", "order": "limit_sell", "entry": 7505, "stop": 7538, "t1": 7457, "t2": 7431, "weight": 0.1, "filled": true, "exit": "t1", "exit_px": 7457, "pts": 48.0, "ret_pct": 0.64, "weighted_bp": 6.4, "note": "★逃命彈掛空精準命中：高7,513.23觸價成交(破位線7,505轉壓)，同日回落觸t1 7,457出場+48點。週六策略表『反彈至7,505掛空』的位置設計正確，與同日被7,505掃停損的carry空單形成完美對照——同一條線,掛對方向的單賺、抱錯緩衝的單虧"},
+        {"name": "short_breakdown", "dir": "short", "order": "sell_stop_close_confirm", "entry": 7421, "weight": 0.1, "filled": false, "note": "收7,443.28>7,421未確認=正確未觸發(低7,440.53距7,421僅19.5點)"},
+        {"name": "long_pullback", "dir": "long", "order": "limit_buy", "entry": 7421, "weight": 0.08, "filled": false, "note": "低7,440.53>7,421未觸價，雙底帶第一次逼近未測試"},
+        {"name": "long_breakout", "dir": "long", "order": "buy_stop", "entry": 7481, "stop": 7448, "weight": 0.08, "executed": false, "mech_result": "跳空開7,489.18成交(gap fill)→低7,440.53觸停損7,448=機械-41.18點/-4.4bp", "note": "★閘門第四次攔截：盤前更新明確『不追跳空、等回測站穩』，實戰未進場避免-4.4bp。攔截紀錄4:1"}
       ],
+      "day_weighted_bp": -1.2
+    },
+    {
+      "report_date": "2026-07-21",
+      "eval_date": "pending(2026-07-21 US close)",
       "trades_pending": [
-        {"name": "short_rally", "dir": "short", "order": "limit_sell", "entry": 7505, "stop": 7538, "t1": 7457, "t2": 7431, "weight": 0.1, "note": "反彈至舊整理線7,505(破位轉壓)掛空(系統模擬用)"},
-        {"name": "short_breakdown", "dir": "short", "order": "sell_stop_close_confirm", "entry": 7421, "stop": 7460, "t1": 7395, "t2": 7365, "weight": 0.1, "note": "收盤破7,421雙底帶=二次探底失敗(rule12；用戶版=二次減碼/防禦升級訊號)"},
-        {"name": "long_pullback", "dir": "long", "order": "limit_buy", "entry": 7421, "stop": 7395, "t1": 7479, "t2": 7505, "weight": 0.08, "note": "雙底帶7,421接多(rule8錨定+C=A測量目標已達)——rule8b：rule15警報中半倉(0.15→0.08)，需當日半導體同步止穩"},
-        {"name": "long_breakout", "dir": "long", "order": "buy_stop", "entry": 7481, "stop": 7448, "t1": 7505, "t2": 7554, "weight": 0.08, "note": "收復MA20/MA50帶(7,465-7,479)追多，需帶量+半導體同步(五紅線)"}
+        {"name": "short_rally", "dir": "short", "order": "limit_sell", "entry": 7476, "stop": 7505, "t1": 7421, "t2": 7395, "weight": 0.1, "note": "反彈至MA20(7,476)轉壓掛空(系統模擬用)——7/20已示範同型態獲利"},
+        {"name": "short_breakdown", "dir": "short", "order": "sell_stop_close_confirm", "entry": 7421, "stop": 7460, "t1": 7395, "t2": 7365, "weight": 0.12, "note": "收盤破7,421雙底帶(rule12；用戶版=融資清零訊號)"},
+        {"name": "long_pullback", "dir": "long", "order": "limit_buy", "entry": 7421, "stop": 7395, "t1": 7466, "t2": 7476, "weight": 0.10, "note": "雙底帶7,421接多——rule15降級為觀察後rule8b半倉解除、倉位回升0.08→0.10，仍需當日半導體不轉弱"},
+        {"name": "long_breakout", "dir": "long", "order": "buy_stop", "entry": 7481, "stop": 7448, "t1": 7505, "t2": 7554, "weight": 0.06, "note": "收復MA20/50帶追多——連兩日被同一組合(跳空/量不足)否決，倉位降至0.06且僅在非跳空+帶量時執行"}
       ]
     }
   ],
   "summary": {
-    "as_of": "2026-07-18",
-    "days_evaluated": 10,
-    "trades_total": 38,
-    "trades_filled": 9,
-    "filled_win": 5,
-    "filled_loss": 3,
-    "cumulative_weighted_bp": 9.6,
-    "open_positions": 1,
-    "honest_read": "累積大幅轉正+9.6bp（7/17：假收復空跳空獲利+11.4bp=帳本最大單筆）。rule12『收盤確認』的完整價值鏈本週跑完：擋掉四次盤中插針假訊號(不虧) → 收盤真確認後進場 → 吃到跳空整段(大賺)。gap雙向對照：跳空幫了空單(+86.25)也作廢了多單(7,477單開盤已在停損下)；新在途空單7,457.69進場屬追空型態，週一反彈是其主要風險(停損收緊7,505)。樣本=10仍無統計意義"
+    "as_of": "2026-07-21",
+    "days_evaluated": 11,
+    "trades_total": 43,
+    "trades_filled": 11,
+    "filled_win": 6,
+    "filled_loss": 4,
+    "cumulative_weighted_bp": 8.4,
+    "open_positions": 0,
+    "honest_read": "累積+8.4bp（7/20 -1.2bp：逃命彈空+6.4bp、carry追空單-7.6bp）。當日最有價值的對照組：同一條7,505線上，『反彈掛空』賺+48點、『前日收盤追空』被同一個高點掃停損-47.31點——差別只在進場緩衝。教訓具體化：close-confirm破位空若當日已離破位點>0.5%，隔日停損應放在破位點外側而非收復線，否則等於用小緩衝抱大部位。閘門攔截4:1(7/20第四次擋掉跳空追多-4.4bp)。樣本=11仍無統計意義"
   }
 }

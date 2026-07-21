@@ -36,18 +36,19 @@
     {"report_date": "2026-07-15", "basis_close": 7543.59, "pullback_prob": 48, "bias": "中性偏多", "actual_date": "2026-07-15", "actual_pct": 0.38, "actual_dir": "up", "grade": "hit"},
     {"report_date": "2026-07-16", "basis_close": 7572.4, "pullback_prob": 52, "bias": "中性(TSM法說二元)", "actual_date": "2026-07-16", "actual_pct": -0.51, "actual_dir": "down", "grade": "half"},
     {"report_date": "2026-07-17", "basis_close": 7533.77, "pullback_prob": 60, "bias": "偏空(rule20上限)", "actual_date": "2026-07-17", "actual_pct": -1.01, "actual_dir": "down", "grade": "hit"},
-    {"report_date": "2026-07-18", "basis_close": 7457.69, "pullback_prob": 54, "bias": "中性偏空(築底vs續跌)", "actual_date": "2026-07-20(pending)", "actual_pct": null, "actual_dir": null, "grade": "pending"}
+    {"report_date": "2026-07-18", "basis_close": 7457.69, "pullback_prob": 54, "bias": "中性偏空(築底vs續跌)", "actual_date": "2026-07-20", "actual_pct": -0.19, "actual_dir": "flat", "grade": "half"},
+    {"report_date": "2026-07-21", "basis_close": 7443.28, "pullback_prob": 58, "bias": "偏空(反轉日+輪動擴散)", "actual_date": "2026-07-21(pending)", "actual_pct": null, "actual_dir": null, "grade": "pending"}
   ],
   "summary": {
-    "graded": 22,
+    "graded": 23,
     "hits": 8,
-    "half": 9,
+    "half": 10,
     "miss": 5,
-    "rolling_direction_score_pct": 56.8,
+    "rolling_direction_score_pct": 56.5,
     "brier": {
-      "as_of": "2026-07-18",
+      "as_of": "2026-07-21",
       "included": 16,
-      "excluded_flat": 6,
+      "excluded_flat": 7,
       "per_entry": [
         {"report_date": "2026-06-16", "p": 0.60, "outcome": 1, "brier": 0.1600},
         {"report_date": "2026-06-17", "p": 0.58, "outcome": 1, "brier": 0.1764},
@@ -69,10 +70,10 @@
       "mean_brier": 0.2655,
       "benchmark_50pct": 0.25,
       "prob_range_observed": "45-65",
-      "honest_read": "mean續改善至0.2655(連三日下降0.2791→0.2756→0.2726→0.2655)。7/17在rule20上限報60%偏空遇-1.01%=Brier 0.16為帳本最佳單筆之一——『有已發生證據(隔夜ES-0.93%+margin shock)才報上限』的紀律得到正回饋。近四筆(48/52/60/54)全部有據可依、無窄帶躺平，報價紀律成形中。7/18報54%中性偏空：C=A測量目標已達+雙底帶7,421在下+半導體相對止穩 vs MACD轉負+破MA20/50，證據真實兩面。"
+      "honest_read": "mean維持0.2655(7/20實際-0.19%=flat，依規則排除不計，樣本仍16筆)。近五筆(48/52/60/54/58)全部有據可依、無窄帶躺平。7/21報58%偏空的證據鏈：反轉日(衝7,513回落收近低)+MACD柱-7.73加深+10Y回升5.7bps+Apple/Tesla補跌，扣分項=7,421未測試、RSI 50中性、半導體連兩日相對強、財報週二元催化——58而非65正是這些反向證據的價格。"
     },
-    "as_of": "2026-07-18",
-    "honest_note": "56.8%（7/17偏空60%遇-1.01%=hit）。7/17整體是系統最好的一天：headline hit+Brier 0.16、方案A路徑精準(收盤破7,505→測MA20/MA50,低7,431)、減碼訊號按預定計畫觸發(收盤破7,505)、開盤確認的『站回7,505才算假跌破』保留條款正確(V轉在7,498夭折)、模擬空單跳空獲利+86.25點。rule16情景路徑六連精準。新格局：收盤首次跌破MA20+MA50、MACD柱轉負=中期趨勢受損，rule20上限條件解除；但C=A測量目標(7,449)已達、7,421雙底帶在下、記憶體股止跌=築底vs續跌的兩面局。",
+    "as_of": "2026-07-21",
+    "honest_note": "56.5%（7/18中性偏空54%遇-0.19%=flat=half）。7/20的價值全在路徑而非headline：週六策略表寫明『反彈至7,479-7,505帶＝第二執行窗、衝7,505無量回落＝賣⑥逃命彈』，實際開7,489.18→高7,513.23(精準摸到破位線上緣)→反轉收7,443.28近全日低——逃命彈劇本教科書級兌現，rule16路徑七連。用戶據此在7,507與收破7,505兩段完成減碼(1.37x→1.10x)，是本系統第一次『訊號→執行→驗證』全鏈條在真實部位上跑完。新結構訊號：rule15降級條件達成(SOXX連兩日相對強+守518)，但weakness輪動到Apple/Tesla=指數最後支柱鬆動，對指數是壞消息、對重倉半導體的用戶反而是相對利多。",
     "seed_note": "帳本自 2026-06-16 起建(更早的 6/11-6/13 缺精確立場紀錄，不回補)"
   }
 }
