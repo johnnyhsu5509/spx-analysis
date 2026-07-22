@@ -149,24 +149,37 @@
     },
     {
       "report_date": "2026-07-21",
-      "eval_date": "pending(2026-07-21 US close)",
+      "eval_date": "2026-07-21",
+      "eval_ohlc": {"o": 7489.95, "h": 7515.31, "l": 7467.86, "c": 7509.2},
+      "execution_override": "long_breakout(7,481)於開盤確認(23:34)依五紅線『跳空開7,489.95越過進場價+量能比1.04<1.1』否決——實戰不進場；但事後看是本次錯過(+19.25點)，與7/20攔截省下-4.4bp形成對照=閘門對『跳空+量不足』一律否決,救過也錯過,長期中性偏保護",
+      "trades": [
+        {"name": "short_rally", "dir": "short", "order": "limit_sell", "entry": 7476, "stop": 7505, "t1": 7421, "t2": 7395, "weight": 0.1, "filled": true, "exit": "stop", "exit_px": 7505, "pts": -29.0, "ret_pct": -0.39, "weighted_bp": -3.9, "note": "高7,515.31觸停損7,505出場-29點。與7/20同型態(反彈掛空)相反結果：7/20收黑故獲利、7/21收復7,505故停損——MA20掛空在『類股連兩日轉強』的背景下是逆勢單,rule21候補的代價"},
+        {"name": "short_breakdown", "dir": "short", "order": "sell_stop_close_confirm", "entry": 7421, "weight": 0.12, "filled": false, "note": "收7,509.2遠高於7,421未觸發=正確未觸發(用戶融資清零線今日完全未逼近)"},
+        {"name": "long_pullback", "dir": "long", "order": "limit_buy", "entry": 7421, "weight": 0.10, "filled": false, "note": "低7,467.86>7,421未觸價,雙底帶第二次未測即反彈"},
+        {"name": "long_breakout", "dir": "long", "order": "buy_stop", "entry": 7481, "stop": 7448, "weight": 0.06, "executed": false, "mech_result": "跳空開7,489.95成交(gap fill)→收7,509.2=機械+19.25點/+1.2bp", "note": "★閘門這次錯過(非攔截):五紅線『不追跳空+量不足』否決,實戰未進場,錯失+1.2bp。攔截紀錄修正為4攔1錯,規則對『假突破』有效但對『真突破的第一天』會漏掉"}
+      ],
+      "day_weighted_bp": -3.9
+    },
+    {
+      "report_date": "2026-07-22",
+      "eval_date": "pending(2026-07-22 US close)",
       "trades_pending": [
-        {"name": "short_rally", "dir": "short", "order": "limit_sell", "entry": 7476, "stop": 7505, "t1": 7421, "t2": 7395, "weight": 0.1, "note": "反彈至MA20(7,476)轉壓掛空(系統模擬用)——7/20已示範同型態獲利"},
-        {"name": "short_breakdown", "dir": "short", "order": "sell_stop_close_confirm", "entry": 7421, "stop": 7460, "t1": 7395, "t2": 7365, "weight": 0.12, "note": "收盤破7,421雙底帶(rule12；用戶版=融資清零訊號)"},
-        {"name": "long_pullback", "dir": "long", "order": "limit_buy", "entry": 7421, "stop": 7395, "t1": 7466, "t2": 7476, "weight": 0.10, "note": "雙底帶7,421接多——rule15降級為觀察後rule8b半倉解除、倉位回升0.08→0.10，仍需當日半導體不轉弱"},
-        {"name": "long_breakout", "dir": "long", "order": "buy_stop", "entry": 7481, "stop": 7448, "t1": 7505, "t2": 7554, "weight": 0.06, "note": "收復MA20/50帶追多——連兩日被同一組合(跳空/量不足)否決，倉位降至0.06且僅在非跳空+帶量時執行"}
+        {"name": "long_pullback", "dir": "long", "order": "limit_buy", "entry": 7478, "stop": 7448, "t1": 7554, "t2": 7588, "weight": 0.1, "note": "回測MA20/收復線7,478接多(rule8錨定,收復後轉撐)——rule15警報解除,恢復正常倉位;財報前需半導體維持強勢"},
+        {"name": "long_breakout", "dir": "long", "order": "buy_stop", "entry": 7556, "stop": 7505, "t1": 7588, "t2": 7620, "weight": 0.08, "note": "過7,554前中樞上沿追多,需帶量+MACD柱轉正(現-6.79仍負)+財報利多;rule3條件多數未滿,倉位保守"},
+        {"name": "short_rally", "dir": "short", "order": "limit_sell", "entry": 7588, "stop": 7620, "t1": 7509, "t2": 7478, "weight": 0.08, "note": "反彈至前高帶7,588均值回歸空(系統模擬用;10Y 4.628新高+財報二元的對沖)"},
+        {"name": "short_breakdown", "dir": "short", "order": "sell_stop_close_confirm", "entry": 7476, "stop": 7515, "t1": 7448, "t2": 7421, "weight": 0.08, "note": "收盤跌回7,476下方=收復失敗(rule12;用戶版=警戒,破7,421才是融資清零)"}
       ]
     }
   ],
   "summary": {
-    "as_of": "2026-07-21",
-    "days_evaluated": 11,
-    "trades_total": 43,
-    "trades_filled": 11,
+    "as_of": "2026-07-22",
+    "days_evaluated": 12,
+    "trades_total": 48,
+    "trades_filled": 12,
     "filled_win": 6,
-    "filled_loss": 4,
-    "cumulative_weighted_bp": 8.4,
+    "filled_loss": 5,
+    "cumulative_weighted_bp": 4.5,
     "open_positions": 0,
-    "honest_read": "累積+8.4bp（7/20 -1.2bp：逃命彈空+6.4bp、carry追空單-7.6bp）。當日最有價值的對照組：同一條7,505線上，『反彈掛空』賺+48點、『前日收盤追空』被同一個高點掃停損-47.31點——差別只在進場緩衝。教訓具體化：close-confirm破位空若當日已離破位點>0.5%，隔日停損應放在破位點外側而非收復線，否則等於用小緩衝抱大部位。閘門攔截4:1(7/20第四次擋掉跳空追多-4.4bp)。樣本=11仍無統計意義"
+    "honest_read": "累積回落至+4.5bp（7/21 -3.9bp：MA20反彈掛空被收復7,505掃損）。本週完整故事：7/13-7/20偏空劇本點位賺錢(逃命彈/破位空)、7/21劇本反轉當日虧錢——這正是趨勢反轉日『最後一根偏空單』的必然成本。閘門紀錄修正4攔1錯:對假突破(7/9/7/10/7/20)有效、對真突破第一天(7/21)會漏,長期偏保護但非全知。rule21候補誕生:類股連兩日逆勢轉強時指數偏空單須降權。樣本=12仍無統計意義"
   }
 }
