@@ -162,24 +162,37 @@
     },
     {
       "report_date": "2026-07-22",
-      "eval_date": "pending(2026-07-22 US close)",
+      "eval_date": "2026-07-22",
+      "eval_ohlc": {"o": 7497.47, "h": 7525.94, "l": 7485.85, "c": 7498.96},
+      "trades": [
+        {"name": "long_pullback", "dir": "long", "order": "limit_buy", "entry": 7478, "weight": 0.1, "filled": false, "note": "低7,485.85>7,478差7.85點未觸價"},
+        {"name": "long_breakout", "dir": "long", "order": "buy_stop", "entry": 7556, "weight": 0.08, "filled": false, "note": "高7,525.94<7,556差30點未觸價"},
+        {"name": "short_rally", "dir": "short", "order": "limit_sell", "entry": 7588, "weight": 0.08, "filled": false, "note": "高7,525.94遠低於7,588"},
+        {"name": "short_breakdown", "dir": "short", "order": "sell_stop_close_confirm", "entry": 7476, "weight": 0.08, "filled": false, "note": "收7,498.96>7,476未確認=正確未觸發"}
+      ],
+      "day_weighted_bp": 0.0,
+      "day_note": "★四張單全部『正確未觸發』：震盪窄幅日(全日僅40點區間)不進場本身就是正確結果。進場價設計把區間震盪擋在門外,無謂交易=0"
+    },
+    {
+      "report_date": "2026-07-23",
+      "eval_date": "pending(2026-07-23 US close)",
       "trades_pending": [
-        {"name": "long_pullback", "dir": "long", "order": "limit_buy", "entry": 7478, "stop": 7448, "t1": 7554, "t2": 7588, "weight": 0.1, "note": "回測MA20/收復線7,478接多(rule8錨定,收復後轉撐)——rule15警報解除,恢復正常倉位;財報前需半導體維持強勢"},
-        {"name": "long_breakout", "dir": "long", "order": "buy_stop", "entry": 7556, "stop": 7505, "t1": 7588, "t2": 7620, "weight": 0.08, "note": "過7,554前中樞上沿追多,需帶量+MACD柱轉正(現-6.79仍負)+財報利多;rule3條件多數未滿,倉位保守"},
-        {"name": "short_rally", "dir": "short", "order": "limit_sell", "entry": 7588, "stop": 7620, "t1": 7509, "t2": 7478, "weight": 0.08, "note": "反彈至前高帶7,588均值回歸空(系統模擬用;10Y 4.628新高+財報二元的對沖)"},
-        {"name": "short_breakdown", "dir": "short", "order": "sell_stop_close_confirm", "entry": 7476, "stop": 7515, "t1": 7448, "t2": 7421, "weight": 0.08, "note": "收盤跌回7,476下方=收復失敗(rule12;用戶版=警戒,破7,421才是融資清零)"}
+        {"name": "long_pullback", "dir": "long", "order": "limit_buy", "entry": 7472, "stop": 7443, "t1": 7526, "t2": 7554, "weight": 0.1, "note": "回測MA50(7,472)接多(rule8錨定;MA20 7,485已在現價下方近處,錨定更下一層以求緩衝)——需當日半導體不轉弱"},
+        {"name": "long_breakout", "dir": "long", "order": "buy_stop", "entry": 7528, "stop": 7485, "t1": 7554, "t2": 7588, "weight": 0.06, "note": "過昨高7,525.94追多,需帶量+半導體同步;GOOGL capex賣壓下追多風險高,倉位保守"},
+        {"name": "short_rally", "dir": "short", "order": "limit_sell", "entry": 7554, "stop": 7588, "t1": 7485, "t2": 7448, "weight": 0.1, "note": "反彈至中樞上沿7,554掛空(系統模擬用;10Y破4.65+capex恐慌+地緣升級三重壓力)"},
+        {"name": "short_breakdown", "dir": "short", "order": "sell_stop_close_confirm", "entry": 7472, "stop": 7510, "t1": 7448, "t2": 7421, "weight": 0.1, "note": "收盤破MA50 7,472=雙均線失守(rule12;用戶版=警戒訊號,破7,421才是融資清零)"}
       ]
     }
   ],
   "summary": {
-    "as_of": "2026-07-22",
-    "days_evaluated": 12,
-    "trades_total": 48,
+    "as_of": "2026-07-23",
+    "days_evaluated": 13,
+    "trades_total": 52,
     "trades_filled": 12,
     "filled_win": 6,
     "filled_loss": 5,
     "cumulative_weighted_bp": 4.5,
     "open_positions": 0,
-    "honest_read": "累積回落至+4.5bp（7/21 -3.9bp：MA20反彈掛空被收復7,505掃損）。本週完整故事：7/13-7/20偏空劇本點位賺錢(逃命彈/破位空)、7/21劇本反轉當日虧錢——這正是趨勢反轉日『最後一根偏空單』的必然成本。閘門紀錄修正4攔1錯:對假突破(7/9/7/10/7/20)有效、對真突破第一天(7/21)會漏,長期偏保護但非全知。rule21候補誕生:類股連兩日逆勢轉強時指數偏空單須降權。樣本=12仍無統計意義"
+    "honest_read": "累積維持+4.5bp（7/22四張單全部正確未觸發=0交易日）。這是本帳本第一個『完全不動也是好結果』的樣本:全日區間僅40點,進場價設計成功把震盪日擋在門外。統計外觀:13日中4日零成交(7/9部分/7/10部分/7/22全部)——不強求每天有單是策略表的隱性優點。閘門紀錄4攔1錯。樣本=13仍無統計意義"
   }
 }
