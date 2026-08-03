@@ -201,24 +201,43 @@
     },
     {
       "report_date": "2026-07-27",
-      "eval_date": "pending(2026-07-27 US close)",
+      "eval_date": "2026-07-27",
+      "eval_ohlc": {"o": 7464.2, "h": 7480.57, "l": 7382.74, "c": 7413.18},
+      "trades": [
+        {"name": "long_pullback", "dir": "long", "order": "limit_buy", "entry": 7376, "weight": 0.1, "filled": false, "note": "低7,382.74>7,376差6.74點未觸價,雙底再度逼近未測"},
+        {"name": "long_breakout", "dir": "long", "order": "buy_stop", "entry": 7462, "stop": 7411, "weight": 0.08, "filled": true, "entry_px": 7464.2, "exit": "stop", "exit_px": 7411, "pts": -53.2, "ret_pct": -0.71, "weighted_bp": -5.7, "note": "開7,464.2觸buy_stop 7,462成交→盤中殺7,382.74觸停損7,411=-53.2點。收復追多在超賣區失敗(當日仍在均線下震盪),rule14『超賣區追多也危險』的反面提醒"},
+        {"name": "short_rally", "dir": "short", "order": "limit_sell", "entry": 7472, "stop": 7505, "t1": 7411, "t2": 7376, "weight": 0.06, "filled": true, "exit": "t1", "exit_px": 7411, "pts": 61.0, "ret_pct": 0.82, "weighted_bp": 4.9, "note": "高7,480.57觸價7,472成交,盤中殺至低7,382.74觸t1 7,411出場+61點。又一次:反彈掛空當日平獲利(第三度驗證進場緩衝+短持倉)"},
+        {"name": "short_breakdown", "dir": "short", "order": "sell_stop_close_confirm", "entry": 7376, "weight": 0.08, "filled": false, "note": "收7,413.18>7,376未確認=正確未觸發(守住雙底)"}
+      ],
+      "day_weighted_bp": -0.8,
+      "day_note": "收復追多-5.7bp、反彈掛空+4.9bp=淨-0.8bp。震盪區:追突破被殺、掛反彈空獲利,型態與7/24雷同"
+    },
+    {
+      "report_date": "2026-07-28to31",
+      "eval_date": "GAP",
+      "note": "★誠實缺口:此4交易日session未執行,無策略表留存,不回補不模擬。實際走勢:7/28守7,383、7/29洗盤破雙底殺7,313.92(-1.52%)、7/30 V轉+1.66%、7/31續彈+0.70%收7,489.72。若當時有分析,7/29超賣破底空與7/30-31 V轉多本可有作為,但無預測即無可計損益,列gap不列績效"
+    },
+    {
+      "report_date": "2026-08-03",
+      "eval_date": "pending(2026-08-03 US close)",
       "trades_pending": [
-        {"name": "long_pullback", "dir": "long", "order": "limit_buy", "entry": 7376, "stop": 7345, "t1": 7448, "t2": 7472, "weight": 0.1, "note": "回測昨低7,376接多(rule5/14:RSI 38.88<40超賣區,做多優先於做空)——超賣反彈博弈,需油價不再飆+守7,376"},
-        {"name": "long_breakout", "dir": "long", "order": "buy_stop", "entry": 7462, "stop": 7411, "t1": 7490, "t2": 7510, "weight": 0.08, "note": "過昨高7,460.98追多=收復動能,需帶量+油價回落確認"},
-        {"name": "short_rally", "dir": "short", "order": "limit_sell", "entry": 7472, "stop": 7505, "t1": 7411, "t2": 7376, "weight": 0.06, "note": "反彈至MA50(7,472)掛空(系統模擬用)——rule14空單禁追,倉位砍半至0.06;僅在反彈無量時"},
-        {"name": "short_breakdown", "dir": "short", "order": "sell_stop_close_confirm", "entry": 7376, "stop": 7420, "t1": 7345, "t2": 7320, "weight": 0.08, "note": "收盤破7,376=超賣續破(rule12;用戶版=核心倉觀察線)——RSI<40環境下破底空同樣要收盤確認"}
+        {"name": "long_pullback", "dir": "long", "order": "limit_buy", "entry": 7472, "stop": 7440, "t1": 7512, "t2": 7554, "weight": 0.1, "note": "回測MA50/收復帶7,472接多(rule8;V轉後轉撐)——需10Y不再飆破4.80、半導體不轉弱"},
+        {"name": "long_breakout", "dir": "long", "order": "buy_stop", "entry": 7514, "stop": 7472, "t1": 7554, "t2": 7588, "weight": 0.08, "note": "過7,512(7/31高)追多=修復續攻,需帶量+MACD柱轉正(現-8.61仍負);10Y新高下追多保守"},
+        {"name": "short_rally", "dir": "short", "order": "limit_sell", "entry": 7554, "stop": 7590, "t1": 7490, "t2": 7448, "weight": 0.1, "note": "反彈至前中樞上沿7,554掛空(系統模擬用;10Y 4.745創2025新高+反彈至阻力的均值回歸)"},
+        {"name": "short_breakdown", "dir": "short", "order": "sell_stop_close_confirm", "entry": 7440, "stop": 7480, "t1": 7400, "t2": 7351, "weight": 0.08, "note": "收盤跌回7,440下=V轉失敗(rule12;用戶版=警戒,破7,313才是核心倉觀察線)"}
       ]
     }
   ],
   "summary": {
-    "as_of": "2026-07-27",
-    "days_evaluated": 15,
-    "trades_total": 60,
-    "trades_filled": 14,
-    "filled_win": 7,
-    "filled_loss": 6,
-    "cumulative_weighted_bp": 2.3,
+    "as_of": "2026-08-03",
+    "days_evaluated": 16,
+    "trades_total": 64,
+    "trades_filled": 16,
+    "filled_win": 8,
+    "filled_loss": 7,
+    "cumulative_weighted_bp": 1.5,
     "open_positions": 0,
-    "honest_read": "累積回落至+2.3bp（7/24 -2.2bp:carry空被十字高點掃停損-7.0bp、當日反彈掛空+4.8bp）。核心教訓浮現且重複兩次(7/20、7/24):十字反轉日的盤中高點會精準掃掉過夜空單的停損(兩次都<1.5點)然後收回——單日強平模擬+抱過夜空的組合,在反轉日必然吃虧。rule12c候補:RSI近超賣+守支撐的反轉徵兆日,系統不留過夜空單。同日『反彈掛空(當日平)』持續賺錢=進場緩衝與持倉時間是空單成敗關鍵。樣本=15仍無統計意義"
+    "gap_days": ["2026-07-28", "2026-07-29", "2026-07-30", "2026-07-31"],
+    "honest_read": "累積回落至+1.5bp（7/27 -0.8bp,收復追多再被震盪殺）。含4日gap(7/28-31未執行),此段的7,313洗盤V轉未計損益=誠實缺口。反覆出現的鐵律(7/20/7/24/7/27三度):震盪/反轉區『追突破多』被殺、『掛反彈空當日平』獲利——策略表裡真正穩定貢獻的是limit反彈單,buy_stop突破追多在無趨勢時是失血點。rule23候補:MACD柱<-8且價在均線糾結帶時,突破追多單倉位須砍半或停用。樣本=16(含gap實際有效更少)仍無統計意義"
   }
 }
