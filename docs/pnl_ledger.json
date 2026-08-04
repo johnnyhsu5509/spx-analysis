@@ -219,25 +219,38 @@
     },
     {
       "report_date": "2026-08-03",
-      "eval_date": "pending(2026-08-03 US close)",
+      "eval_date": "2026-08-03",
+      "eval_ohlc": {"o": 7504.78, "h": 7610.04, "l": 7504.78, "c": 7600.5},
+      "trades": [
+        {"name": "long_pullback", "dir": "long", "order": "limit_buy", "entry": 7472, "weight": 0.1, "filled": false, "note": "低7,504.78(=開盤)>7,472未觸價,跳空後直線上攻不回頭"},
+        {"name": "long_breakout", "dir": "long", "order": "buy_stop", "entry": 7514, "stop": 7472, "t1": 7554, "t2": 7588, "weight": 0.08, "filled": true, "entry_px": 7514, "exit": "close", "exit_px": 7600.5, "pts": 86.5, "ret_pct": 1.15, "weighted_bp": 9.2, "note": "★突破多終於在趨勢日大賺:開7,504.78→過7,514觸價→收最高7,600.5=+86.5點/+9.2bp。rule23精準邊界:8/3是乾淨趨勢日(跳空+收最高,非均線糾結),突破多該賺就賺;rule23砍半只針對無趨勢震盪區,不是禁突破而是分辨盤型"},
+        {"name": "short_rally", "dir": "short", "order": "limit_sell", "entry": 7554, "stop": 7590, "t1": 7490, "t2": 7448, "weight": 0.1, "filled": true, "exit": "stop", "exit_px": 7590, "pts": -36.0, "ret_pct": -0.48, "weighted_bp": -4.8, "note": "高7,610.04觸價7,554成交→續攻觸停損7,590=-36點。趨勢日掛反彈空的代價(與震盪日反彈空獲利相反)=盤型決定成敗"},
+        {"name": "short_breakdown", "dir": "short", "order": "sell_stop_close_confirm", "entry": 7440, "weight": 0.08, "filled": false, "note": "收7,600.5遠高於7,440未觸發"}
+      ],
+      "day_weighted_bp": 4.4,
+      "day_note": "突破多+9.2bp、反彈空-4.8bp=淨+4.4bp。趨勢日突破多賺、反彈空虧,與震盪日完全相反=rule23分辨盤型的正反面同日呈現"
+    },
+    {
+      "report_date": "2026-08-04",
+      "eval_date": "pending(2026-08-04 US close)",
       "trades_pending": [
-        {"name": "long_pullback", "dir": "long", "order": "limit_buy", "entry": 7472, "stop": 7440, "t1": 7512, "t2": 7554, "weight": 0.1, "note": "回測MA50/收復帶7,472接多(rule8;V轉後轉撐)——需10Y不再飆破4.80、半導體不轉弱"},
-        {"name": "long_breakout", "dir": "long", "order": "buy_stop", "entry": 7514, "stop": 7472, "t1": 7554, "t2": 7588, "weight": 0.08, "note": "過7,512(7/31高)追多=修復續攻,需帶量+MACD柱轉正(現-8.61仍負);10Y新高下追多保守"},
-        {"name": "short_rally", "dir": "short", "order": "limit_sell", "entry": 7554, "stop": 7590, "t1": 7490, "t2": 7448, "weight": 0.1, "note": "反彈至前中樞上沿7,554掛空(系統模擬用;10Y 4.745創2025新高+反彈至阻力的均值回歸)"},
-        {"name": "short_breakdown", "dir": "short", "order": "sell_stop_close_confirm", "entry": 7440, "stop": 7480, "t1": 7400, "t2": 7351, "weight": 0.08, "note": "收盤跌回7,440下=V轉失敗(rule12;用戶版=警戒,破7,313才是核心倉觀察線)"}
+        {"name": "long_pullback", "dir": "long", "order": "limit_buy", "entry": 7554, "stop": 7520, "t1": 7610, "t2": 7640, "weight": 0.1, "note": "回測前高帶7,554(破頂後轉撐)接多(rule8)——ATH突破後回踩買點,需10Y不回升"},
+        {"name": "long_breakout", "dir": "long", "order": "buy_stop", "entry": 7612, "stop": 7570, "t1": 7660, "t2": 7690, "weight": 0.08, "note": "過ATH 7,610追多創新高=趨勢延續(rule23:MACD柱+3.54已轉正非糾結,突破多恢復正常倉);需帶量"},
+        {"name": "short_rally", "dir": "short", "order": "limit_sell", "entry": 7640, "stop": 7675, "t1": 7570, "t2": 7520, "weight": 0.08, "note": "衝ATH上方7,640均值回歸空(系統模擬用;BB 91.5%超買對沖)"},
+        {"name": "short_breakdown", "dir": "short", "order": "sell_stop_close_confirm", "entry": 7554, "stop": 7595, "t1": 7512, "t2": 7472, "weight": 0.06, "note": "收盤跌回7,554下=假突破ATH(rule12;用戶版=警戒)"}
       ]
     }
   ],
   "summary": {
-    "as_of": "2026-08-03",
-    "days_evaluated": 16,
-    "trades_total": 64,
-    "trades_filled": 16,
-    "filled_win": 8,
-    "filled_loss": 7,
-    "cumulative_weighted_bp": 1.5,
+    "as_of": "2026-08-04",
+    "days_evaluated": 17,
+    "trades_total": 68,
+    "trades_filled": 18,
+    "filled_win": 9,
+    "filled_loss": 8,
+    "cumulative_weighted_bp": 5.9,
     "open_positions": 0,
     "gap_days": ["2026-07-28", "2026-07-29", "2026-07-30", "2026-07-31"],
-    "honest_read": "累積回落至+1.5bp（7/27 -0.8bp,收復追多再被震盪殺）。含4日gap(7/28-31未執行),此段的7,313洗盤V轉未計損益=誠實缺口。反覆出現的鐵律(7/20/7/24/7/27三度):震盪/反轉區『追突破多』被殺、『掛反彈空當日平』獲利——策略表裡真正穩定貢獻的是limit反彈單,buy_stop突破追多在無趨勢時是失血點。rule23候補:MACD柱<-8且價在均線糾結帶時,突破追多單倉位須砍半或停用。樣本=16(含gap實際有效更少)仍無統計意義"
+    "honest_read": "累積回升至+5.9bp（8/3趨勢日突破多+9.2bp救回帳本）。rule23完整圖像成形:突破多在均線糾結震盪日失血(7/20/24/27)、在乾淨趨勢日大賺(8/3)——關鍵不是禁突破而是盤型辨識(跳空+收極端=趨勢日,MA5/20/50收斂+十字=震盪日),反彈空同理反向。策略表alpha=盤型對了掛單型態就對了。樣本=17(含4日gap)仍無統計意義,但rule23盤型辨識已有4個一致樣本"
   }
 }
