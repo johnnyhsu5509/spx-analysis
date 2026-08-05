@@ -232,25 +232,39 @@
     },
     {
       "report_date": "2026-08-04",
-      "eval_date": "pending(2026-08-04 US close)",
+      "eval_date": "2026-08-04",
+      "eval_ohlc": {"o": 7630.62, "h": 7758.21, "l": 7629.1, "c": 7736.52},
+      "execution_override": "long_breakout(7,612)開盤跳空至7,630.62(越過18點)=五紅線『不追跳空』否決,實戰不進場;機械gap-fill為+11.3bp但列閘門攔截(這次是melt-up續勢的錯過,非救援)——閘門紀錄修正4救2錯,melt-up是閘門的盲區",
+      "trades": [
+        {"name": "long_pullback", "dir": "long", "order": "limit_buy", "entry": 7554, "weight": 0.1, "filled": false, "note": "低7,629.10>7,554未觸價,跳空續噴不回頭"},
+        {"name": "long_breakout", "dir": "long", "order": "buy_stop", "entry": 7612, "stop": 7570, "weight": 0.08, "executed": false, "mech_result": "跳空開7,630.62(gap-fill)→收7,736.52=機械+105.9點/+11.3bp", "note": "★閘門melt-up盲區:五紅線拒跳空,錯失+11.3bp。與7/21同型(gap-up突破被拒)——連續趨勢日中閘門的保護變成錯過,rule24候補要處理"},
+        {"name": "short_rally", "dir": "short", "order": "limit_sell", "entry": 7640, "stop": 7675, "t1": 7570, "t2": 7520, "weight": 0.08, "filled": true, "exit": "stop", "exit_px": 7675, "pts": -35.0, "ret_pct": -0.46, "weighted_bp": -2.8, "note": "高7,758.21觸價7,640成交→續軋觸停損7,675=-35點。melt-up第二日均值回歸空被續軋(8/3-8/4連兩趨勢日),本系統均值回歸傾向的最差環境=rule24候補"},
+        {"name": "short_breakdown", "dir": "short", "order": "sell_stop_close_confirm", "entry": 7554, "weight": 0.06, "filled": false, "note": "收7,736.52遠高於7,554未觸發"}
+      ],
+      "day_weighted_bp": -2.8,
+      "day_note": "melt-up第二日:均值回歸空-2.8bp、閘門拒了會賺的gap突破多(+11.3bp錯過)。連續趨勢日對均值回歸傾向系統=雙重失血(空被軋+閘門擋掉順勢多)→rule24候補"
+    },
+    {
+      "report_date": "2026-08-05",
+      "eval_date": "pending(2026-08-05 US close)",
       "trades_pending": [
-        {"name": "long_pullback", "dir": "long", "order": "limit_buy", "entry": 7554, "stop": 7520, "t1": 7610, "t2": 7640, "weight": 0.1, "note": "回測前高帶7,554(破頂後轉撐)接多(rule8)——ATH突破後回踩買點,需10Y不回升"},
-        {"name": "long_breakout", "dir": "long", "order": "buy_stop", "entry": 7612, "stop": 7570, "t1": 7660, "t2": 7690, "weight": 0.08, "note": "過ATH 7,610追多創新高=趨勢延續(rule23:MACD柱+3.54已轉正非糾結,突破多恢復正常倉);需帶量"},
-        {"name": "short_rally", "dir": "short", "order": "limit_sell", "entry": 7640, "stop": 7675, "t1": 7570, "t2": 7520, "weight": 0.08, "note": "衝ATH上方7,640均值回歸空(系統模擬用;BB 91.5%超買對沖)"},
-        {"name": "short_breakdown", "dir": "short", "order": "sell_stop_close_confirm", "entry": 7554, "stop": 7595, "t1": 7512, "t2": 7472, "weight": 0.06, "note": "收盤跌回7,554下=假突破ATH(rule12;用戶版=警戒)"}
+        {"name": "long_pullback", "dir": "long", "order": "limit_buy", "entry": 7660, "stop": 7620, "t1": 7736, "t2": 7780, "weight": 0.1, "note": "回踩前高帶7,660接多(rule8;melt-up回踩買點)——BB 116.9%極度超買,回踩才進不追"},
+        {"name": "long_breakout", "dir": "long", "order": "buy_stop", "entry": 7760, "stop": 7700, "t1": 7800, "t2": 7840, "weight": 0.06, "note": "過昨高7,758追多=趨勢延續,但BB極度超買故倉位降至0.06(rule14超買側節制);跳空過7,760則閘門會拒"},
+        {"name": "short_rally", "dir": "short", "order": "limit_sell", "entry": 7800, "stop": 7845, "t1": 7736, "t2": 7680, "weight": 0.0, "note": "★rule24候補啟用:BB>100連兩日(8/3-8/4)=暫停均值回歸空單,權重0僅追蹤,不再逆melt-up掛空"},
+        {"name": "short_breakdown", "dir": "short", "order": "sell_stop_close_confirm", "entry": 7660, "stop": 7710, "t1": 7620, "t2": 7554, "weight": 0.08, "note": "收盤跌回7,660下=melt-up首日轉弱(rule12;用戶版=短線警戒,趨勢未破不動核心)"}
       ]
     }
   ],
   "summary": {
-    "as_of": "2026-08-04",
-    "days_evaluated": 17,
-    "trades_total": 68,
-    "trades_filled": 18,
+    "as_of": "2026-08-05",
+    "days_evaluated": 18,
+    "trades_total": 72,
+    "trades_filled": 19,
     "filled_win": 9,
-    "filled_loss": 8,
-    "cumulative_weighted_bp": 5.9,
+    "filled_loss": 9,
+    "cumulative_weighted_bp": 3.1,
     "open_positions": 0,
     "gap_days": ["2026-07-28", "2026-07-29", "2026-07-30", "2026-07-31"],
-    "honest_read": "累積回升至+5.9bp（8/3趨勢日突破多+9.2bp救回帳本）。rule23完整圖像成形:突破多在均線糾結震盪日失血(7/20/24/27)、在乾淨趨勢日大賺(8/3)——關鍵不是禁突破而是盤型辨識(跳空+收極端=趨勢日,MA5/20/50收斂+十字=震盪日),反彈空同理反向。策略表alpha=盤型對了掛單型態就對了。樣本=17(含4日gap)仍無統計意義,但rule23盤型辨識已有4個一致樣本"
+    "honest_read": "累積回落至+3.1bp（8/4 melt-up第二日-2.8bp:均值回歸空被續軋+閘門拒了會賺的gap突破多）。本系統的結構性弱點暴露:均值回歸傾向在『連續趨勢日/melt-up』雙重失血——逆勢空被軋、閘門又擋掉順勢跳空多。rule24候補:BB>100連兩日時暫停均值回歸空單。對照rule23(盤型辨識)+rule24(melt-up暫停逆勢),系統要學的是『趨勢日別逆勢、別用震盪邏輯』。樣本=18(含4日gap)仍無統計意義"
   }
 }
