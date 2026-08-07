@@ -1138,29 +1138,64 @@
     },
     {
       "report_date": "2026-08-06",
-      "eval_date": "pending(2026-08-06 US close)",
-      "trades_pending": [
+      "eval_date": "2026-08-06",
+      "results": [
         {
           "name": "long_pullback_shallow",
+          "filled": true,
+          "outcome": "close",
+          "raw_bp": 12.9,
+          "weighted_bp": 1.29
+        },
+        {
+          "name": "long_breakout",
+          "filled": false,
+          "outcome": "",
+          "raw_bp": 0.0,
+          "weighted_bp": 0.0
+        },
+        {
+          "name": "short_rally",
+          "filled": false,
+          "outcome": "",
+          "raw_bp": 0.0,
+          "weighted_bp": 0.0
+        },
+        {
+          "name": "short_breakdown",
+          "filled": false,
+          "outcome": "",
+          "raw_bp": 0.0,
+          "weighted_bp": 0.0
+        }
+      ],
+      "day_weighted_bp": 1.29
+    },
+    {
+      "report_date": "2026-08-07",
+      "eval_date": "pending(2026-08-07 US close)",
+      "trades_pending": [
+        {
+          "name": "long_pullback",
           "dir": "long",
           "order": "limit_buy",
-          "entry": 7700,
-          "stop": 7655,
-          "t1": 7760,
+          "entry": 7690,
+          "stop": 7650,
+          "t1": 7743,
           "t2": 7794,
           "weight": 0.1,
-          "note": "淺回踩BB上軌帶7,700接多(rule8),距現價0.30%可執行;主做多"
+          "note": "回踩8/6低帶7,690接多(rule8),距現價0.26%,主做多;守7,660前提"
         },
         {
           "name": "long_breakout",
           "dir": "long",
           "order": "buy_stop",
-          "entry": 7796,
-          "stop": 7735,
-          "t1": 7840,
-          "t2": 7880,
-          "weight": 0.05,
-          "note": "過8/5高7,793.68追多,rule14超買側倉位降;距現價0.94%"
+          "entry": 7745,
+          "stop": 7695,
+          "t1": 7794,
+          "t2": 7840,
+          "weight": 0.08,
+          "note": "過8/6高7,742.85追多=整理向上突破,距現價0.45%可執行;rule14 BB 93%仍偏高故中倉"
         },
         {
           "name": "short_rally",
@@ -1170,8 +1205,8 @@
           "stop": 7830,
           "t1": 7660,
           "t2": 7600,
-          "weight": 0.05,
-          "note": "反彈至8/5反轉高掛空;rule24(BB>100)仍在但已現反轉K→小倉追蹤"
+          "weight": 0.04,
+          "note": "反彈至8/5 ATH掛空;BB回93%<100 rule24暫停解除但趨勢上僅小倉,距現價1.09%⚠"
         },
         {
           "name": "short_breakdown",
@@ -1181,20 +1216,20 @@
           "stop": 7710,
           "t1": 7600,
           "t2": 7554,
-          "weight": 0.08,
-          "note": "收盤跌破7,660前高帶=整理轉弱(rule12);用戶版=短線警戒不動核心"
+          "weight": 0.1,
+          "note": "收盤破7,660前高帶=整理轉弱(rule12);10Y破4.70時加分,距現價0.65%可執行"
         }
       ]
     }
   ],
   "summary": {
-    "as_of": "2026-08-06",
-    "days_evaluated": 19,
+    "as_of": "2026-08-07",
+    "days_evaluated": 20,
     "trades_total": 72,
     "trades_filled": 19,
     "filled_win": 9,
     "filled_loss": 9,
-    "cumulative_weighted_bp": 0.28,
+    "cumulative_weighted_bp": 1.57,
     "open_positions": 0,
     "gap_days": [
       "2026-07-28",
