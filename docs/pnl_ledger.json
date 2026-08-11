@@ -1208,58 +1208,93 @@
     },
     {
       "report_date": "2026-08-08",
-      "eval_date": "pending(2026-08-10 US close,週六休市)",
-      "trades_pending": [
+      "eval_date": "2026-08-10",
+      "results": [
         {
           "name": "long_breakout",
-          "dir": "long",
-          "order": "buy_stop",
-          "entry": 7795,
-          "stop": 7740,
-          "t1": 7840,
-          "t2": 7880,
-          "weight": 0.1,
-          "note": "過8/5 ATH 7,793.68追多=新高續攻,主策略,距現價0.48%;RISK_ON+半導體領漲支持"
+          "filled": false,
+          "outcome": "",
+          "raw_bp": 0.0,
+          "weighted_bp": 0.0
         },
         {
           "name": "long_pullback",
-          "dir": "long",
-          "order": "limit_buy",
-          "entry": 7720,
-          "stop": 7685,
-          "t1": 7774,
-          "t2": 7794,
-          "weight": 0.08,
-          "note": "回踩8/7低/突破帶7,720接多(rule8),距現價0.49%"
+          "filled": false,
+          "outcome": "",
+          "raw_bp": 0.0,
+          "weighted_bp": 0.0
         },
+        {
+          "name": "short_rally",
+          "filled": false,
+          "outcome": "",
+          "raw_bp": 0.0,
+          "weighted_bp": 0.0
+        },
+        {
+          "name": "short_breakdown",
+          "filled": false,
+          "outcome": "",
+          "raw_bp": 0.0,
+          "weighted_bp": 0.0
+        }
+      ],
+      "day_weighted_bp": 0.0
+    },
+    {
+      "report_date": "2026-08-11",
+      "eval_date": "pending(2026-08-11 US close)",
+      "trades_pending": [
         {
           "name": "short_rally",
           "dir": "short",
           "order": "limit_sell",
-          "entry": 7793,
-          "stop": 7825,
-          "t1": 7720,
-          "t2": 7660,
-          "weight": 0.05,
-          "note": "ATH 7,793拒絕反手空(8/5 repeat),距現價0.46%;小倉,趨勢上不重壓"
+          "entry": 7790,
+          "stop": 7822,
+          "t1": 7743,
+          "t2": 7706,
+          "weight": 0.08,
+          "note": "ATH 7,794雙拒反彈空(10Y觸4.70+半導體回吐),距現價0.48%,主短"
         },
         {
           "name": "short_breakdown",
           "dir": "short",
           "order": "sell_stop_close_confirm",
-          "entry": 7660,
-          "stop": 7710,
-          "t1": 7600,
-          "t2": 7554,
-          "weight": 0.05,
-          "note": "收盤破7,660前高帶=整理轉弱(rule12),距現價1.26%⚠低成交"
+          "entry": 7700,
+          "stop": 7745,
+          "t1": 7660,
+          "t2": 7600,
+          "weight": 0.1,
+          "note": "收盤破7,700停滯地板=整理轉弱(rule12),10Y破4.70加分,距現價0.68%"
+        },
+        {
+          "name": "long_pullback",
+          "dir": "long",
+          "order": "limit_buy",
+          "entry": 7710,
+          "stop": 7675,
+          "t1": 7774,
+          "t2": 7794,
+          "weight": 0.06,
+          "note": "回踩7,710接多(rule8),距現價0.56%;偏空日故小倉"
+        },
+        {
+          "name": "long_breakout",
+          "dir": "long",
+          "order": "buy_stop",
+          "entry": 7795,
+          "stop": 7745,
+          "t1": 7840,
+          "t2": 7880,
+          "weight": 0.06,
+          "note": "過ATH 7,794追多(rule25不逆突破),距現價0.54%;若破則順勢"
         }
       ]
     }
   ],
   "summary": {
-    "as_of": "2026-08-08",
-    "days_evaluated": 21,
+    "as_of": "2026-08-11",
+    "days_evaluated": 22,
     "trades_total": 72,
     "trades_filled": 19,
     "filled_win": 9,
