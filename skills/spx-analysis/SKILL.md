@@ -48,7 +48,7 @@ description: |
 
 ### Step 1 — 用 Python 抓取最新實際數據（不用 web search 抓價格）
 
-執行 `{repo}\scripts\fetch_today.py`：
+執行 `python3 {repo}\scripts\fetch_today.py`（**一律用 `python3`**，理由見「技術注意事項」）：
 - yfinance 抓 ^GSPC、^VIX（300天，供 MA200）
 - 計算 MA5/20/50/200、RSI(14)、MACD、布林帶、KD
 - 輸出到 `today_data.txt`（**禁止 print 中文**，cp950 會亂碼，一律寫 txt 後用 Read 讀）
@@ -356,6 +356,8 @@ git add + commit + push（PowerShell 用分號串接，不能用 &&）
 
 ## 技術注意事項
 
+- **一律用 `python3` 執行腳本，禁止用 `python`**——本機 `python` 可能指向無 yfinance 的 venv（hermes-agent），只有 `python3`（pythoncore-3.14）裝了 yfinance；雲端 Linux 環境同樣以 `python3` 為準，是跨環境唯一安全解
+- **禁止把腳本呼叫接 `| tail` / `| head`**——管線會吃掉非零 exit code，抓取失敗時指令鏈不會中斷，會讀到前一天的舊 txt 卻誤以為是今天的。改用 `python3 x.py; echo "exit=$?"`，並**每次核對輸出的 `trade_date` 是否為預期交易日**（2026-08-12 發現：`python` 解析到錯誤 venv 導致 fetch 靜默失敗）
 - **禁止 print 中文**到 subprocess stdout（Windows cp950 亂碼）→ 寫 .txt 後用 Read 讀
 - yfinance 回傳 DataFrame 可能是 MultiIndex columns → 需 squeeze() 或攤平
 - PowerShell 不支援 `&&` → 用分號 `;`
