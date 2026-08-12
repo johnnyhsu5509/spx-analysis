@@ -57,6 +57,31 @@ description: |
 
 新聞催化劑（地緣、Fed、財報）可另用 web search 補充，但**價格與指標一律以 Python 抓的為準**。
 
+### Step 1.5 — 重複分析防護（【硬規則】不可跳過）
+
+執行 `python3 {repo}\scripts\check_duplicate.py`，讀取輸出的 `VERDICT`：
+
+| VERDICT | 意義 | 動作 |
+|---|---|---|
+| `OK` | 有新收盤 | 正常往下跑 Step 2 |
+| `DUPLICATE` | **這份收盤已經分析過** | **立即停止，不得寫入三本帳**，先問用戶 |
+
+`DUPLICATE` 時必須停下來，讓用戶三選一（預設建議 a）：
+- **(a) 只看上次結果** — 直接回報 last_analysis.json 既有內容，完全不動帳本
+- **(b) 重跑並覆蓋** — 移除三本帳中相同 `report_date` 的 entry 後再寫入，**只能取代、不可累加**
+- **(c) 取消**
+
+**原理**：`today_data.trade_date` 與 `last_analysis.data_basis` 相同 ⇒ 同一份收盤被分析兩次。這會讓 track_record / pnl_ledger 重複計分，勝率與 Brier 全部失真且無法回溯修復。
+
+**典型觸發情境**（都必須攔下）：
+- 週六分析過，週一美股開盤前又被要求分析（收盤基準仍是週五，沒有新資料）
+- 同一天多次說「分析今日SPX」
+- 本機與雲端在同一天各跑一次（**務必先 `git pull`**，否則兩邊帳本分岔且無法合併）
+
+**絕對禁止**：同一個 `report_date` 在任一本帳出現兩筆 entry。
+
+---
+
 ### Step 2 — 回測驗證（報告第一區）
 
 逐項比對上次預測 vs 實際結果：
@@ -356,6 +381,7 @@ git add + commit + push（PowerShell 用分號串接，不能用 &&）
 
 ## 技術注意事項
 
+- **一天只能一邊跑（本機 or 雲端），且開始前必先 `git pull`**——三本帳逐日累加，分岔後無法合併。以 Step 1.5 的 `check_duplicate.py` 作機械攔截，不依賴記憶
 - **一律用 `python3` 執行腳本，禁止用 `python`**——本機 `python` 可能指向無 yfinance 的 venv（hermes-agent），只有 `python3`（pythoncore-3.14）裝了 yfinance；雲端 Linux 環境同樣以 `python3` 為準，是跨環境唯一安全解
 - **禁止把腳本呼叫接 `| tail` / `| head`**——管線會吃掉非零 exit code，抓取失敗時指令鏈不會中斷，會讀到前一天的舊 txt 卻誤以為是今天的。改用 `python3 x.py; echo "exit=$?"`，並**每次核對輸出的 `trade_date` 是否為預期交易日**（2026-08-12 發現：`python` 解析到錯誤 venv 導致 fetch 靜默失敗）
 - **禁止 print 中文**到 subprocess stdout（Windows cp950 亂碼）→ 寫 .txt 後用 Read 讀
