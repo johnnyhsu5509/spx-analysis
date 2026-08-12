@@ -209,7 +209,7 @@ description: |
 ```
 第一區：回測（上次預測 vs 實際，命中率、偏差分析、學到的教訓）
 第二區：今日分析（KPI、盤前宏觀層卡[ES/NQ/10Y/DXY/backdrop]、拉回機率儀表盤[六因子]、六維分析、葛蘭威爾8宮格、纏論+波浪情景、關鍵位）
-第三區：明日策略（策略表、三層進場確認[盤前定調→開盤30分五紅線→22:30睡前檢查點]、核心建議、監控清單、市場筆記速記）
+第三區：明日策略（策略表、三層進場確認[盤前定調→開盤30分五紅線→22:30睡前檢查點]、監控清單、市場筆記速記）
 ```
 > 盤前宏觀層資料來自 check_es.py（含 10Y 殖利率方向、macro_backdrop）；若分析當下期貨未開（週末/盤前太早）則標註「待開盤」。
 
@@ -222,6 +222,13 @@ description: |
 更新：{repo}\docs\last_analysis.json（含本次全部預測，供明天回測）
 git add + commit + push（PowerShell 用分號串接，不能用 &&）
 ```
+
+> **【硬規則・隱私】公開 repo 不得寫入個人部位資訊**
+> `spx-analysis` 是 **PUBLIC repo**（GitHub Pages 公開可讀）。因此：
+> - HTML 報告、`last_analysis.json`、`pnl_ledger.json`、`track_record.json` **一律只寫指數層級的分析與價位**（例：「收盤破 7,700＝短線警戒」）
+> - **禁止寫入**：持股名稱、槓桿倍數、帳戶金額、加減碼張數、融資狀態、「核心倉」等個人部位描述
+> - **個人化部位建議只在對話中輸出給用戶**，不落檔（對應 rule19）
+> - 需要個人脈絡時，讀私有 repo **`spx-context`** 的 `CONTEXT.md`（雲端 session 可同時掛載兩個 repo；本機則直接讀）
 
 `last_analysis.json` 必含欄位：
 - trade_date / close / change_pct / vix / pullback_prob / rating
