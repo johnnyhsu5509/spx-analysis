@@ -30,6 +30,45 @@ def _use_snapshot():
         return False
 
 
+def _breadth():
+    """RSP/SPY 等權 vs 市值權重比值 = 廣度代理。
+    比值上升 = 中小型股同步參與(廣度好)；下降 = 少數權值撐盤(窄化)。
+    抓不到不阻斷主流程,回傳 None。"""
+    try:
+        rsp = yf_compat.download("RSP", period="3mo", progress=False)
+        spy = yf_compat.download("SPY", period="3mo", progress=False)
+        for df in (rsp, spy):
+            if hasattr(df.columns, "levels"):
+                df.columns = [c[0] if isinstance(c, tuple) else c for c in df.columns]
+        r = rsp["Close"].squeeze().dropna()
+        p_ = spy["Close"].squeeze().dropna()
+        idx = r.index.intersection(p_.index)
+        ratio = (r.loc[idx] / p_.loc[idx]).dropna()
+        if len(ratio) < 25:
+            return None
+        cur = float(ratio.iloc[-1])
+        d1 = (cur / float(ratio.iloc[-2]) - 1) * 100
+        d5 = (cur / float(ratio.iloc[-6]) - 1) * 100
+        ma20 = float(ratio.rolling(20).mean().iloc[-1])
+        vs20 = (cur / ma20 - 1) * 100
+        if d5 >= 0.5:
+            read = "廣度擴張（中小型股同步參與）"
+        elif d5 <= -0.5:
+            read = "廣度窄化（少數權值撐盤，指數強度打折）"
+        else:
+            read = "廣度中性"
+        return {
+            "rsp_spy_ratio": round(cur, 4),
+            "chg_1d_pct": round(d1, 2),
+            "chg_5d_pct": round(d5, 2),
+            "vs_ma20_pct": round(vs20, 2),
+            "read": read,
+            "note": "RSP(等權)/SPY(市值權重);升=廣度好,降=窄化。與指數方向背離時,指數漲勢品質打折"
+        }
+    except Exception:
+        return None
+
+
 end = datetime.today() + timedelta(days=1)
 start = end - timedelta(days=300)
 
@@ -182,6 +221,7 @@ if not spx_close.empty:
         "bb_pct": round(bb_pct, 1),
         "kd_k": round(float(k.iloc[-1]), 2),
         "kd_d": round(float(d.iloc[-1]), 2),
+        "breadth": _breadth(),
         "regime": regime,
         "recent_5": recent
     }
