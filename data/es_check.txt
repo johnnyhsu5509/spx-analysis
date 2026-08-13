@@ -1,45 +1,47 @@
 {
-  "checked_at": "2026-08-13 04:42",
+  "checked_at": "2026-08-13 22:05",
   "session": {
-    "label": "US_AFTERHOURS",
-    "note": "美股盤後：反映當日收盤後動向"
+    "label": "US_REGULAR",
+    "note": "美股盤中：即時讀數"
   },
   "es": {
-    "last": 7775.75,
-    "prev_close": 7755.5,
-    "change_pct": 0.26,
-    "signal": "NEUTRAL"
+    "last": 7825.25,
+    "prev_close": 7775.0,
+    "change_pct": 0.65,
+    "signal": "BULLISH"
   },
   "implied_spx_open": {
-    "approx": 7768.7,
-    "spx_prev_close": 7748.5,
-    "method": "pct_fallback_degraded",
-    "note": "近似值(以ES%套現貨前收，未扣基差)——錨點抓取失敗時的降級模式"
+    "approx": 7801.7,
+    "spx_prev_close": 7798.99,
+    "es_at_prior_close": 7822.5,
+    "es_pt_chg": 2.75,
+    "method": "point_anchor",
+    "note": "方案A：ES點數錨定，基差已抵銷"
   },
-  "nq_change_pct": 0.64,
+  "nq_change_pct": 1.13,
   "soxx_semis": {
-    "last": 546.61,
-    "change_pct": 2.0
+    "last": 550.74,
+    "change_pct": 0.5
   },
   "semi_vs_spx": {
-    "divergence_pp": 1.74,
-    "read": "半導體領漲"
+    "divergence_pp": -0.15,
+    "read": "同步"
   },
-  "vix": 14.55,
+  "vix": 14.63,
   "us10y": {
-    "yield_pct": 4.682,
-    "prev_pct": 4.684,
-    "change_bps": -0.2,
-    "signal": "FLAT"
+    "yield_pct": 4.641,
+    "prev_pct": 4.682,
+    "change_bps": -4.1,
+    "signal": "DOWN_RISK_ON"
   },
   "dxy": {
-    "last": 100.01,
-    "prev_close": 99.88,
-    "change_pct": 0.13,
+    "last": 99.97,
+    "prev_close": 100.0,
+    "change_pct": -0.04,
     "signal": "FLAT"
   },
   "macro_backdrop": {
-    "score": 2,
+    "score": 4,
     "read": "RISK_ON 偏多",
     "note": "ES+NQ+10Y+DXY+VIX 合成；±2 以上才定調"
   },
