@@ -1,6 +1,7 @@
 import yfinance as yf
 import json
 import os
+import sys
 from datetime import datetime, timedelta
 
 OUT_DIR = os.path.dirname(os.path.abspath(__file__))
@@ -9,8 +10,20 @@ REPO = os.path.dirname(OUT_DIR)
 end = datetime.today() + timedelta(days=1)
 start = end - timedelta(days=300)
 
-raw_spx = yf.download("^GSPC", start=start.strftime("%Y-%m-%d"), end=end.strftime("%Y-%m-%d"), progress=False)
-raw_vix = yf.download("^VIX", start=start.strftime("%Y-%m-%d"), end=end.strftime("%Y-%m-%d"), progress=False)
+try:
+    raw_spx = yf.download("^GSPC", start=start.strftime("%Y-%m-%d"), end=end.strftime("%Y-%m-%d"), progress=False)
+    raw_vix = yf.download("^VIX", start=start.strftime("%Y-%m-%d"), end=end.strftime("%Y-%m-%d"), progress=False)
+except Exception as exc:
+    print("FETCH FAILED (network/yfinance): %r" % (exc,))
+    print("today_data.txt left UNCHANGED. Check egress allowlist:")
+    print("  query1.finance.yahoo.com / query2.finance.yahoo.com / fc.yahoo.com")
+    sys.exit(1)
+
+if raw_spx is None or raw_spx.empty:
+    print("FETCH FAILED: empty dataframe for ^GSPC (blocked or no data)")
+    print("today_data.txt left UNCHANGED. Check egress allowlist:")
+    print("  query1.finance.yahoo.com / query2.finance.yahoo.com / fc.yahoo.com")
+    sys.exit(1)
 
 if hasattr(raw_spx.columns, 'levels'):
     raw_spx.columns = [c[0] if isinstance(c, tuple) else c for c in raw_spx.columns]
@@ -146,5 +159,10 @@ if not spx_close.empty:
         "recent_5": recent
     }
 
+if not result or not result.get("trade_date"):
+    print("FETCH FAILED: no trade_date computed; today_data.txt left UNCHANGED")
+    sys.exit(1)
+
 with open(os.path.join(OUT_DIR, "today_data.txt"), "w", encoding="utf-8") as f:
     json.dump(result, f, ensure_ascii=False, indent=2)
+print("OK trade_date=%s close=%s" % (result.get("trade_date"), result.get("close")))

@@ -27,7 +27,8 @@ pl_dates = [e.get('report_date') for e in pl.get('entries', []) if isinstance(e,
 tr_pending = [e.get('report_date') for e in tr.get('entries', [])
               if isinstance(e, dict) and e.get('grade') == 'pending']
 
-verdict = 'DUPLICATE' if dup_basis else 'OK'
+no_data = (not trade_date) or ('__error__' in td)
+verdict = 'NO_DATA' if no_data else ('DUPLICATE' if dup_basis else 'OK')
 
 lines = [
     'VERDICT: %s' % verdict,
@@ -39,7 +40,15 @@ lines = [
     'track_record pending       : %s' % ', '.join(map(str, tr_pending)),
     '',
 ]
-if dup_basis:
+if no_data:
+    lines += [
+        'MEANING: today_data.txt is empty/unreadable -> the fetch FAILED.',
+        'ACTION : STOP. Do NOT analyze. Re-run fetch_today.py and read its error.',
+        '         Likely cause: egress allowlist missing one of',
+        '         query1.finance.yahoo.com / query2.finance.yahoo.com / fc.yahoo.com',
+        'NEVER  : run the analysis on stale or empty data.',
+    ]
+elif dup_basis:
     lines += [
         'MEANING: this US close has ALREADY been analyzed.',
         'ACTION : STOP. Do not append to the three ledgers.',

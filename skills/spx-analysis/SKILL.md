@@ -65,6 +65,7 @@ description: |
 |---|---|---|
 | `OK` | 有新收盤 | 正常往下跑 Step 2 |
 | `DUPLICATE` | **這份收盤已經分析過** | **立即停止，不得寫入三本帳**，先問用戶 |
+| `NO_DATA` | **抓取失敗**，`today_data.txt` 空白或無法讀取 | **立即停止**，重跑 `fetch_today.py` 讀錯誤訊息；常見原因＝雲端 egress 白名單缺 `query1.finance.yahoo.com` / `query2.finance.yahoo.com` / `fc.yahoo.com`。**絕不可用舊資料或空資料做分析** |
 
 `DUPLICATE` 時必須停下來，讓用戶三選一（預設建議 a）：
 - **(a) 只看上次結果** — 直接回報 last_analysis.json 既有內容，完全不動帳本
