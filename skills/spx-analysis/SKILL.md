@@ -224,6 +224,17 @@ description: |
 git add + commit + push（PowerShell 用分號串接，不能用 &&）
 ```
 
+> **【硬規則・分支】三本帳一律推 `main`，禁止留在 `claude/` 分支**
+> `last_analysis.json`／`track_record.json`／`pnl_ledger.json` 是**逐日累加的狀態**：今天讀昨天的預測來評分。雲端 session 預設把成果推到 `claude/xxx` 分支，若不合回 `main`，**隔天的 session 從 main clone 會讀到舊帳本，回測全錯且無法回溯修復**。
+>
+> 雲端 session 完成分析後必須執行：
+> ```bash
+> git add docs/ && git commit -m "analysis: ..." && git pull --rebase origin main && git push origin HEAD:main
+> ```
+> `git push origin HEAD:main` 會直接推上 main（本 repo 未設分支保護、commit 皆為本人，允許）。若推送被拒，**必須回報用戶並停止**，不得把帳本留在 feature 分支後就當作完成。
+>
+> 開始分析前也必須先 `git pull`（見 Step 1.5），確保讀到的是最新帳本。
+
 > **【硬規則・隱私】公開 repo 不得寫入個人部位資訊**
 > `spx-analysis` 是 **PUBLIC repo**（GitHub Pages 公開可讀）。因此：
 > - HTML 報告、`last_analysis.json`、`pnl_ledger.json`、`track_record.json` **一律只寫指數層級的分析與價位**（例：「收盤破 7,700＝短線警戒」）
