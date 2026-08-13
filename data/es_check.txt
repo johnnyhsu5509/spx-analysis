@@ -1,0 +1,47 @@
+{
+  "checked_at": "2026-08-13 04:42",
+  "session": {
+    "label": "US_AFTERHOURS",
+    "note": "美股盤後：反映當日收盤後動向"
+  },
+  "es": {
+    "last": 7775.75,
+    "prev_close": 7755.5,
+    "change_pct": 0.26,
+    "signal": "NEUTRAL"
+  },
+  "implied_spx_open": {
+    "approx": 7768.7,
+    "spx_prev_close": 7748.5,
+    "method": "pct_fallback_degraded",
+    "note": "近似值(以ES%套現貨前收，未扣基差)——錨點抓取失敗時的降級模式"
+  },
+  "nq_change_pct": 0.64,
+  "soxx_semis": {
+    "last": 546.61,
+    "change_pct": 2.0
+  },
+  "semi_vs_spx": {
+    "divergence_pp": 1.74,
+    "read": "半導體領漲"
+  },
+  "vix": 14.55,
+  "us10y": {
+    "yield_pct": 4.682,
+    "prev_pct": 4.684,
+    "change_bps": -0.2,
+    "signal": "FLAT"
+  },
+  "dxy": {
+    "last": 100.01,
+    "prev_close": 99.88,
+    "change_pct": 0.13,
+    "signal": "FLAT"
+  },
+  "macro_backdrop": {
+    "score": 2,
+    "read": "RISK_ON 偏多",
+    "note": "ES+NQ+10Y+DXY+VIX 合成；±2 以上才定調"
+  },
+  "data_status": "OK"
+}
