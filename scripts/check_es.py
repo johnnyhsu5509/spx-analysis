@@ -211,6 +211,19 @@ with open(os.path.join(OUT_DIR, "es_check.txt"), "w", encoding="utf-8") as f:
     json.dump(result, f, ensure_ascii=False, indent=2)
 
 if _core_ok == 0:
+    snap = os.path.join(os.path.dirname(OUT_DIR), "data", "es_check.txt")
+    try:
+        with open(snap, encoding="utf-8") as f:
+            sd = json.load(f)
+        if sd.get("es") or sd.get("vix") is not None:
+            sd["data_status"] = "SNAPSHOT(from data/, original checked_at=%s)" % sd.get("checked_at", "?")
+            sd["snapshot_note"] = "live fetch all failed; this is the Actions morning snapshot - STALE for futures/open checks"
+            with open(os.path.join(OUT_DIR, "es_check.txt"), "w", encoding="utf-8") as f:
+                json.dump(sd, f, ensure_ascii=False, indent=2)
+            print("OK data_status=SNAPSHOT (stale; usable for daily analysis only)")
+            sys.exit(0)
+    except Exception:
+        pass
     print("CHECK_ES FAILED: no core data (ES/VIX/10Y all failed). errors=%s" % ",".join(_err_keys))
     print("es_check.txt written with data_status=ALL_FAILED (no macro_backdrop).")
     sys.exit(1)

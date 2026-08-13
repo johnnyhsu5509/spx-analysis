@@ -10,6 +10,26 @@ from datetime import datetime, timedelta
 OUT_DIR = os.path.dirname(os.path.abspath(__file__))
 REPO = os.path.dirname(OUT_DIR)
 
+def _use_snapshot():
+    """Fetch failed: fall back to the Actions-committed snapshot in data/."""
+    snap = os.path.join(REPO, "data", "today_data.txt")
+    try:
+        with open(snap, encoding="utf-8") as f:
+            d = json.load(f)
+        if not d.get("trade_date"):
+            return False
+        import shutil
+        shutil.copy(snap, os.path.join(OUT_DIR, "today_data.txt"))
+        fa = os.path.join(REPO, "data", "fetched_at.txt")
+        ts = open(fa).read().strip() if os.path.exists(fa) else "unknown"
+        print("OK trade_date=%s close=%s (SNAPSHOT from data/, fetched_at=%s)"
+              % (d["trade_date"], d.get("close"), ts))
+        print("NOTE: live fetch failed; using GitHub Actions snapshot. Verify trade_date is the expected close.")
+        return True
+    except Exception:
+        return False
+
+
 end = datetime.today() + timedelta(days=1)
 start = end - timedelta(days=300)
 
@@ -17,12 +37,16 @@ try:
     raw_spx = yf_compat.download("^GSPC", start=start.strftime("%Y-%m-%d"), end=end.strftime("%Y-%m-%d"), progress=False)
     raw_vix = yf_compat.download("^VIX", start=start.strftime("%Y-%m-%d"), end=end.strftime("%Y-%m-%d"), progress=False)
 except Exception as exc:
+    if _use_snapshot():
+        sys.exit(0)
     print("FETCH FAILED (network/yfinance): %r" % (exc,))
     print("today_data.txt left UNCHANGED. Check egress allowlist:")
     print("  query1.finance.yahoo.com / query2.finance.yahoo.com / fc.yahoo.com")
     sys.exit(1)
 
 if raw_spx is None or raw_spx.empty:
+    if _use_snapshot():
+        sys.exit(0)
     print("FETCH FAILED: empty dataframe for ^GSPC (blocked or no data)")
     print("today_data.txt left UNCHANGED. Check egress allowlist:")
     print("  query1.finance.yahoo.com / query2.finance.yahoo.com / fc.yahoo.com")
