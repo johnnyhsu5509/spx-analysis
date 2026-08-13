@@ -1,4 +1,7 @@
 import yfinance as yf
+import os as _os, sys as _sys
+_sys.path.insert(0, _os.path.dirname(_os.path.abspath(__file__)))
+import yf_compat
 import json
 import os
 import sys
@@ -11,8 +14,8 @@ end = datetime.today() + timedelta(days=1)
 start = end - timedelta(days=300)
 
 try:
-    raw_spx = yf.download("^GSPC", start=start.strftime("%Y-%m-%d"), end=end.strftime("%Y-%m-%d"), progress=False)
-    raw_vix = yf.download("^VIX", start=start.strftime("%Y-%m-%d"), end=end.strftime("%Y-%m-%d"), progress=False)
+    raw_spx = yf_compat.download("^GSPC", start=start.strftime("%Y-%m-%d"), end=end.strftime("%Y-%m-%d"), progress=False)
+    raw_vix = yf_compat.download("^VIX", start=start.strftime("%Y-%m-%d"), end=end.strftime("%Y-%m-%d"), progress=False)
 except Exception as exc:
     print("FETCH FAILED (network/yfinance): %r" % (exc,))
     print("today_data.txt left UNCHANGED. Check egress allowlist:")

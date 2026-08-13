@@ -1,4 +1,7 @@
 import yfinance as yf
+import os as _os, sys as _sys
+_sys.path.insert(0, _os.path.dirname(_os.path.abspath(__file__)))
+import yf_compat
 import json
 import os
 from datetime import datetime
@@ -8,7 +11,7 @@ result = {"checked_at": datetime.now().strftime("%Y-%m-%d %H:%M")}
 
 
 def bars_30m(ticker, period="10d"):
-    raw = yf.download(ticker, period=period, interval="30m", progress=False)
+    raw = yf_compat.download(ticker, period=period, interval="30m", progress=False)
     if hasattr(raw.columns, 'levels'):
         raw.columns = [c[0] if isinstance(c, tuple) else c for c in raw.columns]
     return raw
@@ -88,7 +91,7 @@ if sync:
         result["sync_read"] = "SYNC：指數與科技/半導體同向，訊號有效"
 
 try:
-    vx = yf.Ticker("^VIX")
+    vx = yf_compat.ticker("^VIX")
     result["vix"] = round(float(vx.fast_info["last_price"]), 2)
 except Exception:
     pass

@@ -390,6 +390,7 @@ git add + commit + push（PowerShell 用分號串接，不能用 &&）
 ## 技術注意事項
 
 - **一天只能一邊跑（本機 or 雲端），且開始前必先 `git pull`**——三本帳逐日累加，分岔後無法合併。以 Step 1.5 的 `check_duplicate.py` 作機械攔截，不依賴記憶
+- **雲端／MITM proxy 環境抓不到資料時**：yfinance 走 curl_cffi 做 TLS 指紋偽裝，會被解密型 proxy reset（錯誤：`curl: (35) Recv failure: Connection reset by peer`）。`scripts/yf_compat.py` 會自動退回 plain requests 重試；若仍失敗，在雲端環境變數設 **`SPX_HTTP_PLAIN=1`** 強制從一開始就用 requests。**注意：純 requests 較容易被 Yahoo rate limit，故本機不要設**
 - **一律用 `python3` 執行腳本，禁止用 `python`**——本機 `python` 可能指向無 yfinance 的 venv（hermes-agent），只有 `python3`（pythoncore-3.14）裝了 yfinance；雲端 Linux 環境同樣以 `python3` 為準，是跨環境唯一安全解
 - **禁止把腳本呼叫接 `| tail` / `| head`**——管線會吃掉非零 exit code，抓取失敗時指令鏈不會中斷，會讀到前一天的舊 txt 卻誤以為是今天的。改用 `python3 x.py; echo "exit=$?"`，並**每次核對輸出的 `trade_date` 是否為預期交易日**（2026-08-12 發現：`python` 解析到錯誤 venv 導致 fetch 靜默失敗）
 - **禁止 print 中文**到 subprocess stdout（Windows cp950 亂碼）→ 寫 .txt 後用 Read 讀

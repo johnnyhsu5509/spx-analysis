@@ -1,4 +1,7 @@
 import yfinance as yf
+import os as _os, sys as _sys
+_sys.path.insert(0, _os.path.dirname(_os.path.abspath(__file__)))
+import yf_compat
 import json
 import os
 from datetime import datetime
@@ -25,7 +28,7 @@ result["session"] = {"label": session, "note": s_note}
 
 def get_last_prev(ticker):
     """回傳 (last, prev)。先試 fast_info（即時），失敗用日線歷史備援。"""
-    t = yf.Ticker(ticker)
+    t = yf_compat.ticker(ticker)
     try:
         info = t.fast_info
         last = float(info["last_price"])
@@ -60,7 +63,7 @@ try:
     est = None
     try:
         import pandas as pd
-        es_intra = yf.Ticker("ES=F").history(period="5d", interval="15m", prepost=True).dropna(subset=["Close"])
+        es_intra = yf_compat.history("ES=F", period="5d", interval="15m", prepost=True).dropna(subset=["Close"])
         if len(es_intra):
             anchor_ts = pd.Timestamp(spx_date).tz_localize("America/New_York") + pd.Timedelta(hours=16)
             diffs = abs(es_intra.index - anchor_ts)
