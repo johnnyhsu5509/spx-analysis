@@ -1,557 +1,569 @@
 {
-  "purpose": "累積戰績帳本：終結『自己出題自己改』的單日命中率灌水，用機械化計分看系統真實 edge。每日分析後必須追加一筆並重算 summary。",
-  "scoring_rules": {
-    "actual": "次一交易日收盤漲跌%：≥+0.3%=up、≤-0.3%=down、其間=flat",
-    "bias_mapping": "偏多/中性偏多→預期up；偏空/中性偏空→預期down；中性→預期flat",
-    "grade": "方向對=hit(1分)、方向錯=miss(0分)、其餘(偏向遇flat或中性遇方向)=half(0.5分)",
-    "note": "『正確未觸發』的策略單另計、不算hit；此表只計方向判斷。滾動勝率=總分/已判定筆數"
+ "purpose": "累積戰績帳本：終結『自己出題自己改』的單日命中率灌水，用機械化計分看系統真實 edge。每日分析後必須追加一筆並重算 summary。",
+ "scoring_rules": {
+  "actual": "次一交易日收盤漲跌%：≥+0.3%=up、≤-0.3%=down、其間=flat",
+  "bias_mapping": "偏多/中性偏多→預期up；偏空/中性偏空→預期down；中性→預期flat",
+  "grade": "方向對=hit(1分)、方向錯=miss(0分)、其餘(偏向遇flat或中性遇方向)=half(0.5分)",
+  "note": "『正確未觸發』的策略單另計、不算hit；此表只計方向判斷。滾動勝率=總分/已判定筆數"
+ },
+ "brier_rules": {
+  "purpose": "追蹤拉回機率的『機率報得準不準』，不只方向對錯。目標：逼系統敢報極端值、終結45-64窄帶躺平（2026-07-07啟用）",
+  "formula": "brier = (p - outcome)²，p = pullback_prob/100，outcome：down=1、up=0、flat排除不計",
+  "caveat": "pullback_prob名義上是5D拉回機率，但此處按每日迴圈的實際用法對『次日方向』計分；flat日排除會縮小樣本，解讀時注意",
+  "benchmark": "永遠報50%的無腦基準=0.25。低於0.25才代表機率有資訊量；越低越好",
+  "discrimination_note": "同時觀察報價分布：若機率永遠在45-64窄帶，即使brier達標也視為鑑別度不足"
+ },
+ "entries": [
+  {
+   "report_date": "2026-06-16",
+   "basis_close": 7554.29,
+   "pullback_prob": 60,
+   "bias": "中性偏空",
+   "actual_date": "2026-06-16",
+   "actual_pct": -0.57,
+   "actual_dir": "down",
+   "grade": "hit"
   },
-  "brier_rules": {
-    "purpose": "追蹤拉回機率的『機率報得準不準』，不只方向對錯。目標：逼系統敢報極端值、終結45-64窄帶躺平（2026-07-07啟用）",
-    "formula": "brier = (p - outcome)²，p = pullback_prob/100，outcome：down=1、up=0、flat排除不計",
-    "caveat": "pullback_prob名義上是5D拉回機率，但此處按每日迴圈的實際用法對『次日方向』計分；flat日排除會縮小樣本，解讀時注意",
-    "benchmark": "永遠報50%的無腦基準=0.25。低於0.25才代表機率有資訊量；越低越好",
-    "discrimination_note": "同時觀察報價分布：若機率永遠在45-64窄帶，即使brier達標也視為鑑別度不足"
+  {
+   "report_date": "2026-06-17",
+   "basis_close": 7511.35,
+   "pullback_prob": 58,
+   "bias": "中性(FOMC二元)",
+   "actual_date": "2026-06-17",
+   "actual_pct": -1.21,
+   "actual_dir": "down",
+   "grade": "half"
   },
-  "entries": [
-    {
-      "report_date": "2026-06-16",
-      "basis_close": 7554.29,
-      "pullback_prob": 60,
-      "bias": "中性偏空",
-      "actual_date": "2026-06-16",
-      "actual_pct": -0.57,
-      "actual_dir": "down",
-      "grade": "hit"
-    },
-    {
-      "report_date": "2026-06-17",
-      "basis_close": 7511.35,
-      "pullback_prob": 58,
-      "bias": "中性(FOMC二元)",
-      "actual_date": "2026-06-17",
-      "actual_pct": -1.21,
-      "actual_dir": "down",
-      "grade": "half"
-    },
-    {
-      "report_date": "2026-06-18",
-      "basis_close": 7420.1,
-      "pullback_prob": 64,
-      "bias": "偏空",
-      "actual_date": "2026-06-18",
-      "actual_pct": 1.08,
-      "actual_dir": "up",
-      "grade": "miss"
-    },
-    {
-      "report_date": "2026-06-19",
-      "basis_close": 7500.58,
-      "pullback_prob": 52,
-      "bias": "中性(區間)",
-      "actual_date": "2026-06-22",
-      "actual_pct": -0.37,
-      "actual_dir": "down",
-      "grade": "half"
-    },
-    {
-      "report_date": "2026-06-23",
-      "basis_close": 7472.79,
-      "pullback_prob": 54,
-      "bias": "中性",
-      "actual_date": "2026-06-23",
-      "actual_pct": -1.44,
-      "actual_dir": "down",
-      "grade": "half"
-    },
-    {
-      "report_date": "2026-06-24",
-      "basis_close": 7365.46,
-      "pullback_prob": 64,
-      "bias": "偏空",
-      "actual_date": "2026-06-24",
-      "actual_pct": -0.1,
-      "actual_dir": "flat",
-      "grade": "half"
-    },
-    {
-      "report_date": "2026-06-25",
-      "basis_close": 7358.22,
-      "pullback_prob": 50,
-      "bias": "中性(PCE待開獎)",
-      "actual_date": "2026-06-25",
-      "actual_pct": -0.01,
-      "actual_dir": "flat",
-      "grade": "hit"
-    },
-    {
-      "report_date": "2026-06-26",
-      "basis_close": 7357.49,
-      "pullback_prob": 59,
-      "bias": "中性偏空",
-      "actual_date": "2026-06-26",
-      "actual_pct": -0.05,
-      "actual_dir": "flat",
-      "grade": "half"
-    },
-    {
-      "report_date": "2026-06-29",
-      "basis_close": 7354.02,
-      "pullback_prob": 49,
-      "bias": "中性偏多",
-      "actual_date": "2026-06-29",
-      "actual_pct": 1.18,
-      "actual_dir": "up",
-      "grade": "hit"
-    },
-    {
-      "report_date": "2026-06-30",
-      "basis_close": 7440.43,
-      "pullback_prob": 49,
-      "bias": "中性偏多",
-      "actual_date": "2026-06-30",
-      "actual_pct": 0.79,
-      "actual_dir": "up",
-      "grade": "hit"
-    },
-    {
-      "report_date": "2026-07-01",
-      "basis_close": 7499.36,
-      "pullback_prob": 57,
-      "bias": "中性(不追高)",
-      "actual_date": "2026-07-01",
-      "actual_pct": -0.22,
-      "actual_dir": "flat",
-      "grade": "hit"
-    },
-    {
-      "report_date": "2026-07-02",
-      "basis_close": 7483.23,
-      "pullback_prob": 62,
-      "bias": "中性偏空",
-      "actual_date": "2026-07-02",
-      "actual_pct": 0.0,
-      "actual_dir": "flat",
-      "grade": "half"
-    },
-    {
-      "report_date": "2026-07-03",
-      "basis_close": 7483.24,
-      "pullback_prob": 60,
-      "bias": "中性偏空",
-      "actual_date": "2026-07-06",
-      "actual_pct": 0.72,
-      "actual_dir": "up",
-      "grade": "miss"
-    },
-    {
-      "report_date": "2026-07-07",
-      "basis_close": 7537.43,
-      "pullback_prob": 45,
-      "bias": "中性偏多",
-      "actual_date": "2026-07-07",
-      "actual_pct": -0.45,
-      "actual_dir": "down",
-      "grade": "miss"
-    },
-    {
-      "report_date": "2026-07-08",
-      "basis_close": 7503.85,
-      "pullback_prob": 65,
-      "bias": "偏空",
-      "actual_date": "2026-07-08",
-      "actual_pct": -0.28,
-      "actual_dir": "flat",
-      "grade": "half"
-    },
-    {
-      "report_date": "2026-07-09",
-      "basis_close": 7482.71,
-      "pullback_prob": 65,
-      "bias": "偏空",
-      "actual_date": "2026-07-09",
-      "actual_pct": 0.81,
-      "actual_dir": "up",
-      "grade": "miss"
-    },
-    {
-      "report_date": "2026-07-10",
-      "basis_close": 7543.64,
-      "pullback_prob": 45,
-      "bias": "中性偏多",
-      "actual_date": "2026-07-10",
-      "actual_pct": 0.42,
-      "actual_dir": "up",
-      "grade": "hit"
-    },
-    {
-      "report_date": "2026-07-11",
-      "basis_close": 7575.39,
-      "pullback_prob": 50,
-      "bias": "中性(高檔整理)",
-      "actual_date": "2026-07-13",
-      "actual_pct": -0.79,
-      "actual_dir": "down",
-      "grade": "half"
-    },
-    {
-      "report_date": "2026-07-14",
-      "basis_close": 7515.34,
-      "pullback_prob": 65,
-      "bias": "偏空",
-      "actual_date": "2026-07-14",
-      "actual_pct": 0.38,
-      "actual_dir": "up",
-      "grade": "miss"
-    },
-    {
-      "report_date": "2026-07-15",
-      "basis_close": 7543.59,
-      "pullback_prob": 48,
-      "bias": "中性偏多",
-      "actual_date": "2026-07-15",
-      "actual_pct": 0.38,
-      "actual_dir": "up",
-      "grade": "hit"
-    },
-    {
-      "report_date": "2026-07-16",
-      "basis_close": 7572.4,
-      "pullback_prob": 52,
-      "bias": "中性(TSM法說二元)",
-      "actual_date": "2026-07-16",
-      "actual_pct": -0.51,
-      "actual_dir": "down",
-      "grade": "half"
-    },
-    {
-      "report_date": "2026-07-17",
-      "basis_close": 7533.77,
-      "pullback_prob": 60,
-      "bias": "偏空(rule20上限)",
-      "actual_date": "2026-07-17",
-      "actual_pct": -1.01,
-      "actual_dir": "down",
-      "grade": "hit"
-    },
-    {
-      "report_date": "2026-07-18",
-      "basis_close": 7457.69,
-      "pullback_prob": 54,
-      "bias": "中性偏空(築底vs續跌)",
-      "actual_date": "2026-07-20",
-      "actual_pct": -0.19,
-      "actual_dir": "flat",
-      "grade": "half"
-    },
-    {
-      "report_date": "2026-07-21",
-      "basis_close": 7443.28,
-      "pullback_prob": 58,
-      "bias": "偏空(反轉日+輪動擴散)",
-      "actual_date": "2026-07-21",
-      "actual_pct": 0.89,
-      "actual_dir": "up",
-      "grade": "miss"
-    },
-    {
-      "report_date": "2026-07-22",
-      "basis_close": 7509.2,
-      "pullback_prob": 50,
-      "bias": "中性(收復7505vs財報二元+10Y新高)",
-      "actual_date": "2026-07-22",
-      "actual_pct": -0.14,
-      "actual_dir": "flat",
-      "grade": "hit"
-    },
-    {
-      "report_date": "2026-07-23",
-      "basis_close": 7498.96,
-      "pullback_prob": 55,
-      "bias": "中性偏空(GOOGL capex賣壓+10Y破4.65+地緣升級)",
-      "actual_date": "2026-07-23",
-      "actual_pct": -1.21,
-      "actual_dir": "down",
-      "grade": "hit"
-    },
-    {
-      "report_date": "2026-07-24",
-      "basis_close": 7408.3,
-      "pullback_prob": 58,
-      "bias": "偏空(破雙底+油破百+10Y 1.5年高)",
-      "actual_date": "2026-07-24",
-      "actual_pct": 0.05,
-      "actual_dir": "flat",
-      "grade": "half"
-    },
-    {
-      "report_date": "2026-07-27",
-      "basis_close": 7411.98,
-      "pullback_prob": 50,
-      "bias": "中性(超賣打底vs油/利率未退+週末地緣)",
-      "actual_date": "2026-07-27",
-      "actual_pct": 0.02,
-      "actual_dir": "flat",
-      "grade": "hit"
-    },
-    {
-      "report_date": "2026-07-28to31",
-      "basis_close": null,
-      "bias": "GAP-未分析",
-      "actual_date": "2026-07-28~31",
-      "grade": "gap",
-      "note": "session未執行,無預測留存,不補記不灌水;實際走勢:7/28守7,383(+0.21%)、7/29洗盤殺7,313.92(-1.52%,FOMC鷹派按兵不動+10Y飆)、7/30 V轉+1.66%、7/31續彈+0.70%收7,489.72"
-    },
-    {
-      "report_date": "2026-08-03",
-      "basis_close": 7489.72,
-      "pullback_prob": 50,
-      "bias": "中性(V轉收復MA20/50vs10Y創2025新高)",
-      "actual_date": "2026-08-03",
-      "actual_pct": 1.48,
-      "actual_dir": "up",
-      "grade": "half"
-    },
-    {
-      "report_date": "2026-08-04",
-      "basis_close": 7600.5,
-      "pullback_prob": 45,
-      "bias": "中性偏多(油崩/利率退/伊朗降溫,迫近ATH vs 短線超買)",
-      "actual_date": "2026-08-04",
-      "actual_pct": 1.79,
-      "actual_dir": "up",
-      "grade": "hit"
-    },
-    {
-      "report_date": "2026-08-05",
-      "basis_close": 7736.52,
-      "pullback_prob": 52,
-      "bias": "中性偏空(半導體噴出領漲vs BB116%極度超買/過度延伸)",
-      "actual_date": "2026-08-05",
-      "actual_pct": -0.17,
-      "actual_dir": "flat",
-      "grade": "hit",
-      "grade_note": "盤中創新高7,793.68後反轉收黑-0.17%,52%過熱喘息thesis兌現;7,800阻力守住、追高breakout long被軋=命中"
-    },
-    {
-      "report_date": "2026-08-06",
-      "basis_close": 7723.55,
-      "pullback_prob": 53,
-      "bias": "中性偏空(射擊之星反轉+科技盤前偏弱 vs 超買緩解/VIX降/趨勢完整)",
-      "actual_date": "2026-08-06",
-      "actual_pct": -0.18,
-      "actual_dir": "flat",
-      "grade": "hit",
-      "grade_note": "連二日小紅窄幅整理(-0.18%),高檔換手(方案B)兌現;淺回踩7,700做多成交獲利=命中"
-    },
-    {
-      "report_date": "2026-08-07",
-      "basis_close": 7709.96,
-      "pullback_prob": 54,
-      "bias": "中性偏空(連二整理+10Y升破4.67逼近4.70 vs 超買緩解/半導體止穩/趨勢完整)",
-      "actual_date": "2026-08-07",
-      "actual_pct": 0.62,
-      "actual_dir": "up",
-      "grade": "miss",
-      "grade_note": "向上突破2日整理+0.62%(收近高),54%整理帶利率偏空lean方向錯=miss;但trade book淨多、breakout long 7745成交獲利(rule19分離奏效)"
-    },
-    {
-      "report_date": "2026-08-08",
-      "basis_close": 7757.64,
-      "pullback_prob": 48,
-      "bias": "中性偏多(突破整理續攻+RISK_ON+半導體領漲 vs ATH 7,794超買/距MA20+3.09%過度延伸);週六休市,針對週一8/10",
-      "actual_date": "2026-08-10",
-      "actual_pct": -0.06,
-      "actual_dir": "flat",
-      "grade": "half",
-      "grade_note": "ATH前低量十字停滯-0.06%,突破未成也未回落;48%中性偏多遇平=部分;所有掛單未觸發(全在窄幅外)"
-    },
-    {
-      "report_date": "2026-08-11",
-      "basis_close": 7753.11,
-      "pullback_prob": 57,
-      "bias": "中性偏空(ATH雙拒+10Y觸4.70+半導體回吐SOXX-2.71%+低量十字衰竭 vs 趨勢未破)",
-      "actual_date": "2026-08-11",
-      "actual_pct": -0.32,
-      "actual_dir": "down",
-      "grade": "hit",
-      "grade_note": "開高走低長黑-0.32%收近低,57%多因子偏空(10Y觸4.70+半導體回吐+ATH雙拒+量衰竭)完全兌現=hit,Brier 0.1849最佳之一"
-    },
-    {
-      "report_date": "2026-08-12",
-      "basis_close": 7728.2,
-      "pullback_prob": 56,
-      "bias": "中性偏空(長黑吞噬破MA5+ES-0.44%續弱 vs 10Y退離4.70/半導體+0.95%止穩/趨勢未破)",
-      "actual_date": "2026-08-12(pending)",
-      "actual_pct": null,
-      "actual_dir": null,
-      "grade": "pending"
-    }
-  ],
-  "summary": {
-    "graded": 35,
-    "hits": 15,
-    "half": 13,
-    "miss": 7,
-    "rolling_direction_score_pct": 61.4,
-    "gap_days": [
-      "2026-07-28",
-      "2026-07-29",
-      "2026-07-30",
-      "2026-07-31"
-    ],
-    "gap_note": "此四日session未執行、無預測留存,不回補不灌水;7/29曾洗盤破雙底殺至7,313.92後2日V轉,若當時有分析為超賣區,方向未知故不計",
-    "brier": {
-      "as_of": "2026-08-12",
-      "included": 22,
-      "excluded_flat": 13,
-      "per_entry": [
-        {
-          "report_date": "2026-06-16",
-          "p": 0.6,
-          "outcome": 1,
-          "brier": 0.16
-        },
-        {
-          "report_date": "2026-06-17",
-          "p": 0.58,
-          "outcome": 1,
-          "brier": 0.1764
-        },
-        {
-          "report_date": "2026-06-18",
-          "p": 0.64,
-          "outcome": 0,
-          "brier": 0.4096
-        },
-        {
-          "report_date": "2026-06-19",
-          "p": 0.52,
-          "outcome": 1,
-          "brier": 0.2304
-        },
-        {
-          "report_date": "2026-06-23",
-          "p": 0.54,
-          "outcome": 1,
-          "brier": 0.2116
-        },
-        {
-          "report_date": "2026-06-29",
-          "p": 0.49,
-          "outcome": 0,
-          "brier": 0.2401
-        },
-        {
-          "report_date": "2026-06-30",
-          "p": 0.49,
-          "outcome": 0,
-          "brier": 0.2401
-        },
-        {
-          "report_date": "2026-07-03",
-          "p": 0.6,
-          "outcome": 0,
-          "brier": 0.36
-        },
-        {
-          "report_date": "2026-07-07",
-          "p": 0.45,
-          "outcome": 1,
-          "brier": 0.3025
-        },
-        {
-          "report_date": "2026-07-09",
-          "p": 0.65,
-          "outcome": 0,
-          "brier": 0.4225
-        },
-        {
-          "report_date": "2026-07-10",
-          "p": 0.45,
-          "outcome": 0,
-          "brier": 0.2025
-        },
-        {
-          "report_date": "2026-07-11",
-          "p": 0.5,
-          "outcome": 1,
-          "brier": 0.25
-        },
-        {
-          "report_date": "2026-07-14",
-          "p": 0.65,
-          "outcome": 0,
-          "brier": 0.4225
-        },
-        {
-          "report_date": "2026-07-15",
-          "p": 0.48,
-          "outcome": 0,
-          "brier": 0.2304
-        },
-        {
-          "report_date": "2026-07-16",
-          "p": 0.52,
-          "outcome": 1,
-          "brier": 0.2304
-        },
-        {
-          "report_date": "2026-07-17",
-          "p": 0.6,
-          "outcome": 1,
-          "brier": 0.16
-        },
-        {
-          "report_date": "2026-07-21",
-          "p": 0.58,
-          "outcome": 0,
-          "brier": 0.3364
-        },
-        {
-          "report_date": "2026-07-23",
-          "p": 0.55,
-          "outcome": 1,
-          "brier": 0.2025
-        },
-        {
-          "report_date": "2026-08-03",
-          "p": 0.5,
-          "outcome": 0,
-          "brier": 0.25
-        },
-        {
-          "report_date": "2026-08-04",
-          "p": 0.45,
-          "outcome": 0,
-          "brier": 0.2025
-        },
-        {
-          "report_date": "2026-08-07",
-          "p": 0.54,
-          "outcome": 0,
-          "brier": 0.2916
-        },
-        {
-          "report_date": "2026-08-11",
-          "p": 0.57,
-          "outcome": 1,
-          "brier": 0.1849
-        }
-      ],
-      "mean_brier": 0.2599,
-      "benchmark_50pct": 0.25,
-      "prob_range_observed": "45-65",
-      "honest_read": "mean改善至0.2621(連兩日下降)。8/4報45%中性偏多遇+1.79%大漲=hit,Brier 0.2025優於基準,滾動勝率升至60.0%創新高。8/5報52%中性偏空:半導體噴出領漲(SOXX+5.83%)+10Y退+backdrop+3=趨勢向上,但BB 116.9%(價在上軌之上)+MA20乖離+3.21%(過度延伸regime)+3日累漲+5.3%=短線過度延伸——52非因趨勢轉空,是過熱後喘息機率升;melt-up不宜逆勢但拉回機率確實升高。"
-    },
-    "as_of": "2026-08-12",
-    "honest_note_20260805": "60.0%（8/4中性偏多45%遇+1.79%=hit，滾動勝率首破60）。對用戶最重要的一天:SOXX +5.83%!——半導體終於狂奔領漲,正是我叫用戶盯的『帳戶回本引擎』訊號,8/4觸發。用戶3週來第一次帳戶會明顯往回填坑(前一天才用數字證實SOXX-22.9%落後SPX)。SPX 3日melt-up(+5.3%)破ATH至7,736.52。系統教訓:P&L的均值回歸空單在melt-up第二日被續軋(short_rally 7,640掃損)、閘門又拒了gap-up突破多——連續趨勢日是本系統(均值回歸傾向)最差環境,rule24候補:BB>100連兩日時暫停均值回歸空單。用戶端:訊號來了,但8/5在BB 116.9%極度超買處『追』風險最大,讓核心倉跑、加碼等回踩不變。",
-    "honest_note_20260804": "58.6%（8/3中性50%遇+1.48%=half）。macro三殺全面反轉是8/3大漲的引擎:Brent油崩4.7%至$83.77(自$100)、10Y退4.686、伊朗取消攻擊=去風險利多齊發,SPX+1.48%收7,600.50離歷史收盤高(7,609.78)僅0.12%、Dow創新高、半導體終於領漲。P&L亮點:突破多7,514在趨勢日(跳空開+收最高)吃到+9.2bp=rule23的精準邊界驗證——rule23砍半是針對『均線糾結無趨勢』,8/3是乾淨趨勢日故突破多該賺就賺,規則不是禁突破而是分辨盤型。用戶端:1.0x核心倉完整參與這波修復到ATH,降槓桿沒有錯過上漲(核心倉本來就在)、只是拿掉了洗盤時的爆倉風險=風控的理想結果。",
-    "honest_note_20260803": "58.9%（7/27中性50%遇+0.02%flat=hit）。重要誠實紀錄:7/28-7/31有4個交易日session未執行,無預測留存。這段走了7/29洗盤破雙底殺至7,313.92(FOMC鷹派按兵不動+3票主張升息+10Y飆)後2日V轉收復7,489.72的劇烈來回。這4日不回補、不計入勝率——不是為了跳過不利日(其中7/29大跌若當時報偏空反而會加分),而是沒有即時預測就沒有可誠實計分的東西,補記等於作弊。用戶端:1.0x核心倉安然渡過7,313洗盤(若帶槓桿此處會被嚇出場),再吃到V轉修復=7/23降槓桿的價值在洗盤中二度體現。系統教訓:長假/斷線後要主動補跑或明確標記gap,避免預測連續性斷裂。",
-    "honest_note_20260727": "57.4%（7/24偏空58%遇+0.05%flat=half，週五休止）。7/24是十字打底日:守住7,376昨低、油價盤中回落3%(一週來首次)、收十字內包線=賣壓暫歇。RSI跌至38.88(首度<40)=正式進入rule5/rule14的空單禁區。系統教訓:P&L的carry空單7/24被盤中高點7,460.98觸停損7,460(僅差0.98點!)後收回7,411.98=繼7/20後第二次『十字反轉日高點掃停損又收回』,rule12b加寬停損仍被<1點掃到→真正的解法是『反轉徵兆日(RSI近超賣+守支撐)不留過夜空單』,列rule12c候補。用戶端:1.0x安穩過週末,油價回落是超賣反彈的第一把鑰匙,但週末美伊/油價跳空風險仍在,零槓桿是對的姿態。",
-    "honest_note_20260724": "57.7%（7/23中性偏空55%遇-1.21%=hit，滾動勝率創新高）。7/23整套訊號體系運作到位:①headline方向對(Brier 0.2025)、②rule22判讀對(capex恐慌打指數但半導體早盤仍逆勢+1.63%)、③最重要=7,421融資清零訊號實戰觸發,用戶在睡前檢查(22:13)依『10Y破4.70+半導體翻黑+放量』三條件全翻的即時證據,提前於收盤把融資清掉降至1.0x。收盤7,408.30確實破了7,421→若賭無人看管的收盤=承受整夜跳空(隔夜ES再-0.97%、油破$100)。這是rule19『部位風險優先』+睡前閘門機制第一次在真實下跌中避開過夜風險的完整實例。教訓延伸:規則的價值不在預測跌多少,在於跌來時用戶已經在場外。",
-    "honest_note_20260723": "56.0%（7/22中性50%遇-0.14%flat=hit，rule21教訓當日即見效）。7/22是罕見的『四張單全部正確未觸發』日：low 7,485.85差7.85點沒接到7,478多單、high 7,525.94差30點沒觸7,556突破單、收7,498.96守住7,476不觸發破位空——震盪日不進場本身就是正確。真正的新聞在盤後：GOOGL財報beat(雲端+82%)但因capex成長股價-2%，與7/16 TSM『好財報被賣』完全同一劇本,只是主角換成Mag7。這件事有個常被忽略的另一面:capex是買方的成本、卻是賣方(NVDA/TSM/AVGO)的營收——同一則新聞對用戶核心持股其實是利多,對指數權值是利空。",
-    "honest_note": "54.2%（7/21偏空58%遇+0.89%=miss，滾動勝率首度回落至55下方）。miss的機制很清楚也很重要：我把『昨日已發生的偏空證據』評估得比『正在發生的類股轉強』重——半導體SOX連兩日反彈(7/21+5.21%、SNDK+14%/WDC+12.5%/MU+12%)+TSMC明年漲價10%+財報季87%beat+伊朗10天停火談判,四個利多疊加,指數收復7,505/MA20/MA50。教訓=rule21候補：我方偏空所依賴的類股(半導體)已連兩日逆勢轉強時,指數偏空權重必須大幅下調。對用戶部位這是純利多:核心倉TSM/NVDA領漲、rule15警報完全解除、7,421融資清零線遠離。用戶在7,507/1.10x減碼減在了短期底附近,但風控不是抓底——降槓桿讓他能安心看完本週GOOGL/TSLA/IBM/INTC財報,這才是目的。",
-    "seed_note": "帳本自 2026-06-16 起建(更早的 6/11-6/13 缺精確立場紀錄，不回補)"
+  {
+   "report_date": "2026-06-18",
+   "basis_close": 7420.1,
+   "pullback_prob": 64,
+   "bias": "偏空",
+   "actual_date": "2026-06-18",
+   "actual_pct": 1.08,
+   "actual_dir": "up",
+   "grade": "miss"
+  },
+  {
+   "report_date": "2026-06-19",
+   "basis_close": 7500.58,
+   "pullback_prob": 52,
+   "bias": "中性(區間)",
+   "actual_date": "2026-06-22",
+   "actual_pct": -0.37,
+   "actual_dir": "down",
+   "grade": "half"
+  },
+  {
+   "report_date": "2026-06-23",
+   "basis_close": 7472.79,
+   "pullback_prob": 54,
+   "bias": "中性",
+   "actual_date": "2026-06-23",
+   "actual_pct": -1.44,
+   "actual_dir": "down",
+   "grade": "half"
+  },
+  {
+   "report_date": "2026-06-24",
+   "basis_close": 7365.46,
+   "pullback_prob": 64,
+   "bias": "偏空",
+   "actual_date": "2026-06-24",
+   "actual_pct": -0.1,
+   "actual_dir": "flat",
+   "grade": "half"
+  },
+  {
+   "report_date": "2026-06-25",
+   "basis_close": 7358.22,
+   "pullback_prob": 50,
+   "bias": "中性(PCE待開獎)",
+   "actual_date": "2026-06-25",
+   "actual_pct": -0.01,
+   "actual_dir": "flat",
+   "grade": "hit"
+  },
+  {
+   "report_date": "2026-06-26",
+   "basis_close": 7357.49,
+   "pullback_prob": 59,
+   "bias": "中性偏空",
+   "actual_date": "2026-06-26",
+   "actual_pct": -0.05,
+   "actual_dir": "flat",
+   "grade": "half"
+  },
+  {
+   "report_date": "2026-06-29",
+   "basis_close": 7354.02,
+   "pullback_prob": 49,
+   "bias": "中性偏多",
+   "actual_date": "2026-06-29",
+   "actual_pct": 1.18,
+   "actual_dir": "up",
+   "grade": "hit"
+  },
+  {
+   "report_date": "2026-06-30",
+   "basis_close": 7440.43,
+   "pullback_prob": 49,
+   "bias": "中性偏多",
+   "actual_date": "2026-06-30",
+   "actual_pct": 0.79,
+   "actual_dir": "up",
+   "grade": "hit"
+  },
+  {
+   "report_date": "2026-07-01",
+   "basis_close": 7499.36,
+   "pullback_prob": 57,
+   "bias": "中性(不追高)",
+   "actual_date": "2026-07-01",
+   "actual_pct": -0.22,
+   "actual_dir": "flat",
+   "grade": "hit"
+  },
+  {
+   "report_date": "2026-07-02",
+   "basis_close": 7483.23,
+   "pullback_prob": 62,
+   "bias": "中性偏空",
+   "actual_date": "2026-07-02",
+   "actual_pct": 0.0,
+   "actual_dir": "flat",
+   "grade": "half"
+  },
+  {
+   "report_date": "2026-07-03",
+   "basis_close": 7483.24,
+   "pullback_prob": 60,
+   "bias": "中性偏空",
+   "actual_date": "2026-07-06",
+   "actual_pct": 0.72,
+   "actual_dir": "up",
+   "grade": "miss"
+  },
+  {
+   "report_date": "2026-07-07",
+   "basis_close": 7537.43,
+   "pullback_prob": 45,
+   "bias": "中性偏多",
+   "actual_date": "2026-07-07",
+   "actual_pct": -0.45,
+   "actual_dir": "down",
+   "grade": "miss"
+  },
+  {
+   "report_date": "2026-07-08",
+   "basis_close": 7503.85,
+   "pullback_prob": 65,
+   "bias": "偏空",
+   "actual_date": "2026-07-08",
+   "actual_pct": -0.28,
+   "actual_dir": "flat",
+   "grade": "half"
+  },
+  {
+   "report_date": "2026-07-09",
+   "basis_close": 7482.71,
+   "pullback_prob": 65,
+   "bias": "偏空",
+   "actual_date": "2026-07-09",
+   "actual_pct": 0.81,
+   "actual_dir": "up",
+   "grade": "miss"
+  },
+  {
+   "report_date": "2026-07-10",
+   "basis_close": 7543.64,
+   "pullback_prob": 45,
+   "bias": "中性偏多",
+   "actual_date": "2026-07-10",
+   "actual_pct": 0.42,
+   "actual_dir": "up",
+   "grade": "hit"
+  },
+  {
+   "report_date": "2026-07-11",
+   "basis_close": 7575.39,
+   "pullback_prob": 50,
+   "bias": "中性(高檔整理)",
+   "actual_date": "2026-07-13",
+   "actual_pct": -0.79,
+   "actual_dir": "down",
+   "grade": "half"
+  },
+  {
+   "report_date": "2026-07-14",
+   "basis_close": 7515.34,
+   "pullback_prob": 65,
+   "bias": "偏空",
+   "actual_date": "2026-07-14",
+   "actual_pct": 0.38,
+   "actual_dir": "up",
+   "grade": "miss"
+  },
+  {
+   "report_date": "2026-07-15",
+   "basis_close": 7543.59,
+   "pullback_prob": 48,
+   "bias": "中性偏多",
+   "actual_date": "2026-07-15",
+   "actual_pct": 0.38,
+   "actual_dir": "up",
+   "grade": "hit"
+  },
+  {
+   "report_date": "2026-07-16",
+   "basis_close": 7572.4,
+   "pullback_prob": 52,
+   "bias": "中性(TSM法說二元)",
+   "actual_date": "2026-07-16",
+   "actual_pct": -0.51,
+   "actual_dir": "down",
+   "grade": "half"
+  },
+  {
+   "report_date": "2026-07-17",
+   "basis_close": 7533.77,
+   "pullback_prob": 60,
+   "bias": "偏空(rule20上限)",
+   "actual_date": "2026-07-17",
+   "actual_pct": -1.01,
+   "actual_dir": "down",
+   "grade": "hit"
+  },
+  {
+   "report_date": "2026-07-18",
+   "basis_close": 7457.69,
+   "pullback_prob": 54,
+   "bias": "中性偏空(築底vs續跌)",
+   "actual_date": "2026-07-20",
+   "actual_pct": -0.19,
+   "actual_dir": "flat",
+   "grade": "half"
+  },
+  {
+   "report_date": "2026-07-21",
+   "basis_close": 7443.28,
+   "pullback_prob": 58,
+   "bias": "偏空(反轉日+輪動擴散)",
+   "actual_date": "2026-07-21",
+   "actual_pct": 0.89,
+   "actual_dir": "up",
+   "grade": "miss"
+  },
+  {
+   "report_date": "2026-07-22",
+   "basis_close": 7509.2,
+   "pullback_prob": 50,
+   "bias": "中性(收復7505vs財報二元+10Y新高)",
+   "actual_date": "2026-07-22",
+   "actual_pct": -0.14,
+   "actual_dir": "flat",
+   "grade": "hit"
+  },
+  {
+   "report_date": "2026-07-23",
+   "basis_close": 7498.96,
+   "pullback_prob": 55,
+   "bias": "中性偏空(GOOGL capex賣壓+10Y破4.65+地緣升級)",
+   "actual_date": "2026-07-23",
+   "actual_pct": -1.21,
+   "actual_dir": "down",
+   "grade": "hit"
+  },
+  {
+   "report_date": "2026-07-24",
+   "basis_close": 7408.3,
+   "pullback_prob": 58,
+   "bias": "偏空(破雙底+油破百+10Y 1.5年高)",
+   "actual_date": "2026-07-24",
+   "actual_pct": 0.05,
+   "actual_dir": "flat",
+   "grade": "half"
+  },
+  {
+   "report_date": "2026-07-27",
+   "basis_close": 7411.98,
+   "pullback_prob": 50,
+   "bias": "中性(超賣打底vs油/利率未退+週末地緣)",
+   "actual_date": "2026-07-27",
+   "actual_pct": 0.02,
+   "actual_dir": "flat",
+   "grade": "hit"
+  },
+  {
+   "report_date": "2026-07-28to31",
+   "basis_close": null,
+   "bias": "GAP-未分析",
+   "actual_date": "2026-07-28~31",
+   "grade": "gap",
+   "note": "session未執行,無預測留存,不補記不灌水;實際走勢:7/28守7,383(+0.21%)、7/29洗盤殺7,313.92(-1.52%,FOMC鷹派按兵不動+10Y飆)、7/30 V轉+1.66%、7/31續彈+0.70%收7,489.72"
+  },
+  {
+   "report_date": "2026-08-03",
+   "basis_close": 7489.72,
+   "pullback_prob": 50,
+   "bias": "中性(V轉收復MA20/50vs10Y創2025新高)",
+   "actual_date": "2026-08-03",
+   "actual_pct": 1.48,
+   "actual_dir": "up",
+   "grade": "half"
+  },
+  {
+   "report_date": "2026-08-04",
+   "basis_close": 7600.5,
+   "pullback_prob": 45,
+   "bias": "中性偏多(油崩/利率退/伊朗降溫,迫近ATH vs 短線超買)",
+   "actual_date": "2026-08-04",
+   "actual_pct": 1.79,
+   "actual_dir": "up",
+   "grade": "hit"
+  },
+  {
+   "report_date": "2026-08-05",
+   "basis_close": 7736.52,
+   "pullback_prob": 52,
+   "bias": "中性偏空(半導體噴出領漲vs BB116%極度超買/過度延伸)",
+   "actual_date": "2026-08-05",
+   "actual_pct": -0.17,
+   "actual_dir": "flat",
+   "grade": "hit",
+   "grade_note": "盤中創新高7,793.68後反轉收黑-0.17%,52%過熱喘息thesis兌現;7,800阻力守住、追高breakout long被軋=命中"
+  },
+  {
+   "report_date": "2026-08-06",
+   "basis_close": 7723.55,
+   "pullback_prob": 53,
+   "bias": "中性偏空(射擊之星反轉+科技盤前偏弱 vs 超買緩解/VIX降/趨勢完整)",
+   "actual_date": "2026-08-06",
+   "actual_pct": -0.18,
+   "actual_dir": "flat",
+   "grade": "hit",
+   "grade_note": "連二日小紅窄幅整理(-0.18%),高檔換手(方案B)兌現;淺回踩7,700做多成交獲利=命中"
+  },
+  {
+   "report_date": "2026-08-07",
+   "basis_close": 7709.96,
+   "pullback_prob": 54,
+   "bias": "中性偏空(連二整理+10Y升破4.67逼近4.70 vs 超買緩解/半導體止穩/趨勢完整)",
+   "actual_date": "2026-08-07",
+   "actual_pct": 0.62,
+   "actual_dir": "up",
+   "grade": "miss",
+   "grade_note": "向上突破2日整理+0.62%(收近高),54%整理帶利率偏空lean方向錯=miss;但trade book淨多、breakout long 7745成交獲利(rule19分離奏效)"
+  },
+  {
+   "report_date": "2026-08-08",
+   "basis_close": 7757.64,
+   "pullback_prob": 48,
+   "bias": "中性偏多(突破整理續攻+RISK_ON+半導體領漲 vs ATH 7,794超買/距MA20+3.09%過度延伸);週六休市,針對週一8/10",
+   "actual_date": "2026-08-10",
+   "actual_pct": -0.06,
+   "actual_dir": "flat",
+   "grade": "half",
+   "grade_note": "ATH前低量十字停滯-0.06%,突破未成也未回落;48%中性偏多遇平=部分;所有掛單未觸發(全在窄幅外)"
+  },
+  {
+   "report_date": "2026-08-11",
+   "basis_close": 7753.11,
+   "pullback_prob": 57,
+   "bias": "中性偏空(ATH雙拒+10Y觸4.70+半導體回吐SOXX-2.71%+低量十字衰竭 vs 趨勢未破)",
+   "actual_date": "2026-08-11",
+   "actual_pct": -0.32,
+   "actual_dir": "down",
+   "grade": "hit",
+   "grade_note": "開高走低長黑-0.32%收近低,57%多因子偏空(10Y觸4.70+半導體回吐+ATH雙拒+量衰竭)完全兌現=hit,Brier 0.1849最佳之一"
+  },
+  {
+   "report_date": "2026-08-12",
+   "basis_close": 7728.2,
+   "pullback_prob": 56,
+   "bias": "中性偏空(長黑吞噬破MA5+ES-0.44%續弱 vs 10Y退離4.70/半導體+0.95%止穩/趨勢未破)",
+   "actual_date": "2026-08-12",
+   "actual_pct": 0.26,
+   "actual_dir": "flat",
+   "grade": "half",
+   "grade_note": "實際+0.26%落在±0.3%內=flat;中性偏空遇flat=half。振幅僅0.36%(15日最窄)、完全inside day被8/11包住=方向沒表態。偏空論據MACD二度收窄兌現、偏多論據10Y退離4.70+SOXX+2.32%連兩日轉強兌現,兩邊都對→盤整"
+  },
+  {
+   "report_date": "2026-08-13",
+   "basis_close": 7748.5,
+   "pullback_prob": 46,
+   "bias": "中性偏多(收斂三角末端:兩大偏空觸發因子解除[10Y連兩日退離4.70/SOXX連兩日轉強觸發rule21]+6日橫盤消化超買 vs RSI 75.1超買/MACD柱三連收窄頂背馳/距MA200+9.67%)",
+   "actual_date": "2026-08-13(pending)",
+   "actual_pct": null,
+   "actual_dir": null,
+   "grade": "pending"
   }
+ ],
+ "summary": {
+  "graded": 36,
+  "hits": 15,
+  "half": 14,
+  "miss": 7,
+  "rolling_direction_score_pct": 61.1,
+  "gap_days": [
+   "2026-07-28",
+   "2026-07-29",
+   "2026-07-30",
+   "2026-07-31"
+  ],
+  "gap_note": "此四日session未執行、無預測留存,不回補不灌水;7/29曾洗盤破雙底殺至7,313.92後2日V轉,若當時有分析為超賣區,方向未知故不計",
+  "brier": {
+   "as_of": "2026-08-13",
+   "included": 22,
+   "excluded_flat": 14,
+   "per_entry": [
+    {
+     "report_date": "2026-06-16",
+     "p": 0.6,
+     "outcome": 1,
+     "brier": 0.16
+    },
+    {
+     "report_date": "2026-06-17",
+     "p": 0.58,
+     "outcome": 1,
+     "brier": 0.1764
+    },
+    {
+     "report_date": "2026-06-18",
+     "p": 0.64,
+     "outcome": 0,
+     "brier": 0.4096
+    },
+    {
+     "report_date": "2026-06-19",
+     "p": 0.52,
+     "outcome": 1,
+     "brier": 0.2304
+    },
+    {
+     "report_date": "2026-06-23",
+     "p": 0.54,
+     "outcome": 1,
+     "brier": 0.2116
+    },
+    {
+     "report_date": "2026-06-29",
+     "p": 0.49,
+     "outcome": 0,
+     "brier": 0.2401
+    },
+    {
+     "report_date": "2026-06-30",
+     "p": 0.49,
+     "outcome": 0,
+     "brier": 0.2401
+    },
+    {
+     "report_date": "2026-07-03",
+     "p": 0.6,
+     "outcome": 0,
+     "brier": 0.36
+    },
+    {
+     "report_date": "2026-07-07",
+     "p": 0.45,
+     "outcome": 1,
+     "brier": 0.3025
+    },
+    {
+     "report_date": "2026-07-09",
+     "p": 0.65,
+     "outcome": 0,
+     "brier": 0.4225
+    },
+    {
+     "report_date": "2026-07-10",
+     "p": 0.45,
+     "outcome": 0,
+     "brier": 0.2025
+    },
+    {
+     "report_date": "2026-07-11",
+     "p": 0.5,
+     "outcome": 1,
+     "brier": 0.25
+    },
+    {
+     "report_date": "2026-07-14",
+     "p": 0.65,
+     "outcome": 0,
+     "brier": 0.4225
+    },
+    {
+     "report_date": "2026-07-15",
+     "p": 0.48,
+     "outcome": 0,
+     "brier": 0.2304
+    },
+    {
+     "report_date": "2026-07-16",
+     "p": 0.52,
+     "outcome": 1,
+     "brier": 0.2304
+    },
+    {
+     "report_date": "2026-07-17",
+     "p": 0.6,
+     "outcome": 1,
+     "brier": 0.16
+    },
+    {
+     "report_date": "2026-07-21",
+     "p": 0.58,
+     "outcome": 0,
+     "brier": 0.3364
+    },
+    {
+     "report_date": "2026-07-23",
+     "p": 0.55,
+     "outcome": 1,
+     "brier": 0.2025
+    },
+    {
+     "report_date": "2026-08-03",
+     "p": 0.5,
+     "outcome": 0,
+     "brier": 0.25
+    },
+    {
+     "report_date": "2026-08-04",
+     "p": 0.45,
+     "outcome": 0,
+     "brier": 0.2025
+    },
+    {
+     "report_date": "2026-08-07",
+     "p": 0.54,
+     "outcome": 0,
+     "brier": 0.2916
+    },
+    {
+     "report_date": "2026-08-11",
+     "p": 0.57,
+     "outcome": 1,
+     "brier": 0.1849
+    }
+   ],
+   "mean_brier": 0.2599,
+   "benchmark_50pct": 0.25,
+   "prob_range_observed": "45-65",
+   "honest_read": "mean改善至0.2621(連兩日下降)。8/4報45%中性偏多遇+1.79%大漲=hit,Brier 0.2025優於基準,滾動勝率升至60.0%創新高。8/5報52%中性偏空:半導體噴出領漲(SOXX+5.83%)+10Y退+backdrop+3=趨勢向上,但BB 116.9%(價在上軌之上)+MA20乖離+3.21%(過度延伸regime)+3日累漲+5.3%=短線過度延伸——52非因趨勢轉空,是過熱後喘息機率升;melt-up不宜逆勢但拉回機率確實升高。",
+   "note_latest": "8/12 實際+0.26%=flat→依brier_rules排除不計。included仍22筆、mean_brier不變"
+  },
+  "as_of": "2026-08-12",
+  "honest_note_20260805": "60.0%（8/4中性偏多45%遇+1.79%=hit，滾動勝率首破60）。對用戶最重要的一天:SOXX +5.83%!——半導體終於狂奔領漲,正是我叫用戶盯的『帳戶回本引擎』訊號,8/4觸發。用戶3週來第一次帳戶會明顯往回填坑(前一天才用數字證實SOXX-22.9%落後SPX)。SPX 3日melt-up(+5.3%)破ATH至7,736.52。系統教訓:P&L的均值回歸空單在melt-up第二日被續軋(short_rally 7,640掃損)、閘門又拒了gap-up突破多——連續趨勢日是本系統(均值回歸傾向)最差環境,rule24候補:BB>100連兩日時暫停均值回歸空單。用戶端:訊號來了,但8/5在BB 116.9%極度超買處『追』風險最大,讓核心倉跑、加碼等回踩不變。",
+  "honest_note_20260804": "58.6%（8/3中性50%遇+1.48%=half）。macro三殺全面反轉是8/3大漲的引擎:Brent油崩4.7%至$83.77(自$100)、10Y退4.686、伊朗取消攻擊=去風險利多齊發,SPX+1.48%收7,600.50離歷史收盤高(7,609.78)僅0.12%、Dow創新高、半導體終於領漲。P&L亮點:突破多7,514在趨勢日(跳空開+收最高)吃到+9.2bp=rule23的精準邊界驗證——rule23砍半是針對『均線糾結無趨勢』,8/3是乾淨趨勢日故突破多該賺就賺,規則不是禁突破而是分辨盤型。用戶端:1.0x核心倉完整參與這波修復到ATH,降槓桿沒有錯過上漲(核心倉本來就在)、只是拿掉了洗盤時的爆倉風險=風控的理想結果。",
+  "honest_note_20260803": "58.9%（7/27中性50%遇+0.02%flat=hit）。重要誠實紀錄:7/28-7/31有4個交易日session未執行,無預測留存。這段走了7/29洗盤破雙底殺至7,313.92(FOMC鷹派按兵不動+3票主張升息+10Y飆)後2日V轉收復7,489.72的劇烈來回。這4日不回補、不計入勝率——不是為了跳過不利日(其中7/29大跌若當時報偏空反而會加分),而是沒有即時預測就沒有可誠實計分的東西,補記等於作弊。用戶端:1.0x核心倉安然渡過7,313洗盤(若帶槓桿此處會被嚇出場),再吃到V轉修復=7/23降槓桿的價值在洗盤中二度體現。系統教訓:長假/斷線後要主動補跑或明確標記gap,避免預測連續性斷裂。",
+  "honest_note_20260727": "57.4%（7/24偏空58%遇+0.05%flat=half，週五休止）。7/24是十字打底日:守住7,376昨低、油價盤中回落3%(一週來首次)、收十字內包線=賣壓暫歇。RSI跌至38.88(首度<40)=正式進入rule5/rule14的空單禁區。系統教訓:P&L的carry空單7/24被盤中高點7,460.98觸停損7,460(僅差0.98點!)後收回7,411.98=繼7/20後第二次『十字反轉日高點掃停損又收回』,rule12b加寬停損仍被<1點掃到→真正的解法是『反轉徵兆日(RSI近超賣+守支撐)不留過夜空單』,列rule12c候補。用戶端:1.0x安穩過週末,油價回落是超賣反彈的第一把鑰匙,但週末美伊/油價跳空風險仍在,零槓桿是對的姿態。",
+  "honest_note_20260724": "57.7%（7/23中性偏空55%遇-1.21%=hit，滾動勝率創新高）。7/23整套訊號體系運作到位:①headline方向對(Brier 0.2025)、②rule22判讀對(capex恐慌打指數但半導體早盤仍逆勢+1.63%)、③最重要=7,421融資清零訊號實戰觸發,用戶在睡前檢查(22:13)依『10Y破4.70+半導體翻黑+放量』三條件全翻的即時證據,提前於收盤把融資清掉降至1.0x。收盤7,408.30確實破了7,421→若賭無人看管的收盤=承受整夜跳空(隔夜ES再-0.97%、油破$100)。這是rule19『部位風險優先』+睡前閘門機制第一次在真實下跌中避開過夜風險的完整實例。教訓延伸:規則的價值不在預測跌多少,在於跌來時用戶已經在場外。",
+  "honest_note_20260723": "56.0%（7/22中性50%遇-0.14%flat=hit，rule21教訓當日即見效）。7/22是罕見的『四張單全部正確未觸發』日：low 7,485.85差7.85點沒接到7,478多單、high 7,525.94差30點沒觸7,556突破單、收7,498.96守住7,476不觸發破位空——震盪日不進場本身就是正確。真正的新聞在盤後：GOOGL財報beat(雲端+82%)但因capex成長股價-2%，與7/16 TSM『好財報被賣』完全同一劇本,只是主角換成Mag7。這件事有個常被忽略的另一面:capex是買方的成本、卻是賣方(NVDA/TSM/AVGO)的營收——同一則新聞對用戶核心持股其實是利多,對指數權值是利空。",
+  "honest_note": "54.2%（7/21偏空58%遇+0.89%=miss，滾動勝率首度回落至55下方）。miss的機制很清楚也很重要：我把『昨日已發生的偏空證據』評估得比『正在發生的類股轉強』重——半導體SOX連兩日反彈(7/21+5.21%、SNDK+14%/WDC+12.5%/MU+12%)+TSMC明年漲價10%+財報季87%beat+伊朗10天停火談判,四個利多疊加,指數收復7,505/MA20/MA50。教訓=rule21候補：我方偏空所依賴的類股(半導體)已連兩日逆勢轉強時,指數偏空權重必須大幅下調。對用戶部位這是純利多:核心倉TSM/NVDA領漲、rule15警報完全解除、7,421融資清零線遠離。用戶在7,507/1.10x減碼減在了短期底附近,但風控不是抓底——降槓桿讓他能安心看完本週GOOGL/TSLA/IBM/INTC財報,這才是目的。",
+  "seed_note": "帳本自 2026-06-16 起建(更早的 6/11-6/13 缺精確立場紀錄，不回補)"
+ }
 }
