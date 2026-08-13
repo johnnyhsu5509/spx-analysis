@@ -1,4 +1,5 @@
 import yfinance as yf
+import sys
 import os as _os, sys as _sys
 _sys.path.insert(0, _os.path.dirname(_os.path.abspath(__file__)))
 import yf_compat
@@ -188,5 +189,29 @@ try:
 except Exception as e:
     result["backdrop_error"] = str(e)
 
+# --- 資料完整性把關（避免全數抓取失敗仍寫出「中性」假訊號）---
+_err_keys = [k for k in result if k.endswith("_error")]
+_have_es = "es" in result and isinstance(result.get("es"), dict)
+_have_vix = result.get("vix") is not None
+_have_10y = "us10y" in result and isinstance(result.get("us10y"), dict)
+_core_ok = sum([_have_es, _have_vix, _have_10y])
+
+if _core_ok == 0:
+    result["data_status"] = "ALL_FAILED"
+    result.pop("macro_backdrop", None)   # 全掛時不得留下 score 0 = 中性的誤導
+elif _err_keys:
+    result["data_status"] = "PARTIAL(%d core ok, errors: %s)" % (_core_ok, ",".join(_err_keys))
+    if "macro_backdrop" in result:
+        result["macro_backdrop"]["note"] = ("[PARTIAL DATA - 部分指標缺失,合成分不可信] "
+                                            + result["macro_backdrop"].get("note", ""))
+else:
+    result["data_status"] = "OK"
+
 with open(os.path.join(OUT_DIR, "es_check.txt"), "w", encoding="utf-8") as f:
     json.dump(result, f, ensure_ascii=False, indent=2)
+
+if _core_ok == 0:
+    print("CHECK_ES FAILED: no core data (ES/VIX/10Y all failed). errors=%s" % ",".join(_err_keys))
+    print("es_check.txt written with data_status=ALL_FAILED (no macro_backdrop).")
+    sys.exit(1)
+print("OK data_status=%s" % result["data_status"])
