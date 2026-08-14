@@ -393,18 +393,29 @@
    "basis_close": 7748.5,
    "pullback_prob": 46,
    "bias": "中性偏多(收斂三角末端:兩大偏空觸發因子解除[10Y連兩日退離4.70/SOXX連兩日轉強觸發rule21]+6日橫盤消化超買 vs RSI 75.1超買/MACD柱三連收窄頂背馳/距MA200+9.67%)",
-   "actual_date": "2026-08-13(pending)",
+   "actual_date": "2026-08-13",
+   "actual_pct": 0.65,
+   "actual_dir": "up",
+   "grade": "hit",
+   "grade_note": "實際+0.65%≥+0.3%=up;中性偏多預測遇up=hit。方案A「⑤浪啟動突破」40%為實際發生情景:帶量破7,768後直上7,816.70、收7,798.99=盤中與收盤雙創ATH(前值7,793.68/7,757.64)。rule28候補(波動壓縮末端必擴張)首度驗證成功:振幅由0.36%擴張至0.69%,擴張首日方向即主方向"
+  },
+  {
+   "report_date": "2026-08-14",
+   "basis_close": 7798.99,
+   "pullback_prob": 39,
+   "bias": "偏多(⑤浪啟動、廣度擴張確認)：創ATH收盤+RSP/SPY廣度5日+0.68%擴張+完整多頭排列+10Y退至4.645+半導體連三強 vs RSI 76.72超買/MACD柱第四度收窄頂背馳強化/KD 90.5/距MA20+3.04%進入過度延伸regime/突破日量能未放大",
+   "actual_date": "2026-08-14(pending)",
    "actual_pct": null,
    "actual_dir": null,
    "grade": "pending"
   }
  ],
  "summary": {
-  "graded": 36,
-  "hits": 15,
+  "graded": 37,
+  "hits": 16,
   "half": 14,
   "miss": 7,
-  "rolling_direction_score_pct": 61.1,
+  "rolling_direction_score_pct": 62.2,
   "gap_days": [
    "2026-07-28",
    "2026-07-29",
@@ -413,8 +424,8 @@
   ],
   "gap_note": "此四日session未執行、無預測留存,不回補不灌水;7/29曾洗盤破雙底殺至7,313.92後2日V轉,若當時有分析為超賣區,方向未知故不計",
   "brier": {
-   "as_of": "2026-08-13",
-   "included": 22,
+   "as_of": "2026-08-14",
+   "included": 23,
    "excluded_flat": 14,
    "per_entry": [
     {
@@ -548,13 +559,19 @@
      "p": 0.57,
      "outcome": 1,
      "brier": 0.1849
+    },
+    {
+     "report_date": "2026-08-13",
+     "p": 0.46,
+     "outcome": 0,
+     "brier": 0.2116
     }
    ],
-   "mean_brier": 0.2599,
+   "mean_brier": 0.2578,
    "benchmark_50pct": 0.25,
    "prob_range_observed": "45-65",
    "honest_read": "mean改善至0.2621(連兩日下降)。8/4報45%中性偏多遇+1.79%大漲=hit,Brier 0.2025優於基準,滾動勝率升至60.0%創新高。8/5報52%中性偏空:半導體噴出領漲(SOXX+5.83%)+10Y退+backdrop+3=趨勢向上,但BB 116.9%(價在上軌之上)+MA20乖離+3.21%(過度延伸regime)+3日累漲+5.3%=短線過度延伸——52非因趨勢轉空,是過熱後喘息機率升;melt-up不宜逆勢但拉回機率確實升高。",
-   "note_latest": "8/12 實際+0.26%=flat→依brier_rules排除不計。included仍22筆、mean_brier不變"
+   "note_latest": "8/13 報46%遇up→brier=(0.46-0)²=0.2116,優於基準0.25。mean由0.2599降至0.2578(23筆)。首日套用rule16禁折中前的最後一筆折中報價;明日起headline=情景推導值"
   },
   "as_of": "2026-08-12",
   "honest_note_20260805": "60.0%（8/4中性偏多45%遇+1.79%=hit，滾動勝率首破60）。對用戶最重要的一天:SOXX +5.83%!——半導體終於狂奔領漲,正是我叫用戶盯的『帳戶回本引擎』訊號,8/4觸發。用戶3週來第一次帳戶會明顯往回填坑(前一天才用數字證實SOXX-22.9%落後SPX)。SPX 3日melt-up(+5.3%)破ATH至7,736.52。系統教訓:P&L的均值回歸空單在melt-up第二日被續軋(short_rally 7,640掃損)、閘門又拒了gap-up突破多——連續趨勢日是本系統(均值回歸傾向)最差環境,rule24候補:BB>100連兩日時暫停均值回歸空單。用戶端:訊號來了,但8/5在BB 116.9%極度超買處『追』風險最大,讓核心倉跑、加碼等回踩不變。",
