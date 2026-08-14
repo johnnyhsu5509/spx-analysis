@@ -1,48 +1,48 @@
 {
-  "checked_at": "2026-08-13 22:05",
+  "checked_at": "2026-08-14 21:42",
   "session": {
     "label": "US_REGULAR",
     "note": "美股盤中：即時讀數"
   },
   "es": {
-    "last": 7825.25,
-    "prev_close": 7775.0,
-    "change_pct": 0.65,
-    "signal": "BULLISH"
+    "last": 7802.5,
+    "prev_close": 7824.25,
+    "change_pct": -0.28,
+    "signal": "NEUTRAL"
   },
   "implied_spx_open": {
-    "approx": 7801.7,
-    "spx_prev_close": 7798.99,
-    "es_at_prior_close": 7822.5,
-    "es_pt_chg": 2.75,
+    "approx": 7787.5,
+    "spx_prev_close": 7785.76,
+    "es_at_prior_close": 7800.75,
+    "es_pt_chg": 1.75,
     "method": "point_anchor",
     "note": "方案A：ES點數錨定，基差已抵銷"
   },
-  "nq_change_pct": 1.13,
+  "nq_change_pct": 0.0,
   "soxx_semis": {
-    "last": 550.74,
-    "change_pct": 0.5
+    "last": 550.42,
+    "change_pct": -0.34
   },
   "semi_vs_spx": {
-    "divergence_pp": -0.15,
+    "divergence_pp": -0.06,
     "read": "同步"
   },
-  "vix": 14.63,
+  "vix": 14.25,
   "us10y": {
-    "yield_pct": 4.641,
-    "prev_pct": 4.682,
-    "change_bps": -4.1,
-    "signal": "DOWN_RISK_ON"
+    "yield_pct": 4.696,
+    "prev_pct": 4.641,
+    "change_bps": 5.5,
+    "signal": "UP_RISK_OFF"
   },
   "dxy": {
-    "last": 99.97,
-    "prev_close": 100.0,
-    "change_pct": -0.04,
-    "signal": "FLAT"
+    "last": 99.64,
+    "prev_close": 99.89,
+    "change_pct": -0.25,
+    "signal": "DOWN_RISK_ON"
   },
   "macro_backdrop": {
-    "score": 4,
-    "read": "RISK_ON 偏多",
+    "score": 1,
+    "read": "MIXED 中性",
     "note": "ES+NQ+10Y+DXY+VIX 合成；±2 以上才定調"
   },
   "data_status": "OK"
