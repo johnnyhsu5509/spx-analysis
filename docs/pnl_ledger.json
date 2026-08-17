@@ -1358,42 +1358,7 @@
   },
   {
    "report_date": "2026-08-14",
-   "eval_date": "pending(2026-08-14 US close)",
-   "trades_pending": [
-    {
-     "name": "long_pullback",
-     "dir": "long",
-     "order": "limit_buy",
-     "entry": 7770,
-     "stop": 7742,
-     "t1": 7816,
-     "t2": 7840,
-     "weight": 0.08,
-     "note": "★主策略。回踩三角上沿7,768轉支撐＋8/13開盤即最低7,763.18帶,錨定支撐本身站穩即進(rule8)。距現價-0.37%(門檻0.485%)。RR T1 1.64/T2 2.50"
-    },
-    {
-     "name": "long_breakout",
-     "dir": "long",
-     "order": "buy_stop",
-     "entry": 7818,
-     "stop": 7786,
-     "t1": 7840,
-     "t2": 7884,
-     "weight": 0.06,
-     "note": "突破8/13新ATH 7,816.70續攻→量測目標7,840、BB上軌7,884。距現價+0.24%。rule3要求帶量(8/13初值相對量僅1.004未放大)、rule14超買側倉位壓在6%。RR T1 0.69/T2 2.06"
-    },
-    {
-     "name": "short_breakdown",
-     "dir": "short",
-     "order": "sell_stop_close_confirm",
-     "entry": 7766,
-     "stop": 7798,
-     "t1": 7740,
-     "t2": 7716,
-     "weight": 0.05,
-     "note": "假突破確認空:收盤跌回三角上沿7,768之下才進(rule12收盤確認)。距現價-0.42%。RR T1 0.81/T2 1.56"
-    }
-   ],
+   "eval_date": "2026-08-14",
    "rule27_rejected": [
     {
      "name": "short_extension",
@@ -1402,13 +1367,88 @@
      "threshold_pct": 0.485,
      "reason": "乖離修正空(距MA20+3.04%過度延伸+RSI 76.72+MACD頂背馳)方向有理,但進場距離0.526%>門檻0.485%→rule27 weight歸0、不掛"
     }
+   ],
+   "results": [
+    {
+     "name": "long_pullback",
+     "filled": false,
+     "outcome": "未成交",
+     "raw_bp": 0.0,
+     "weighted_bp": 0.0,
+     "missed_by_pts": 6.31
+    },
+    {
+     "name": "long_breakout",
+     "filled": false,
+     "outcome": "未成交",
+     "raw_bp": 0.0,
+     "weighted_bp": 0.0,
+     "missed_by_pts": 7.99
+    },
+    {
+     "name": "short_breakdown",
+     "filled": false,
+     "outcome": "正確未觸發",
+     "raw_bp": 0.0,
+     "weighted_bp": 0.0
+    }
+   ],
+   "day_weighted_bp": 0.0,
+   "day_note": "三張全未成交,當日0bp。**rule27的第一個反例**:回踩多7,770差6.31點(當日低7,776.31)、突破多7,818差7.99點(當日高7,810.01)。兩張都「差一點」,原因是rule27用「全日振幅×0.6」當門檻,但全日振幅是高低差、不等於從前收算起的單邊移動距離——8/14全日振幅0.43%,而從前收7,798.99算起上行僅+0.141%、下行僅-0.291%。門檻0.485%對單邊而言寬了約兩倍→rule31候補"
+  },
+  {
+   "report_date": "2026-08-17",
+   "eval_date": "pending(2026-08-17 US close)",
+   "trades_pending": [
+    {
+     "name": "long_pullback",
+     "dir": "long",
+     "order": "limit_buy",
+     "entry": 7776,
+     "stop": 7757,
+     "t1": 7810,
+     "t2": 7840,
+     "weight": 0.08,
+     "note": "★主策略。錨定8/14低點7,776.31本身,距現價僅-0.13%(rule27門檻0.46%、rule31候補下行門檻0.19%,雙門檻皆過)。停損置MA5 7,762.91之下。RR T1 1.79/T2 3.37"
+    },
+    {
+     "name": "long_breakout",
+     "dir": "long",
+     "order": "buy_stop",
+     "entry": 7811,
+     "stop": 7780,
+     "t1": 7840,
+     "t2": 7884,
+     "weight": 0.05,
+     "note": "突破8/14高7,810.01=解除雙頂。距現價+0.32%(rule31上行門檻0.38%,過)。MACD柱第五度收窄+量縮0.86倍→倉位由6%再降至5%、不追第一根。RR T1 0.94/T2 2.35"
+    },
+    {
+     "name": "short_breakdown",
+     "dir": "short",
+     "order": "sell_stop_close_confirm",
+     "entry": 7763,
+     "stop": 7795,
+     "t1": 7740,
+     "t2": 7716,
+     "weight": 0.04,
+     "note": "⚠低成交機率、保護性質。收盤跌破7,763(8/13開盤即最低+三角上沿帶)=⑤浪突破失敗確認(rule12收盤確認)。距現價-0.29%:過rule27門檻0.46%,但超過rule31候補下行門檻0.19%→倉位壓到4%。RR T1 0.72/T2 1.47"
+    }
+   ],
+   "rule27_rejected": [
+    {
+     "name": "short_extension",
+     "entry": 7840,
+     "dist_pct": 0.697,
+     "threshold_pct": 0.46,
+     "reason": "乖離修正空(RSI 75.30+KD 91.61+MACD第五度收窄)方向有理,但距現價0.697%>rule27門檻0.46%→weight歸0、不掛"
+    }
    ]
   }
  ],
  "summary": {
-  "as_of": "2026-08-14",
-  "days_evaluated": 25,
-  "trades_total": 79,
+  "as_of": "2026-08-17",
+  "days_evaluated": 26,
+  "trades_total": 82,
   "trades_filled": 21,
   "filled_win": 10,
   "filled_loss": 10,
@@ -1420,7 +1460,7 @@
    "2026-07-30",
    "2026-07-31"
   ],
-  "honest_read": "8/13 終結連10次零成交:2筆成交、當日+1.88bp,累積4.76bp。rule27(進場距離≤預期振幅×0.6)首日即見效——突破多掛7,768距現價僅0.25%,首根30分K就吃到。但樣本仍極小,不能因一天有效就當結論。今日起rule27為硬規則:8/14的乖離修正空(7,840)距現價0.526%>門檻0.485%已被擋下不掛,策略表由4張減為3張——「寧可只掛2張接得到,不要掛4張接不到」的第一次實際執行。",
-  "fill_rate_pct": 26.6
+  "honest_read": "8/14 三張全未成交、0bp,累積維持+4.76bp,成交率回落至25.6%(21/82)。rule27上線第二天就吃到反例:兩張單分別差6.31點與7.99點。診斷出公式缺陷——「全日振幅×0.6」把高低差當成單邊可及距離,但近5日單邊移動實測上行均0.381%、下行均僅0.188%,遠小於門檻0.46%。下行側尤其嚴重,等於回踩多的掛單長期掛在數學上接不到的地方,這正是累積成交率卡在25%的根本原因。今日起策略表加掛rule31候補的單邊門檻作為二次過濾:回踩多錨定8/14低點7,776本身、距現價僅0.13%。",
+  "fill_rate_pct": 25.6
  }
 }
