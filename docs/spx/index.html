@@ -1,0 +1,171 @@
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>SPX 日線分析 2026-08-18</title>
+<style>
+:root{--bg:#0a0a0a;--card:#111418;--line:#1e2530;--txt:#d7e0ea;--dim:#8794a5;--grn:#00e08a;--red:#ff4d5e;--gold:#ffc234;--cyan:#22d3ee}
+*{box-sizing:border-box;margin:0;padding:0}
+body{background:var(--bg);color:var(--txt);font-family:"Segoe UI","Microsoft JhengHei",sans-serif;line-height:1.65;padding:16px;max-width:1100px;margin:0 auto}
+h1{font-size:1.5rem;color:#fff;letter-spacing:1px}
+h2{font-size:1.15rem;margin:26px 0 12px;padding-left:10px;border-left:4px solid var(--cyan);color:#fff}
+h3{font-size:1rem;margin:16px 0 8px;color:var(--gold)}
+.sub{color:var(--dim);font-size:.85rem;margin-top:4px}
+.card{background:var(--card);border:1px solid var(--line);border-radius:10px;padding:16px;margin:12px 0}
+.kpi{display:grid;grid-template-columns:repeat(auto-fit,minmax(120px,1fr));gap:10px}
+.kpi .b{background:#0d1117;border:1px solid var(--line);border-radius:8px;padding:10px;text-align:center}
+.kpi .v{font-size:1.3rem;font-weight:700}
+.kpi .l{font-size:.72rem;color:var(--dim);margin-top:2px}
+.up{color:var(--grn)}.down{color:var(--red)}.neu{color:var(--gold)}.cy{color:var(--cyan)}
+.tw{overflow-x:auto}
+table{width:100%;border-collapse:collapse;font-size:.83rem;margin:8px 0;min-width:520px}
+th,td{border:1px solid var(--line);padding:7px 8px;text-align:center}
+th{background:#0d1117;color:var(--cyan)}
+.tag{display:inline-block;padding:1px 8px;border-radius:20px;font-size:.72rem;font-weight:700}
+.tg{background:rgba(0,224,138,.15);color:var(--grn)}.tr{background:rgba(255,77,94,.15);color:var(--red)}.tn{background:rgba(255,194,52,.15);color:var(--gold)}
+.gauge{height:26px;border-radius:14px;background:linear-gradient(90deg,var(--grn),var(--gold) 55%,var(--red));position:relative;margin:10px 0}
+.gauge .mk{position:absolute;top:-6px;width:4px;height:38px;background:#fff;box-shadow:0 0 8px #fff}
+ul{padding-left:20px}li{margin:4px 0}
+.dim{color:var(--dim)}.mono{font-family:Consolas,monospace}
+.foot{color:var(--dim);font-size:.78rem;margin-top:24px;border-top:1px solid var(--line);padding-top:12px}
+.note{background:#0d1117;border-left:3px solid var(--gold);padding:8px 12px;font-size:.83rem;border-radius:0 6px 6px 0;margin:8px 0}
+.warn{border-left-color:var(--red)}.good{border-left-color:var(--grn)}
+</style>
+
+<h1>📊 S&P 500 日線分析</h1>
+<div class="sub">報告日 2026-08-18（台北）｜數據基準 2026-08-17 美股收盤｜⑤浪衰竭確認・跌破分水嶺</div>
+
+<div class="card kpi">
+  <div class="b"><div class="v down">7,745.06</div><div class="l">收盤 <span class="down">-0.52%</span></div></div>
+  <div class="b"><div class="v down">16.17</div><div class="l">MACD 柱・第六度收窄</div></div>
+  <div class="b"><div class="v neu">15.19</div><div class="l">VIX（+6.6%）</div></div>
+  <div class="b"><div class="v down">58%</div><div class="l">拉回機率（中性帶上緣）</div></div>
+  <div class="b"><div class="v neu">70.77</div><div class="l">RSI 超買緩解</div></div>
+  <div class="b"><div class="v down">-0.42%</div><div class="l">廣度當日轉負</div></div>
+</div>
+
+<h2>① 回測驗證：8/17 預測 vs 實際</h2>
+<div class="card">
+<p>8/17 <b class="down">開 7,790.68 即最高</b>、低 7,744.88、收 7,745.06（-0.52%）——<b>開高走低長黑，收盤位置只在當日區間的 0.4% 處</b>，賣壓貫穿全日。</p>
+<div class="tw"><table>
+<tr><th>預測項目</th><th>結果</th><th>說明</th></tr>
+<tr><td>headline 中性偏多 44%</td><td><span class="tag tr">❌ miss</span></td><td>實際 -0.52% ≤ -0.3%＝down。<b>Brier 0.3136，差於基準 0.25</b></td></tr>
+<tr><td>方案C 突破失敗（<b>25%，權重最低者</b>）</td><td><span class="tag tr">← 實際發生的情景</span></td><td>反彈未起，直接跌破分水嶺</td></tr>
+<tr><td>方案A 續攻 38%／方案B 整理 37%</td><td><span class="tag tr">✘ 皆未發生</span></td><td>高 7,790.68 連 7,810 都沒摸到</td></tr>
+<tr><td>回踩多 7,776 limit_buy</td><td><span class="tag tr">成交後停損</span></td><td>低 7,744.88 觸發，隨即觸及停損 7,757＝<b class="down">-1.95bp</b></td></tr>
+<tr><td>突破多 7,811 buy_stop</td><td><span class="tag tn">正確未觸發</span></td><td>差 20.32 點</td></tr>
+<tr><td>破底空 7,763 收盤確認</td><td><span class="tag tn">成交・0bp</span></td><td>收 7,745.06 &lt; 7,763；依 sim_rules 以收盤價進場、1 日視野同日平倉</td></tr>
+</table></div>
+
+<h3>watch_points 驗收</h3>
+<div class="tw"><table>
+<tr><th>觀察項</th><th>結果</th><th>實際</th></tr>
+<tr><td>MACD 柱是否第六度收窄</td><td><span class="tag tr">✅ 兌現</span></td><td>22.41 → <b>16.17</b>，單日降幅 6.24 <b>為六次之最</b>＝⑤浪確認為<b class="down">衰竭浪</b></td></tr>
+<tr><td>7,763 分水嶺</td><td><span class="tag tr">✘ 跌破</span></td><td>收 7,745.06，<b>⑤浪突破失敗確認</b>；同時跌破 MA5 7,761.30</td></tr>
+<tr><td>7,810–7,817 雙頂</td><td><span class="tag tr">✘ 天花板下移</span></td><td>高點僅 7,790.68，<b>連測試都沒測試到就失守下方</b></td></tr>
+<tr><td>廣度 RSP/SPY</td><td><span class="tag tr">✅ 示警兌現</span></td><td>當日 <b>-0.42%</b>、5 日由 +0.82% 收斂至 +0.31%，read 由「擴張」降為「中性」</td></tr>
+<tr><td>量能能否回補</td><td><span class="tag tr">✘ 沒回補</span></td><td>初值 2.5065B ＝ 8/13 初值的 0.93 倍，長黑配量縮（待 rule6 復核）</td></tr>
+</table></div>
+
+<div class="note warn"><b>教訓一：判錯的根因是情景權重給偏，不是「禁折中」給錯</b><br>
+8/17 我把「廣度逆勢擴張」稱為<b>最硬的偏多支柱</b>，據此把方案C壓到 25%，同時低估了 MACD 柱已經連五縮。結果：<b>廣度支柱兩個交易日內就瓦解</b>（+0.82% → +0.31%，當日 -0.42%），而動能訊號如期兌現（第六度收窄）。<br>
+原因很清楚——<b>廣度是同步指標</b>（反映當下參與度，不預測明日），<b>MACD 柱是動能導數</b>（衰減具持續性）。用前者去對抗後者，方向就會判反。<br>
+若當時方案C給 35–40%，headline 會落在 50 上下而不是 44。→ 立 <b>rule34 候補</b>：動能訊號連續 3 日以上同向衰減時，同步型指標不得作為下修反向情景權重的主要依據。</div>
+
+<div class="note"><b>教訓二：rule31 的第一份成績單要分開讀——掛單有效、方向判錯</b><br>
+回踩多改錨定前低 7,776 後<b>確實成交了</b>（8/14 的舊掛法 7,770 會差 6.31 點空掛）。成交之後虧損，是方向判斷的問題，不是掛單設計的問題。<b>「接不到」和「判斷錯」是兩個獨立問題，不可混為一談。</b>成交率由 25.6% 回升至 <b>27.1%</b>。</div>
+
+<div class="note"><b>另發現模擬缺陷（rule33 候補）</b>：<span class="mono">close_confirm</span> 單依 sim_rules 以<b>收盤價</b>進場，而 exit_priority 規定當日收盤強制平倉 → 進場價＝出場價，<b>結構性恆為 0bp</b>。8/17 首次實際觸發即暴露：所有破位空的績效在帳本上不可見，這條策略線<b>從未被評分</b>。建議改為允許持倉至次日評價。</div>
+
+<div class="note warn">三本帳：方向 <b class="down">60.3%</b>（39 筆，前值 61.8%）｜Brier <b class="down">0.2601</b>（24 筆，前值 0.2578，<b>回到基準 0.25 之上</b>）｜P&L 累積 <b class="down">+2.81bp</b>（前值 +4.76bp）｜成交率 <b class="up">27.1%</b>（23/85）</div>
+</div>
+
+<h2>② 今日分析（基準 8/17 收盤）</h2>
+
+<div class="card">
+<h3>拉回機率：<b class="down">58%</b>（中性偏空）</h3>
+<div class="gauge"><div class="mk" style="left:58%"></div></div>
+<div class="note"><b>rule16 純情景推導</b>：<span class="mono">跌 40% ＋ 整理 35% × 0.5 ＝ <b>57.5% → 報 58%</b></span>。六因子加權 54.3 只用來校準情景，不進 headline。<br>
+rule20 上限檢查：均線多頭且收盤未破 MA20 → 偏空報價上限 60%，<b>58% 未觸及上限</b>。</div>
+
+<div class="tw"><table>
+<tr><th>因子</th><th>權重</th><th>評分</th><th>加權</th><th>依據</th></tr>
+<tr><td>技術指標過熱度</td><td>25%</td><td class="neu">55</td><td>13.75</td><td>RSI <b>70.77</b>（由 76.72 大降）、BB 72.3%（由 80.9% 降）＝<b>超買壓力大幅緩解</b>；但 KD 89.66 死叉逼近</td></tr>
+<tr><td>均線乖離率</td><td>20%</td><td class="up">50</td><td>10.0</td><td>距 MA200 +9.41%、距 MA20 <b>+1.91%</b>（持續收斂）＝乖離改善</td></tr>
+<tr><td>利率／匯率／即時事件</td><td>30%</td><td class="neu">50</td><td>15.0</td><td>VIX 15.19（+6.6%）；<b class="down">10Y／DXY 已過時 5 個交易日，不可用</b></td></tr>
+<tr><td>成交量衰竭</td><td>15%</td><td class="neu">50</td><td>7.5</td><td>初值 0.93 倍，長黑配量縮（待復核）</td></tr>
+<tr><td>波浪／纏論結構</td><td>10%</td><td class="down">80</td><td>8.0</td><td>⑤浪<b>衰竭確認</b>、跌破中樞下緣 7,763</td></tr>
+<tr><th colspan="3">六因子加權（僅供校準，不進 headline）</th><th class="dim">54.3</th><td class="dim">—</td></tr>
+</table></div>
+
+<div class="note warn"><b>Step 4.5 客觀 regime 對照 —— 近期首次主客觀分歧（rule30）</b><br>
+主觀：<b class="down">58%</b>（<span class="dim">隔日收盤下跌機率</span>）｜客觀：55.4%（<span class="dim">未來 5 日盤中回撤</span>，vs 基準 61.65%，超額 <b class="up">-6.2pp＝偏多</b>）<br>
+├ VIX &lt;16 → 49.45%（<b class="up">-12.2pp</b>，VIX 15.19 仍在低波動帶但已<b>逼近 16 分界</b>）　├ 趨勢 在 MA200 上 → 56.95%（-4.7pp）　└ MA20 +1.91% 正常帶 → 59.89%（-1.8pp）<br>
+<b>→ 方向分歧，但兩者不矛盾。</b>主觀捕捉「短線結構破位」（跌破分水嶺與 MA5、動能衰竭），客觀捕捉「中期環境仍友善」（VIX&lt;16、在 MA200 上、乖離正常）。<b>短線轉弱可以發生在中期多頭環境裡</b>——這正是「高檔回檔而非趨勢反轉」的統計註腳。<br>
+<b>操作意義：偏空側可做，但目標設在結構位（7,716／7,700）而非趨勢位，不擴大為趨勢級空單。</b></div>
+</div>
+
+<div class="card">
+<h3>七維分析</h3>
+<div class="tw"><table>
+<tr><th>維度</th><th>判斷</th><th>內容</th></tr>
+<tr><td>⓪ 廣度</td><td><span class="tag tr">轉弱（支柱瓦解）</span></td><td>當日 <b>-0.42%</b>、5 日 +0.82% → <b>+0.31%</b>，read 降為「中性」。<b>賣壓已擴散至中小型股</b>，不再是「僅權值股回檔」</td></tr>
+<tr><td>① 價格行為</td><td><span class="tag tr">偏空</span></td><td><b>開盤即最高、收在最低附近</b>（收盤位置在區間 0.4% 處）＝賣壓貫穿全日的長黑。振幅 0.591% 較前日 0.433% 擴張，方向向下</td></tr>
+<tr><td>② 均線系統</td><td><span class="tag tn">中性偏多</span></td><td><b class="down">收盤跌破 MA5 7,761.30</b>＝短線轉弱；但 MA5 &gt; MA20 7,600 &gt; MA50 7,516 &gt; MA200 7,079 <b class="up">完整多頭排列未破</b>，收盤仍在 MA20 之上</td></tr>
+<tr><td>③ 技術指標</td><td><span class="tag tr">偏空</span></td><td>MACD 柱 <b>第六度收窄</b>（22.41→<b>16.17</b>，單日降幅 6.24 為六次之最）；KD K 89.66／D 88.00，<b>差距僅 1.66＝死叉逼近</b>。<span class="up">RSI 70.77 由 76.72 大降＝超買緩解（偏多）</span></td></tr>
+<tr><td>④ 葛蘭威爾</td><td><span class="tag tr">偏空</span></td><td>跌破 MA5 且未能收復，屬「賣②跌破短均」型態</td></tr>
+<tr><td>⑤ 纏論</td><td><span class="tag tr">偏空</span></td><td>原中樞 7,763–7,817 <b>向下跌破</b>，新中樞下移至 <b>7,716–7,763</b>。頂背馳兌現後轉為結構破位</td></tr>
+<tr><td>⑥ 艾略特</td><td><span class="tag tr">⑤浪衰竭確認</span></td><td>8/13 創雙 ATH 後僅維持 2 個交易日即跌回 7,763 之下，且 MACD 柱全程未再放大、連六縮＝<b>failed fifth</b>。典型意義：推動段結束，進入 ABC 修正或大級別橫盤</td></tr>
+</table></div>
+<div class="note"><b>定調</b>：短線結構<b class="down">已壞</b>（跌破分水嶺＋MA5、⑤浪失敗、廣度支柱瓦解），趨勢層級<b class="up">未破</b>（MA20／MA200 之上、完整多頭排列）。<b>屬高檔回檔而非趨勢反轉。</b></div>
+</div>
+
+<div class="card">
+<h3>三情景與機率（headline 的唯一來源）</h3>
+<div class="tw"><table>
+<tr><th>方案</th><th>機率</th><th>觸發</th><th>目標</th></tr>
+<tr><td class="down">C 修正延續</td><td><b>40%</b></td><td>反彈至 7,761–7,763 遇壓再跌</td><td>7,716 → 7,700，深則 MA20 7,600</td></tr>
+<tr><td class="neu">B 區間下移</td><td><b>35%</b></td><td>7,716–7,763 整理</td><td>消化衰竭訊號，等變數表態</td></tr>
+<tr><td class="up">A 假跌破</td><td><b>25%</b></td><td>快速收復 7,763</td><td>回 7,763–7,817 原區間，⑤浪延長</td></tr>
+<tr><th colspan="2">headline ＝ 40 ＋ 35×0.5</th><th class="down">57.5 → 58%</th><td class="dim">無折中（rule16）</td></tr>
+</table></div>
+<div class="note"><b>關鍵位</b>　壓力：<b class="down">7,761／7,763</b>（MA5＋前分水嶺重疊）→ 7,790（8/17 開盤即最高）→ 7,810<br>
+支撐：7,745（8/17 低）→ <b class="cy">7,716（8/11 低・下一層分水嶺）</b> → 7,700（短線警戒）→ 7,660（趨勢警訊）→ <b>7,600（MA20・多頭排列存亡線）</b></div>
+</div>
+
+<h2>③ 明日策略</h2>
+<div class="card">
+<div class="note">雙門檻：rule27 硬上限 <b>0.467%</b>（區間 7,709–7,781）｜rule31 候補 <b>上行 0.352%、下行 0.256%</b></div>
+<div class="tw"><table>
+<tr><th>策略</th><th>掛單型態</th><th>進場</th><th>距現價</th><th>雙門檻</th><th>停損</th><th>目標①</th><th>目標②</th><th>RR(T2)</th><th>倉位</th></tr>
+<tr><td class="down">★反彈空（主）</td><td>limit_sell</td><td><b>7,761</b></td><td class="up">+0.21%</td><td><span class="tag tg">皆過</span></td><td>7,792</td><td>7,716</td><td>7,700</td><td>1.97</td><td>8%</td></tr>
+<tr><td class="up">小倉承接</td><td>limit_buy</td><td><b>7,730</b></td><td class="up">-0.19%</td><td><span class="tag tg">皆過</span></td><td>7,712</td><td>7,761</td><td>7,790</td><td>3.33</td><td>5%</td></tr>
+<tr><td class="down">破底空</td><td>sell_stop<br>close_confirm</td><td><b>7,716</b></td><td class="neu">-0.38%</td><td><span class="tag tn">超出 rule31</span></td><td>7,748</td><td>7,700</td><td>7,660</td><td>1.75</td><td>4%</td></tr>
+</table></div>
+<div class="note"><b>本次不設突破多</b>：rule3 要求「突破均線＋帶量＋MACD 柱正/放大」，而 MACD 柱第六度收窄、量能 0.93 倍——<b>條件完全不成立</b>。<br>
+<b>🚫 被 rule27 擋下</b>：深破位空 @7,700，距現價 0.582% &gt; 門檻 0.467% → 不掛；改以 7,716 作觸發點，7,700 列為 T1 目標。</div>
+<div class="note"><b>倉位</b>：空單 12%（8%＋4%）、多單 5%。58% 落在 40–60 中性帶上緣，規則允許任一方向 ≤20%。<br>
+<b>核心紀律：偏空側可做，但目標設在結構位（7,716／7,700）而非趨勢位——因為客觀 regime 仍偏多（-6.2pp），中期環境沒壞。7,730–7,761 之間不動作。</b></div>
+
+<h3>監控清單</h3>
+<ul>
+<li><b>MACD 柱 16.17（衰竭浪已確認）</b>：<b class="down">柱體翻負＝修正正式展開</b>；若重新放大＝衰竭誤判、方案A 機率上調</li>
+<li><b>7,761–7,763（MA5＋前分水嶺重疊）</b>：反彈至此遇壓再跌＝方案C 確立；<b>帶量收復並站穩＝假跌破、方案A</b></li>
+<li><b>7,716（8/11 低）</b>：收盤跌破＝下一層結構破位，測 7,700／7,660；守住＝區間下移整理</li>
+<li><b>廣度 RSP/SPY</b>：當日 -0.42%、5 日 +0.31%。<b>續轉負且 5 日跌破 0＝賣壓全面擴散、偏空升級</b>；回升至 +0.5% 以上＝支柱重建</li>
+<li><b>KD 死叉</b>：K 89.66／D 88.00，差距僅 1.66。正式死叉＝高檔轉折確認</li>
+<li><b>VIX 15.19</b>：<b>站上 16＝離開低波動 regime</b>，客觀偏多最強的一維（-12.2pp）將消失，主客觀分歧會轉為同向偏空</li>
+<li><b class="down">宏觀層已過時 5 個交易日</b>：21:20 必跑 <span class="mono">check_es.py</span>。10Y 重回 4.70 上＝偏空升級；跌破 4.60＝偏空降級</li>
+<li><b>半導體</b>：SOXX 連三強後已 4 個交易日無讀數，須確認是否守住 560</li>
+</ul>
+
+<h3>市場筆記</h3>
+<div class="note">這次判錯值得記，因為錯得很有結構。<br>
+上週五我看到「指數跌但廣度漲」，把它讀成「賣壓只在權值股、中小型股在承接」，於是認定下方有支撐。這個讀法本身沒錯，錯的是<b>把一個描述當下的指標，當成預測明天的依據</b>。廣度告訴你此刻誰在買，不告訴你明天誰會賣。而 MACD 柱連續五天收窄講的是另一件事：<b>推動的力氣在遞減</b>——那是導數，有慣性，會延續。<br>
+兩個訊號打架時，該問的不是「哪個比較硬」，而是「<b>哪個有時間延續性</b>」。這次同步指標兩天就翻臉，動能指標如期兌現到第六天。<br>
+盤面上：⑤浪確認失敗，但 MA20 還在 7,600、完整多頭排列沒破。這是回檔，不是反轉——所以空單目標放 7,716 和 7,700 這種結構位，不放趨勢位。<b>判斷轉空和押注崩盤是兩件事。</b></div>
+</div>
+
+<div class="foot">
+系統規則 37 條（新增 rule33 候補：close_confirm 模擬缺陷；rule34 候補：同步指標不得對抗動能訊號）｜三本帳：方向 60.3%（39 筆）・Brier 0.2601（24 筆）・P&L +2.81bp（成交率 27.1%）<br>
+<span class="dim">rule32 分析潔淨：本報告所有數字純由市場資料推導，未摻入任何個人財務條件。</span><br>
+<b>本分析僅供學習參考，不構成投資建議。</b>
+</div>

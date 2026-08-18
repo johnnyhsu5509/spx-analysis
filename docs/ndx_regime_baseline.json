@@ -1,0 +1,247 @@
+{
+  "generated_at": "2026-08-18 11:07",
+  "index": "^NDX",
+  "vol_index": "^VXN",
+  "futures": "NQ=F",
+  "pullback_def": "future N-day intraday low <= signal close -1.00pct",
+  "pullback_note": "1.00pct not 0.75pct: NDX daily sigma is 1.25-1.37x SPX; same-percentage trigger would not be comparable across systems",
+  "vxn_cuts": {
+    "lo": 18.0,
+    "hi": 28.0,
+    "why": "calibrated; optimizer best (16/32) rejected as overfit (78pct of its low bucket in 2016-2017, zero fires 2021/22/25/26)"
+  },
+  "windows": {
+    "primary_2015": {
+      "date_range": "2015-10-16 ~ 2026-08-10",
+      "samples": 2718,
+      "vol_ratio_ndx_over_spx": 1.251,
+      "base_rate": {
+        "1d": 29.1,
+        "3d": 48.97,
+        "5d": 57.14
+      },
+      "model_metrics_vs_horizon": {
+        "1d": {
+          "auc": 0.668,
+          "brier": 0.2729
+        },
+        "3d": {
+          "auc": 0.647,
+          "brier": 0.2436
+        },
+        "5d": {
+          "auc": 0.641,
+          "brier": 0.2332
+        }
+      },
+      "regime_5d_rates": {
+        "vxn": {
+          "vxn_18_28": {
+            "n": 1360,
+            "rate": 61.47
+          },
+          "vxn_ge28": {
+            "n": 528,
+            "rate": 72.35
+          },
+          "vxn_lt18": {
+            "n": 830,
+            "rate": 40.36
+          }
+        },
+        "trend": {
+          "above_ma200": {
+            "n": 2224,
+            "rate": 53.46
+          },
+          "below_ma200": {
+            "n": 494,
+            "rate": 73.68
+          }
+        },
+        "ext": {
+          "ma20_normal": {
+            "n": 1895,
+            "rate": 53.51
+          },
+          "ma20_over3": {
+            "n": 512,
+            "rate": 60.74
+          },
+          "ma20_under3": {
+            "n": 311,
+            "rate": 73.31
+          }
+        }
+      },
+      "vxn_bucket_by_year": {
+        "2015": {
+          "vxn_lt18": 31,
+          "vxn_18_28": 22
+        },
+        "2016": {
+          "vxn_18_28": 75,
+          "vxn_ge28": 11,
+          "vxn_lt18": 166
+        },
+        "2017": {
+          "vxn_lt18": 244,
+          "vxn_18_28": 7
+        },
+        "2018": {
+          "vxn_lt18": 101,
+          "vxn_18_28": 122,
+          "vxn_ge28": 28
+        },
+        "2019": {
+          "vxn_ge28": 4,
+          "vxn_18_28": 135,
+          "vxn_lt18": 113
+        },
+        "2020": {
+          "vxn_lt18": 17,
+          "vxn_18_28": 53,
+          "vxn_ge28": 183
+        },
+        "2021": {
+          "vxn_ge28": 45,
+          "vxn_18_28": 207
+        },
+        "2022": {
+          "vxn_18_28": 58,
+          "vxn_ge28": 193
+        },
+        "2023": {
+          "vxn_ge28": 8,
+          "vxn_18_28": 209,
+          "vxn_lt18": 33
+        },
+        "2024": {
+          "vxn_lt18": 109,
+          "vxn_18_28": 140,
+          "vxn_ge28": 3
+        },
+        "2025": {
+          "vxn_18_28": 209,
+          "vxn_ge28": 25,
+          "vxn_lt18": 16
+        },
+        "2026": {
+          "vxn_18_28": 123,
+          "vxn_ge28": 28
+        }
+      }
+    },
+    "spx_matched_2021": {
+      "date_range": "2021-10-18 ~ 2026-08-10",
+      "samples": 1207,
+      "vol_ratio_ndx_over_spx": 1.368,
+      "base_rate": {
+        "1d": 35.05,
+        "3d": 55.92,
+        "5d": 64.37
+      },
+      "model_metrics_vs_horizon": {
+        "1d": {
+          "auc": 0.645,
+          "brier": 0.3027
+        },
+        "3d": {
+          "auc": 0.628,
+          "brier": 0.2434
+        },
+        "5d": {
+          "auc": 0.617,
+          "brier": 0.2211
+        }
+      },
+      "regime_5d_rates": {
+        "vxn": {
+          "vxn_18_28": {
+            "n": 787,
+            "rate": 63.28
+          },
+          "vxn_ge28": {
+            "n": 262,
+            "rate": 77.48
+          },
+          "vxn_lt18": {
+            "n": 158,
+            "rate": 48.1
+          }
+        },
+        "trend": {
+          "above_ma200": {
+            "n": 896,
+            "rate": 58.93
+          },
+          "below_ma200": {
+            "n": 311,
+            "rate": 80.06
+          }
+        },
+        "ext": {
+          "ma20_normal": {
+            "n": 766,
+            "rate": 62.92
+          },
+          "ma20_over3": {
+            "n": 270,
+            "rate": 61.11
+          },
+          "ma20_under3": {
+            "n": 171,
+            "rate": 76.02
+          }
+        }
+      },
+      "vxn_bucket_by_year": {
+        "2021": {
+          "vxn_18_28": 48,
+          "vxn_ge28": 5
+        },
+        "2022": {
+          "vxn_18_28": 58,
+          "vxn_ge28": 193
+        },
+        "2023": {
+          "vxn_ge28": 8,
+          "vxn_18_28": 209,
+          "vxn_lt18": 33
+        },
+        "2024": {
+          "vxn_lt18": 109,
+          "vxn_18_28": 140,
+          "vxn_ge28": 3
+        },
+        "2025": {
+          "vxn_18_28": 209,
+          "vxn_ge28": 25,
+          "vxn_lt18": 16
+        },
+        "2026": {
+          "vxn_18_28": 123,
+          "vxn_ge28": 28
+        }
+      }
+    }
+  },
+  "fetch_today_constants": {
+    "BASE_5D": 57.14,
+    "vxn": {
+      "vxn_18_28": 61.47,
+      "vxn_ge28": 72.35,
+      "vxn_lt18": 40.36
+    },
+    "trend": {
+      "above_ma200": 53.46,
+      "below_ma200": 73.68
+    },
+    "ext": {
+      "ma20_normal": 53.51,
+      "ma20_over3": 60.74,
+      "ma20_under3": 73.31
+    }
+  },
+  "known_limitation": "VXN rarely drops below 18 in the current regime (2025 n=16, 2026 n=0). The risk-on bucket is近乎 dormant; treat mid-bucket as the practical baseline until VXN mean-reverts."
+}

@@ -1,0 +1,312 @@
+<!doctype html>
+<html lang="zh-Hant">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>NDX 日線分析 2026-08-18</title>
+<style>
+:root{
+  --bg:#0a0a0a; --panel:#111417; --line:#1e2429; --line2:#2a323a;
+  --tx:#d6dde3; --dim:#8b979f; --cy:#22d3ee; --gr:#34d399; --rd:#f87171;
+  --am:#fbbf24; --vi:#a78bfa;
+}
+*{box-sizing:border-box}
+body{margin:0;background:var(--bg);color:var(--tx);
+  font:15px/1.7 -apple-system,"Segoe UI","Noto Sans TC",sans-serif;}
+.wrap{max-width:1120px;margin:0 auto;padding:28px 20px 72px}
+header{border-bottom:2px solid var(--cy);padding-bottom:16px;margin-bottom:8px}
+.badge{display:inline-block;background:var(--cy);color:#04252b;font-weight:800;
+  letter-spacing:.14em;padding:3px 12px;border-radius:3px;font-size:12px}
+h1{margin:12px 0 4px;font-size:27px;letter-spacing:.02em}
+.sub{color:var(--dim);font-size:13px}
+h2{margin:44px 0 14px;font-size:19px;color:var(--cy);
+  border-left:3px solid var(--cy);padding-left:11px}
+h3{margin:26px 0 10px;font-size:15px;color:var(--am)}
+.kpi{display:grid;grid-template-columns:repeat(auto-fit,minmax(148px,1fr));gap:11px;margin:20px 0}
+.k{background:var(--panel);border:1px solid var(--line);border-radius:7px;padding:13px 15px}
+.k .l{color:var(--dim);font-size:11px;letter-spacing:.09em;text-transform:uppercase}
+.k .v{font-size:22px;font-weight:700;margin-top:5px;font-variant-numeric:tabular-nums}
+.k .n{font-size:11px;color:var(--dim);margin-top:3px}
+.up{color:var(--gr)} .dn{color:var(--rd)} .nu{color:var(--am)} .cy{color:var(--cy)} .vi{color:var(--vi)}
+.tw{overflow-x:auto;margin:16px 0}
+table{width:100%;border-collapse:collapse;font-size:13.5px;min-width:560px}
+th,td{padding:9px 11px;text-align:left;border-bottom:1px solid var(--line)}
+th{background:#151a1f;color:var(--cy);font-weight:600;font-size:12px;
+  letter-spacing:.05em;white-space:nowrap}
+td{font-variant-numeric:tabular-nums}
+tr:hover td{background:#0f1316}
+.box{background:var(--panel);border:1px solid var(--line);border-radius:7px;
+  padding:15px 18px;margin:15px 0}
+.box.hot{border-color:var(--rd);background:#170f10}
+.box.warn{border-color:var(--am);background:#171308}
+.box.good{border-color:var(--gr);background:#0c1613}
+.box.info{border-color:var(--vi);background:#12101a}
+.box h4{margin:0 0 8px;font-size:14px}
+.gauge{background:var(--panel);border:1px solid var(--line);border-radius:7px;padding:20px;margin:18px 0}
+.bar{height:26px;border-radius:13px;overflow:hidden;display:flex;margin:12px 0 6px;
+  background:#0c1013;border:1px solid var(--line2)}
+.bar i{display:block;height:100%}
+.scale{display:flex;justify-content:space-between;color:var(--dim);font-size:11px}
+ul{padding-left:20px;margin:9px 0} li{margin:5px 0}
+.mono{font-family:"Cascadia Mono",Consolas,monospace;font-size:12.5px;
+  background:#0c1013;border:1px solid var(--line);border-radius:6px;
+  padding:14px 16px;white-space:pre;overflow-x:auto;color:#b9c4cc}
+.tag{display:inline-block;font-size:11px;padding:2px 8px;border-radius:10px;
+  border:1px solid var(--line2);color:var(--dim);margin-right:5px}
+.tag.r{border-color:var(--rd);color:var(--rd)}
+.tag.g{border-color:var(--gr);color:var(--gr)}
+.tag.a{border-color:var(--am);color:var(--am)}
+footer{margin-top:56px;padding-top:18px;border-top:1px solid var(--line);
+  color:var(--dim);font-size:12px}
+.big{font-size:31px;font-weight:800;font-variant-numeric:tabular-nums}
+</style>
+</head>
+<body>
+<div class="wrap">
+
+<header>
+  <span class="badge">NDX · NASDAQ-100</span>
+  <h1>那斯達克100 日線分析</h1>
+  <div class="sub">報告日 2026-08-18 ｜ 數據基準：2026-08-17 美股收盤 ｜ 本系統首份正式分析</div>
+</header>
+
+<div class="box info">
+  <h4 class="vi">關於這份報告</h4>
+  這是 NDX 分析系統的第一份正式輸出。與 SPX 系統<strong>並列、不分主從</strong>，各自記帳互不污染。
+  所有參數（VXN 門檻 18/28、拉回定義 −1.00%、方向計分 ±0.4%）均為獨立校準值，
+  <strong>非沿用 SPX</strong>。首份分析無前次預測，故第一區回測從缺。
+</div>
+
+<h2>第一區 · 回測驗證</h2>
+<div class="box">
+  <strong>N/A — 本系統首份分析，無前次預測可回測。</strong><br>
+  <span style="color:var(--dim)">
+  今日已於 <code>ndx_track_record.json</code> 寫入首筆 pending（拉回機率 60%、中性偏空），
+  並於 <code>ndx_pnl_ledger.json</code> 寫入首份策略表 trades_pending。
+  自 2026-08-19 起開始累積方向勝率、Brier score 與 P&amp;L 三本帳。
+  在累積足夠樣本前，本系統不得宣稱任何 edge。</span>
+</div>
+
+<h2>第二區 · 今日分析</h2>
+
+<div class="kpi">
+  <div class="k"><div class="l">收盤</div><div class="v">29,995</div><div class="n dn">−0.17%（−50.76）</div></div>
+  <div class="k"><div class="l">日內區間</div><div class="v">223.8</div><div class="n">29,972 – 30,196（0.75%）</div></div>
+  <div class="k"><div class="l">VXN</div><div class="v nu">21.51</div><div class="n">中波動檔（18–28）</div></div>
+  <div class="k"><div class="l">RSI(14)</div><div class="v dn">73.92</div><div class="n">超買（SMA法·rule33）</div></div>
+  <div class="k"><div class="l">KD</div><div class="v dn">92.2/87.3</div><div class="n">極高檔，差距收斂至 4.87</div></div>
+  <div class="k"><div class="l">MACD 柱</div><div class="v nu">163.5</div><div class="n">8日新低，連兩日縮</div></div>
+  <div class="k"><div class="l">距 ATH</div><div class="v">−2.49%</div><div class="n">ATH 30,762（6/03）</div></div>
+  <div class="k"><div class="l">ATR14</div><div class="v cy">1.694%</div><div class="n">SPX 的 1.674 倍</div></div>
+</div>
+
+<div class="box hot">
+  <h4 class="dn">★ 今日核心結構事實：0.786 斐波那契反壓精準受阻</h4>
+  <div class="mono">6/03 ATH      30,762.20
+7/29 低點     27,176.03      跌幅 −3,586.17 點（−11.66%）
+8/17 收盤     29,995.38      反彈回補 78.62%
+
+0.786 反壓位  29,994.76      收盤距此位 <span style="color:#f87171">僅 0.62 點（0.002%）</span></div>
+  <p style="margin:11px 0 0">
+  0.786 是空方最後防線：站穩則全面回測 ATH 的機率大增，受阻則反彈段結束。
+  <strong>今日為觸及後收黑</strong>——開 30,150.78 → 高 30,195.72（20日新高）→ 收 29,995.38，
+  留 200 點上影線、收在日內區間下緣 <strong>10.5%</strong>。這是典型的 ABC 修正型反彈完成區受阻型態。</p>
+</div>
+
+<h3>七維分析</h3>
+<div class="tw"><table>
+<tr><th>維度</th><th>判斷</th><th>內容</th></tr>
+<tr><td>⓪ 廣度</td><td class="nu">中性偏弱</td>
+  <td>QQQE/QQQ 比值 0.1698；5日 +0.22%（中性）但<strong>當日 −0.38% 窄化</strong>。NDX 權重集中度遠高於 SPX，當日窄化配合指數收黑 → 指數強度打折</td></tr>
+<tr><td>① 價格行為</td><td class="dn">偏空</td>
+  <td>開高走低長黑，實體 −155 點，上影線 200 點；創 20 日新高 30,195.72 後<strong>收回全部漲幅</strong>，收於區間下緣 10.5%。量能因資料失真無法判讀（見下方警示）</td></tr>
+<tr><td>② 均線系統</td><td class="nu">偏多但不完整</td>
+  <td>收盤 &gt; MA5 29,879（+0.39%）&gt; MA50 29,295（+2.39%）&gt; <strong>MA20 29,011</strong>（+3.39%）&gt; MA200 26,758（+12.10%）。<strong>MA20 仍低於 MA50 ＝ 中期結構尚在修復</strong>，非完整多頭排列。距 MA20 +3.39% 已達過度延伸</td></tr>
+<tr><td>③ 技術指標</td><td class="dn">偏空</td>
+  <td>RSI <strong>73.92 超買</strong>；KD 92.19/87.32 極高檔，K−D 差距由 6.72 收斂至 4.87 <strong>死叉逼近</strong>；MACD 柱 184.1→179.4→<strong>163.5</strong> 連兩日收窄至 8 日新低（主趨勢仍多：MACD 線 250.01 遠高於訊號 86.53）；布林 %B 78.6</td></tr>
+<tr><td>④ 葛蘭威爾</td><td class="nu">中性</td>
+  <td>站穩所有均線之上屬多頭正常整理；但乖離過大（距 MA20 +3.39%）已觸及賣⑧「乖離過大快速修正」的預警條件</td></tr>
+<tr><td>⑤ 纏論</td><td class="dn">中性偏空</td>
+  <td>8/13–8/17 三根K重疊中樞 <strong>29,972 – 30,168</strong>（極窄）。收盤 29,995 貼近中樞下沿，破 29,972 即下離；站回 30,168 才重啟上攻</td></tr>
+<tr><td>⑥ 艾略特</td><td class="dn">偏空</td>
+  <td>自 ATH 下跌後的反彈段，回補 78.62% 精準觸及 0.786 反壓並受阻。典型為 ABC 修正型反彈（B/C 浪末端）完成區</td></tr>
+</table></div>
+
+<div class="box warn">
+  <h4 class="nu">⚠ 資料品質警示：成交量降級（rule36）</h4>
+  <div class="mono">^NDX  8/17   1,147,389,000  =  20日均量的 <span style="color:#fbbf24">13.6%</span>
+^GSPC 8/17   2,506,498,000  =  20日均量的 48.6%
+QQQ   8/17      26,102,182  =  20日均量的 66.5%   ← ETF，較可信</div>
+  <p style="margin:11px 0 0">指數成交量在最新交易日常為<strong>未結算殘值</strong>。以 QQQ 代理判讀為
+  <strong>偏輕但非崩量</strong>，<span class="dn">絕不可讀成 −86% 崩量訊號</span>。
+  影響：①「成交量衰竭」因子（權重 15%）降級為中性處理；
+  ②「突破做多需帶量」的必要條件<strong>今日無法驗證</strong>，突破多單因此降為觀察級。</p>
+</div>
+
+<h3>波動尺度校正（rule34）</h3>
+<div class="tw"><table>
+<tr><th>項目</th><th>NDX</th><th>SPX</th><th>比值</th></tr>
+<tr><td>ATR14</td><td class="cy">1.694%</td><td>1.012%</td><td class="cy">1.674×</td></tr>
+<tr><td>近5日均振幅</td><td class="cy">0.885%</td><td>0.545%</td><td class="cy">1.624×</td></tr>
+<tr><td>預期振幅（折中）</td><td class="cy">1.289%</td><td>0.778%</td><td class="cy">1.657×</td></tr>
+<tr><td>rule27 掛單門檻（×0.6）</td><td class="cy">0.773%</td><td>0.467%</td><td>—</td></tr>
+<tr><td>可執行掛單區間</td><td colspan="3" class="cy">29,763 – 30,227</td></tr>
+</table></div>
+<div class="box">
+  <strong>當日 ATR 比值 1.674 倍，明顯高於長期 1.25–1.37 倍區間</strong>
+  → NDX 正處於相對高波動狀態。所有停損寬度、掛單距離、目標距離一律以 NDX 自身波動計算；
+  <span class="dn">用 SPX 的距離感設 NDX 停損＝系統性過窄＝被日常波動洗掉</span>。
+</div>
+
+<h3>拉回機率</h3>
+<div class="gauge">
+  <div class="big dn">60%</div>
+  <div style="color:var(--dim);font-size:13px">中性偏空 · 隔日收盤下跌機率（基準約 45–50%）</div>
+  <div class="bar">
+    <i style="width:60%;background:linear-gradient(90deg,#fbbf24,#f87171)"></i>
+    <i style="width:40%;background:#161b20"></i>
+  </div>
+  <div class="scale"><span>0 低風險</span><span>40 中性</span><span>60 中高</span><span>80 高風險</span><span>100</span></div>
+  <p style="margin:14px 0 0;font-size:13.5px">
+  <strong>情景推導（rule16 禁止折中，headline 直接等於推導值）：</strong></p>
+  <div class="mono">A 續攻 ATH   25%   帶量站上 30,196  →  30,450 / 30,762
+B 區間整理   30%   29,750 – 30,196 遊走，消化超買
+C 反壓回落   45%   收盤跌破 MA5 29,879  →  29,525 / 29,392
+
+headline = 45 + 30 × 0.5 = <span style="color:#f87171">60%</span></div>
+  <p style="margin:11px 0 0;font-size:13px;color:var(--dim)">
+  偏空側證據成群：0.786 精準受阻＋RSI 超買＋KD 死叉逼近＋MACD 柱連縮至 8 日新低＋長上影線收區間下緣＋乖離過大＋廣度當日窄化。
+  多方僅存 SOXX 逆勢 +1.58%（5日 +5.62%）與 MACD 線遠高於訊號的主趨勢結構。</p>
+</div>
+
+<h3>Regime 客觀對照（第二視角）</h3>
+<div class="box">
+<div class="mono">主觀拉回機率：60%    （隔日收盤方向，±0.4% 計分）
+客觀 regime 平均：58.6%（未來5日盤中回撤 −1.00%，vs 基準 57.14%，超額 <span style="color:#f87171">+1.5pp</span>）
+  ├ VXN ：中波動檔 18–28      → 61.5%（<span style="color:#f87171">+4.3pp</span>）
+  ├ 趨勢：NDX 在 MA200 之上   → 53.5%（<span style="color:#34d399">−3.7pp</span>）
+  └ MA20：距 MA20 +3.39% 延伸 → 60.7%（<span style="color:#f87171">+3.6pp</span>）</div>
+<p style="margin:12px 0 0"><strong>合併判定：兩層同向偏空 → 信心提高。</strong>
+主觀 60% 高於隔日下跌基準（約 45–50%）；客觀 regime +1.5pp 亦高於基準。
+<span class="dn">禁止直接比較 60 與 58.6 的絕對值——兩者單位不同</span>（一個是隔日收盤方向，一個是未來5日盤中回撤）。</p>
+<p style="margin:9px 0 0;font-size:13px;color:var(--dim)">
+基準：2015–2026 共 2,718 樣本，AUC 1D=0.668 / 3D=0.647 / 5D=0.641 → <strong>以 1D 為主決策</strong>。
+已知限制：VXN 極少跌破 18（2025 僅 16 天、2026 為 0），低波動檔近乎休眠，實務以中波動檔為基準線。</p>
+</div>
+
+<h3>與 SPX 系統交叉對照</h3>
+<div class="tw"><table>
+<tr><th></th><th>NDX</th><th>SPX</th></tr>
+<tr><td>主觀拉回機率</td><td class="dn">60%</td><td class="dn">58%</td></tr>
+<tr><td>客觀 regime 超額</td><td class="dn">+1.5pp（偏空）</td><td class="up">−6.2pp（偏多）</td></tr>
+<tr><td>波動率</td><td class="nu">VXN 21.51 · 中波動檔</td><td class="up">VIX 15.19 · 低波動檔</td></tr>
+<tr><td>波動檔 regime 貢獻</td><td class="dn">+4.3pp</td><td class="up">−12.2pp</td></tr>
+<tr><td>主觀 vs 客觀</td><td class="dn"><strong>兩層同向偏空</strong></td><td class="nu">兩層分歧（其 rule30）</td></tr>
+</table></div>
+<div class="box hot">
+  <h4 class="dn">判讀：主觀同向、客觀分歧 → 整體同向加強，但分歧必須點明</h4>
+  <p><strong>分歧成因（類型1・波動檔不同）：</strong>
+  VIX 15.19 落在低波動檔，吃到 −12.2pp 的大幅減項；VXN 21.51 落在中波動檔，吃到 +4.3pp 加項。
+  → <strong>風險集中在科技側，大盤的平靜對 NDX 不適用。</strong></p>
+  <p style="margin:9px 0 0"><strong>關鍵差別：</strong>
+  NDX 是主觀與客觀<strong>兩層同向偏空</strong>；SPX 則是主觀偏空、客觀偏多的<strong>兩層分歧</strong>。
+  <span class="cy">→ NDX 的偏空訊號比 SPX 乾淨。</span>
+  <span class="dn">禁止因 60 與 58 數字接近就宣稱兩套一致</span>——數字接近但理由不同，那是巧合不是共識。</p>
+</div>
+
+<h2>第三區 · 明日策略</h2>
+
+<div class="tw"><table>
+<tr><th>策略</th><th>型態</th><th>進場</th><th>距現價</th><th>停損</th><th>目標①</th><th>目標②</th><th>RR(T2)</th><th>倉位</th></tr>
+<tr><td>★ 破位空（主）</td><td>close_confirm</td><td class="dn">29,879</td><td>−0.39%</td><td>30,196</td><td>29,525</td><td>29,392</td><td>1.54</td><td class="dn">15%</td></tr>
+<tr><td>突破多（降級）</td><td>buy_stop</td><td class="up">30,196</td><td>+0.67%</td><td>29,879</td><td>30,450</td><td>30,762</td><td>1.79</td><td class="nu">5%</td></tr>
+</table></div>
+
+<div class="box">
+  <span class="tag r">rule12</span><strong>破位空為主策略</strong>——必須<strong>收盤確認</strong>跌破 MA5 29,879，盤中插針不算。
+  停損設 30,196（收復當日高＝結構失效），距進場 317 點 ＝ <strong>0.62 ATR</strong>，符合 rule34「停損不可過窄」。
+</div>
+<div class="box warn">
+  <span class="tag a">條件未滿足</span><strong>突破多已降為 5% 觀察級。</strong>
+  突破做多必要條件「突破均線 ＋ 帶量 ＋ MACD 柱收窄」<strong>缺一不可</strong>：
+  MACD 柱收窄 ✓、突破位明確 ✓、但<strong>帶量今日無法驗證</strong>（指數量能資料失真，rule36）。
+  → 須以 <strong>QQQ 量能 &gt;1.1 倍</strong>確認後才可執行，否則不進場。
+</div>
+<div class="box">
+  <span class="tag">rule27 攔截</span><strong>深破位空 29,750 已被擋下</strong>——距現價 0.82% &gt; 門檻 0.773%，
+  當日數學上難以觸及。weight 設 0、不掛，改列為破位空的延伸目標參考。
+  <span style="color:var(--dim)">寧可只掛 2 張接得到，不要掛 4 張接不到。</span>
+</div>
+
+<h3>關鍵價位</h3>
+<div class="tw"><table>
+<tr><th>方向</th><th>價位</th><th>意義</th></tr>
+<tr><td class="dn">阻力</td><td>30,762</td><td>ATH（6/03）＝ 0.786 之上的最終目標</td></tr>
+<tr><td class="dn">阻力</td><td>30,450</td><td>突破後第一目標</td></tr>
+<tr><td class="dn">阻力</td><td><strong>30,196</strong></td><td><strong>8/17 高＝20日新高；中樞上沿 30,168 之上</strong></td></tr>
+<tr><td class="nu">關鍵</td><td><strong>29,995</strong></td><td><strong>0.786 斐波那契反壓——站穩三日以上才算突破成立</strong></td></tr>
+<tr><td class="nu">關鍵</td><td>29,972</td><td>中樞下沿，破此即下離＝最早結構警訊</td></tr>
+<tr><td class="up">支撐</td><td><strong>29,879</strong></td><td><strong>MA5＝多空分界，收盤破＝情景C啟動</strong></td></tr>
+<tr><td class="up">支撐</td><td>29,525</td><td>8/11 收盤區</td></tr>
+<tr><td class="up">支撐</td><td>29,392</td><td>61.8% 斐波那契</td></tr>
+<tr><td class="up">支撐</td><td>29,295</td><td>MA50</td></tr>
+<tr><td class="up">支撐</td><td>29,011</td><td>MA20</td></tr>
+</table></div>
+
+<h3>盤前宏觀層</h3>
+<div class="box warn">
+  <div class="mono">NQ 期貨  −1.10%（偏空）    ES 期貨  −0.81%（大盤同步偏空）
+VXN 21.51（中波動檔）      macro_backdrop  <span style="color:#f87171">−2 RISK_OFF</span>
+隱含 NDX 開盤  29,829  →  已在 MA5 29,879 之下</div>
+  <p style="margin:11px 0 0"><span class="tag a">ASIA_THIN</span>
+  <strong>此為亞洲薄盤讀數，流動性低、反轉率高，不可據此執行。</strong>
+  台灣時間 21:00 後必須以「NQ確認」複查。若隱含開盤 29,829 成立，
+  則情景C（跌破 MA5）在開盤即已觸發，須以收盤確認（rule12）為準。</p>
+</div>
+
+<h3>明日觀察清單</h3>
+<ul>
+<li><strong>0.786 反壓 29,995</strong>：站穩三日以上才視為突破成立，單日插針不算</li>
+<li><strong>MA5 29,879</strong>：多空分界，收盤跌破＝情景C啟動</li>
+<li><strong>中樞下沿 29,972</strong>：破此即下離，最早的結構警訊</li>
+<li><strong>SOXX 559.12</strong>：距 20 日高 566.01 僅 1.2%。站上＝科技引擎重啟，情景A機率上修；跌破 5 日均＝唯一多方論據消失（rule15，半導體對 NDX 權重最高）</li>
+<li><strong>KD 死叉</strong>：K−D 差距已由 6.72 收斂至 4.87，死叉成立為明確賣訊</li>
+<li><strong>MACD 柱</strong>：163.5 為 8 日新低，若續縮至 &lt;150 確認動能衰竭</li>
+<li><strong>QQQE/QQQ 廣度</strong>：當日 −0.38%，若連兩日窄化則指數強度須再打折</li>
+<li><strong>VXN 21.51</strong>：站上 28 進入高波動檔（regime +15.2pp）；跌破 18 才回低波動檔（現行 regime 罕見）</li>
+<li><strong>指數成交量</strong>：明日須確認 ^NDX 量能是否回補至正常區間，否則量能維度持續降級（rule36）</li>
+</ul>
+
+<h3>市場筆記速記</h3>
+<div class="mono">📋 NDX 市場筆記速記
+
+日期：2026-08-18
+收盤：29,995（-0.17%）
+VXN：21.51
+拉回機率：60%
+
+纏論中樞：29,972 – 30,168
+關鍵支撐：29,879 / 29,525 / 29,392
+關鍵阻力：30,196 / 30,450 / 30,762
+
+SPX 對照：拉回機率 58%｜分歧（主觀同向、客觀相反）
+今日催化劑：0.786 斐波那契反壓精準受阻，20日新高後收回全部漲幅
+明日觀察：MA5 29,879 收盤攻防；SOXX 能否站上 566
+
+策略摘要：
+空單：進場 29,879｜停損 30,196｜目標① 29,525｜目標② 29,392
+做多：進場 30,196｜停損 29,879｜目標① 30,450｜目標② 30,762
+
+📌 回測參照（下次勿刪）：
+拉回機率 60%｜支撐 29,879 / 29,525｜阻力 30,196 / 30,450｜纏論上沿 30,168</div>
+
+<footer>
+NDX 分析系統首份正式報告 ｜ 數據基準 2026-08-17 美股收盤 ｜ 產出 2026-08-18<br>
+指標口徑：RSI 為 SMA/Cutler 法，與 SPX 系統一致（rule33）。regime 基準 2015–2026 共 2,718 樣本。<br>
+本系統與 spx-analysis 並列、不分主從，帳本完全分離。<br><br>
+<strong>本分析僅供學習參考，不構成投資建議。</strong>
+</footer>
+
+</div>
+</body>
+</html>

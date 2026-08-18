@@ -32,11 +32,19 @@ jobs:
       - name: Fetch macro layer
         run: python3 scripts/check_es.py
 
+      - name: Fetch daily data (NDX)
+        run: python3 scripts/fetch_today.py --symbol ndx
+
+      - name: Fetch macro layer (NDX)
+        run: python3 scripts/check_es.py --symbol ndx
+
       - name: Copy outputs to tracked data/
         run: |
           mkdir -p data
           cp scripts/today_data.txt data/today_data.txt
           cp scripts/es_check.txt data/es_check.txt
+          cp scripts/ndx_today_data.txt data/ndx_today_data.txt
+          cp scripts/ndx_es_check.txt data/ndx_es_check.txt
           date -u +"%Y-%m-%dT%H:%M:%SZ" > data/fetched_at.txt
 
       - name: Commit and push if changed

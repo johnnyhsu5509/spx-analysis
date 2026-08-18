@@ -1,0 +1,46 @@
+{
+  "checked_at": "2026-08-18 11:24",
+  "session": {
+    "label": "ASIA_THIN",
+    "note": "亞洲薄盤：流動性低、反轉率高，僅供參考，21:00後須複查再執行"
+  },
+  "nq": {
+    "last": 29895.5,
+    "prev_close": 30245.75,
+    "change_pct": -1.16,
+    "signal": "BEARISH"
+  },
+  "implied_ndx_open": {
+    "approx": 29812.6,
+    "index_prev_close": 29995.38,
+    "fut_at_prior_close": 30078.25,
+    "fut_pt_chg": -182.75,
+    "method": "point_anchor",
+    "note": "方案A：NQ=F點數錨定，基差已抵銷"
+  },
+  "es_change_pct": -0.83,
+  "soxx_semis": {
+    "last": 559.12,
+    "change_pct": 1.58,
+    "note": "ETF無夜盤，此為前一交易日資料（非即時）"
+  },
+  "vxn": 21.51,
+  "us10y": {
+    "yield_pct": 4.724,
+    "prev_pct": 4.696,
+    "change_bps": 2.8,
+    "signal": "FLAT"
+  },
+  "dxy": {
+    "last": 99.58,
+    "prev_close": 99.52,
+    "change_pct": 0.07,
+    "signal": "FLAT"
+  },
+  "macro_backdrop": {
+    "score": -2,
+    "read": "RISK_OFF 偏空",
+    "note": "NQ+ES+10Y+DXY+VXN 合成；±2 以上才定調；亞洲薄盤讀數，可信度打折"
+  },
+  "data_status": "OK"
+}

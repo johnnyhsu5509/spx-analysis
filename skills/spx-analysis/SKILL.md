@@ -3,12 +3,15 @@ name: spx-analysis
 description: |
   標普500 (S&P 500 / SPX) 日線技術分析與回測驗證工具（合併版：一次完成回測+分析+建議）。
 
-  【觸發條件 — 看到以下任何關鍵字就立刻啟動】
-  每日例行（完整流程）：「分析SPX」、「分析今日SPX」、「SPX日報」、「跑每日分析」、「分析標普」、「今天市場怎樣」、「日線分析」
-  單獨回測：「只回測」、「回測上次」、「驗證昨日推論」、「命中了嗎」、「預測準嗎」
-  快速確認（不產報告、純文字，任何視窗皆可）：「期貨確認」、「看一下期貨」、「ES怎樣」、「開盤確認」、「開盤怎樣」、「看30分K」、「睡前檢查」、「睡前確認」
+  【觸發條件 — 指令必須指名 SPX 或 ES，未指名者不觸發】
+  每日例行（完整流程）：「分析SPX」、「分析今日SPX」、「SPX日報」、「分析標普」、「SPX日線分析」
+  單獨回測：「回測SPX」、「SPX命中了嗎」、「驗證昨日SPX推論」、「SPX預測準嗎」
+  快速確認（不產報告、純文字，任何視窗皆可）：「SPX期貨確認」、「ES確認」、「ES怎樣」、「SPX開盤確認」、「SPX睡前檢查」
 
   本 SKILL 固定針對 S&P 500 指數（SPX），不分析其他標的。
+  【重要】並存的 ndx-analysis 為對等的另一套系統。裸指令（如未指名的「期貨確認」「開盤確認」
+  「睡前檢查」「分析行情」「今天市場怎樣」）**一律不得預設觸發本 SKILL**——必須先反問用戶
+  要 SPX 還是 NDX。靜默拿錯一套比報錯更危險。
   執行本 SKILL 時，必須完整跑完所有步驟，不可省略任何分析維度。
 ---
 
@@ -32,7 +35,7 @@ description: |
 ### 路徑說明（跨電腦通用）
 
 本系統的 repo 為 `https://github.com/johnnyhsu5509/spx-analysis`。
-- 主力機（Johnny 桌機）clone 位置：`D:\LICHUNG_Agent\STOCK\spx-gh\`
+- 本機 clone 位置：見私有筆記；其它電腦搜尋 `spx-analysis` 資料夾（內含 `docs/`、`scripts/`）
 - 其它電腦：先找本機 clone 位置（搜尋 `spx-analysis` 資料夾，內含 `docs/`、`scripts/`）；找不到就先 `git clone`
 - 下文 `{repo}` 代表 clone 根目錄；腳本一律在 `{repo}\scripts\`，輸出 txt 也在同資料夾
 - 開始工作前先 `git pull` 確保最新；推送即同步所有電腦
@@ -245,10 +248,20 @@ description: |
 
 設計風格：深色金融終端（黑底 #0a0a0a、青/綠/紅霓虹）。
 
+> **【硬規則・首頁分家】禁止覆蓋 `docs\index.html`**
+> `docs\index.html` 是**靜態導覽頁**（連向 `spx/` 與 `ndx/` 兩個入口），2026-08-18 起不再由任一套系統每日覆蓋。
+> SPX 只寫 `docs\spx\index.html`，NDX 只寫 `docs\ndx\index.html`。
+> 覆蓋根目錄的 index.html 會把另一套的入口一起弄丟，且用戶書籤會指向錯誤的指數。
+>
+> 三個網址：
+> - 導覽頁　`https://johnnyhsu5509.github.io/spx-analysis/`
+> - **SPX**　`https://johnnyhsu5509.github.io/spx-analysis/spx/`
+> - **NDX**　`https://johnnyhsu5509.github.io/spx-analysis/ndx/`
+
 檔名與推送：
 ```
 產出：{repo}\docs\spx-analysis-YYYYMMDD.html
-同時覆蓋：{repo}\docs\index.html
+同時覆蓋：{repo}\docs\spx\index.html   ← SPX 固定入口（書籤用）
 更新：{repo}\docs\last_analysis.json（含本次全部預測，供明天回測）
 git add + commit + push（PowerShell 用分號串接，不能用 &&）
 ```
@@ -383,7 +396,7 @@ git add + commit + push（PowerShell 用分號串接，不能用 &&）
 
 ## 快速確認模式（不產 HTML、不推 GitHub、純文字回覆）
 
-### 模式一：期貨確認（觸發詞：「期貨確認」「看一下期貨」「ES怎樣」）
+### 模式一：期貨確認（觸發詞：「SPX期貨確認」「ES確認」「ES怎樣」）
 
 1. 執行 `{repo}\scripts\check_es.py` → Read 同資料夾 `es_check.txt`
 2. 判斷標準：
@@ -402,7 +415,7 @@ git add + commit + push（PowerShell 用分號串接，不能用 &&）
    ```
 4. **方向一致** → 提示按策略執行；**方向相反** → 縮倉觀望、等開盤確認；**殖利率飆+backdrop轉空** → 即使ES紅也不追多
 
-### 模式二：開盤確認（觸發詞：「開盤確認」「開盤怎樣」「看30分K」）
+### 模式二：開盤確認（觸發詞：「SPX開盤確認」「SPX開盤怎樣」）
 
 ⚠️ 需在台灣時間 22:00 後執行（第一根30分K收完）。
 
@@ -425,7 +438,7 @@ git add + commit + push（PowerShell 用分號串接，不能用 &&）
    - **🛑 跌破停損**：觸及 last_analysis.json 停損位 → 直接砍/翻向，不凹單
    - **⚠️ 只是反彈別加碼**：無量反彈、NQ 不同步、未收復關鍵位 → 視為逃命彈，不加碼
 
-### 模式三：睡前檢查（觸發詞：「睡前檢查」「睡前確認」）
+### 模式三：睡前檢查（觸發詞：「SPX睡前檢查」「SPX睡前確認」）
 
 ⚠️ 台灣時間 22:30–23:00 執行（開盤約一小時後），是用戶睡前的**最終過夜閘門**——用戶凌晨收盤時在睡覺，此後只剩預掛單。
 

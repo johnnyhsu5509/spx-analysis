@@ -1,0 +1,71 @@
+{
+  "purpose": "NDX 策略表 P&L 模擬帳本（2026-08-18 啟用）：與 SPX 的 pnl_ledger.json 完全分離。每天用隔日 NDX OHLC 機械判定策略表的成交/停損/停利，累積虛擬損益。命中率只看方向，這本帳看的是『如果真的照表執行，賺賠多少』。",
+  "index": "^NDX",
+  "sim_rules": {
+    "order_types": {
+      "limit_buy": "回踩接多：隔日 Low ≤ entry 即成交",
+      "buy_stop": "突破追多：隔日 High ≥ entry 即成交",
+      "sell_stop_close_confirm": "破底空(rule12收盤確認)：隔日『收盤』< entry 才成交、以收盤價進場，盤中插針不算",
+      "limit_sell": "反彈掛空：隔日 High ≥ entry 即成交"
+    },
+    "exit_priority": "成交後同日檢查：停損與目標若同日都在範圍內，保守假設『停損先到』；皆未觸及→以當日收盤平倉（1日模擬視野）",
+    "pnl_calc": "pts=多:(出場-entry)/空:(entry-出場)；ret_pct=pts/entry；weighted_bp=ret_pct×策略倉位權重×10000",
+    "known_limits": "①僅按價格觸發，忽略策略附註的質化條件 ②持倉最長1日、收盤強制平倉，低估波段單潛力 ③不計滑價與成本"
+  },
+  "ndx_specific": {
+    "distance_cap_note": "rule27 的掛單距離上限不可沿用 SPX 數值。NDX 的 ATR14 與日波動約為 SPX 的 1.25-1.37 倍，掛單距離上限須以 NDX 自身的 ATR 計算，否則掛單會過近、被日常波動掃到。",
+    "stop_width_note": "停損寬度同理必須用 NDX 波動計算。這正是建立本系統的初衷：用 SPX 波動設停損會系統性過窄。",
+    "position_sizing_note": "同樣的『倉位%』在 NDX 上承擔的實際風險較 SPX 高約 1.3 倍。並列比較兩套策略表時，倉位數字不可直接對照。"
+  },
+  "entries": [],
+  "summary": {
+    "as_of": "2026-08-18",
+    "days_evaluated": 0,
+    "trades_total": 0,
+    "trades_filled": 0,
+    "filled_win": 0,
+    "filled_loss": 0,
+    "filled_flat": 0,
+    "fill_rate_pct": null,
+    "cumulative_weighted_bp": 0,
+    "open_positions": 0,
+    "gap_days": [],
+    "honest_read": "首份策略表已寫入 trades_pending（破位空 15%、突破多 5%），尚未評估。rule27 擋下第三張（深破位空 29,750，距現價 0.82% > 門檻 0.773%）。"
+  },
+  "trades_pending": {
+    "report_date": "2026-08-18",
+    "basis_close": 29995.38,
+    "eval_rule": "用 2026-08-18 美股 NDX OHLC 機械判定",
+    "trades": [
+      {
+        "name": "破位空",
+        "order": "sell_stop_close_confirm",
+        "entry": 29879,
+        "stop": 30196,
+        "t1": 29525,
+        "t2": 29392,
+        "weight": 15,
+        "dir": "short"
+      },
+      {
+        "name": "突破多",
+        "order": "buy_stop",
+        "entry": 30196,
+        "stop": 29879,
+        "t1": 30450,
+        "t2": 30762,
+        "weight": 5,
+        "dir": "long",
+        "condition_note": "須 QQQ 量能 >1.1 倍確認；機械模擬僅依價格觸發（已知限制①）"
+      }
+    ],
+    "rejected_by_rule27": [
+      {
+        "name": "深破位空",
+        "entry": 29750,
+        "dist_pct": -0.82,
+        "threshold": 0.773
+      }
+    ]
+  }
+}

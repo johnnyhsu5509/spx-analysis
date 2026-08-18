@@ -1,0 +1,55 @@
+{
+  "purpose": "NDX 累積戰績帳本（2026-08-18 啟用）：與 SPX 的 track_record.json 完全分離，兩套並列不分主從、各自記帳，避免互相污染。每日 NDX 分析後必須追加一筆並重算 summary。",
+  "index": "^NDX",
+  "vol_index": "^VXN",
+  "futures": "NQ=F",
+  "scoring_rules": {
+    "actual": "次一交易日 NDX 收盤漲跌%：≥+0.4%=up、≤-0.4%=down、其間=flat",
+    "actual_note": "門檻用 ±0.4% 而非 SPX 的 ±0.3%：NDX 日波動為 SPX 的 1.25-1.37 倍，沿用 ±0.3% 會讓 flat 區間過窄、把雜訊判成方向。0.3% × 1.3 ≈ 0.4%",
+    "bias_mapping": "偏多/中性偏多→預期up；偏空/中性偏空→預期down；中性→預期flat",
+    "grade": "方向對=hit(1分)、方向錯=miss(0分)、其餘(偏向遇flat或中性遇方向)=half(0.5分)",
+    "note": "『正確未觸發』的策略單另計、不算hit；此表只計方向判斷。滾動勝率=總分/已判定筆數"
+  },
+  "brier_rules": {
+    "purpose": "追蹤 NDX 拉回機率的『機率報得準不準』，不只方向對錯",
+    "formula": "brier = (p - outcome)²，p = pullback_prob/100，outcome：down=1、up=0、flat排除不計",
+    "pullback_def": "NDX 拉回定義為 5日內盤中低點 ≤ 訊號日收盤 -1.00%（SPX 為 -0.75%）。門檻放寬是因 NDX 日波動較大，沿用 -0.75% 會讓兩套機率不可比",
+    "caveat": "pullback_prob 名義上是 5D 拉回機率，但此處按每日迴圈的實際用法對『次日方向』計分；flat日排除會縮小樣本，解讀時注意",
+    "benchmark": "永遠報50%的無腦基準=0.25。低於0.25才代表機率有資訊量；越低越好",
+    "discrimination_note": "同時觀察報價分布：若機率永遠在窄帶，即使brier達標也視為鑑別度不足",
+    "regime_baseline_ref": "客觀對照基準見 docs/ndx_regime_baseline.json（VXN 18/28 三檔，2015-2026 共 2718 樣本，基準 5D 拉回率 57.14%、AUC 0.641）"
+  },
+  "cross_system_note": "與 SPX 並列時的解讀：兩套同向→訊號加強；分歧→各自減半並記錄分歧原因。分歧本身是資訊（例：VIX 在低波動檔但 VXN 在中波動檔，代表風險集中在科技側）。切勿把 SPX 的結論直接套用到 NDX。",
+  "entries": [
+    {
+      "report_date": "2026-08-18",
+      "basis_close": 29995.38,
+      "basis_date": "2026-08-17",
+      "pullback_prob": 60,
+      "bias": "中性偏空",
+      "actual_date": null,
+      "actual_pct": null,
+      "actual_dir": null,
+      "grade": "pending"
+    }
+  ],
+  "summary": {
+    "as_of": "2026-08-18",
+    "graded": 0,
+    "hits": 0,
+    "half": 0,
+    "miss": 0,
+    "rolling_direction_score_pct": null,
+    "gap_days": [],
+    "brier": {
+      "as_of": "2026-08-18",
+      "included": 0,
+      "excluded_flat": 0,
+      "per_entry": [],
+      "mean_brier": null,
+      "benchmark_50pct": 0.25,
+      "prob_range_observed": null,
+      "honest_read": "首筆已寫入（8/18 報 60%、中性偏空，基準收盤 8/17 29,995.38）。尚未判定，無勝率可言。60% 的依據為 0.786 斐波那契反壓精準受阻（收盤距該位僅 0.62 點）＋RSI 73.92 超買＋KD 死叉逼近＋MACD 柱連縮，非窄帶折中。"
+    }
+  }
+}
