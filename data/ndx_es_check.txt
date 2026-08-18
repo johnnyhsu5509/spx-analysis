@@ -1,46 +1,49 @@
 {
-  "checked_at": "2026-08-18 11:24",
+  "checked_at": "2026-08-18 21:41",
   "session": {
-    "label": "ASIA_THIN",
-    "note": "亞洲薄盤：流動性低、反轉率高，僅供參考，21:00後須複查再執行"
+    "label": "US_REGULAR",
+    "note": "美股盤中：即時讀數"
   },
   "nq": {
-    "last": 29895.5,
-    "prev_close": 30245.75,
-    "change_pct": -1.16,
+    "last": 29559.5,
+    "prev_close": 29900.0,
+    "change_pct": -1.14,
     "signal": "BEARISH"
   },
   "implied_ndx_open": {
-    "approx": 29812.6,
-    "index_prev_close": 29995.38,
-    "fut_at_prior_close": 30078.25,
-    "fut_pt_chg": -182.75,
+    "approx": 29477.2,
+    "index_prev_close": 29490.96,
+    "fut_at_prior_close": 29573.25,
+    "fut_pt_chg": -13.75,
     "method": "point_anchor",
     "note": "方案A：NQ=F點數錨定，基差已抵銷"
   },
-  "es_change_pct": -0.83,
+  "es_change_pct": -0.4,
   "soxx_semis": {
-    "last": 559.12,
-    "change_pct": 1.58,
-    "note": "ETF無夜盤，此為前一交易日資料（非即時）"
+    "last": 531.39,
+    "change_pct": -5.23
   },
-  "vxn": 21.51,
+  "semi_vs_ndx": {
+    "divergence_pp": -4.09,
+    "read": "半導體領跌(輪動殺半導體)"
+  },
+  "vxn": 22.56,
   "us10y": {
-    "yield_pct": 4.724,
-    "prev_pct": 4.696,
-    "change_bps": 2.8,
+    "yield_pct": 4.706,
+    "prev_pct": 4.724,
+    "change_bps": -1.8,
     "signal": "FLAT"
   },
   "dxy": {
-    "last": 99.58,
-    "prev_close": 99.52,
-    "change_pct": 0.07,
+    "last": 99.64,
+    "prev_close": 99.63,
+    "change_pct": 0.01,
     "signal": "FLAT"
   },
   "macro_backdrop": {
     "score": -2,
     "read": "RISK_OFF 偏空",
-    "note": "NQ+ES+10Y+DXY+VXN 合成；±2 以上才定調；亞洲薄盤讀數，可信度打折"
+    "note": "NQ+ES+10Y+DXY+VXN 合成；±2 以上才定調"
   },
   "data_status": "OK"
 }
