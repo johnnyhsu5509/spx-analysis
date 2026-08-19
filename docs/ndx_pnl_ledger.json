@@ -5,26 +5,38 @@
     "order_types": {
       "limit_buy": "回踩接多：隔日 Low ≤ entry 即成交",
       "buy_stop": "突破追多：隔日 High ≥ entry 即成交",
-      "sell_stop_close_confirm": "破底空(rule12收盤確認)：隔日『收盤』< entry 才成交、以收盤價進場，盤中插針不算",
+      "sell_stop_close_confirm": "破底空(rule12收盤確認)：隔日『收盤』< entry 才成交、以收盤價進場，盤中插針不算。【2026-08-19 修訂・已核准】成交後不套用同日平倉，改列 open_position 留倉至次一交易日，以次日 OHLC 判定停損/目標/收盤平倉",
       "limit_sell": "反彈掛空：隔日 High ≥ entry 即成交"
     },
-    "exit_priority": "成交後同日檢查：停損與目標若同日都在範圍內，保守假設『停損先到』；皆未觸及→以當日收盤平倉（1日模擬視野）",
+    "exit_priority": "成交後同日檢查：停損與目標若同日都在範圍內，保守假設『停損先到』；皆未觸及→以當日收盤平倉（1日模擬視野）。【例外・2026-08-19 核准】sell_stop_close_confirm 不適用同日平倉，一律留倉至次一交易日判定",
     "pnl_calc": "pts=多:(出場-entry)/空:(entry-出場)；ret_pct=pts/entry；weighted_bp=ret_pct×策略倉位權重×10000",
-    "known_limits": "①僅按價格觸發，忽略策略附註的質化條件 ②持倉最長1日、收盤強制平倉，低估波段單潛力 ③不計滑價與成本 ④【2026-08-19 發現】sell_stop_close_confirm 與『同日收盤平倉』規則邏輯衝突，該單型在現行規則下損益恆為 0，見 pending_rule_change"
+    "known_limits": "①僅按價格觸發，忽略策略附註的質化條件 ②持倉最長1日、收盤強制平倉，低估波段單潛力（sell_stop_close_confirm 已於 2026-08-19 修訂為例外）③不計滑價與成本 ④【2026-08-19 新發現・待核准】跳空穿越目標問題：收盤確認單的訊號價與成交價可能相差極大，導致成交當下 T1 已被穿越、剩餘風報比嚴重失真，見 pending_rule_change_2"
   },
   "ndx_specific": {
     "distance_cap_note": "rule27 的掛單距離上限不可沿用 SPX 數值。NDX 的 ATR14 與日波動約為 SPX 的 1.25-1.37 倍，掛單距離上限須以 NDX 自身的 ATR 計算，否則掛單會過近、被日常波動掃到。",
     "stop_width_note": "停損寬度同理必須用 NDX 波動計算。這正是建立本系統的初衷：用 SPX 波動設停損會系統性過窄。",
     "position_sizing_note": "同樣的『倉位%』在 NDX 上承擔的實際風險較 SPX 高約 1.3 倍。並列比較兩套策略表時，倉位數字不可直接對照。"
   },
-  "pending_rule_change": {
+  "approved_rule_changes": [
+    {
+      "id": "prc-001",
+      "raised_on": "2026-08-19",
+      "approved_on": "2026-08-19",
+      "status": "APPROVED — 已套用至 sim_rules，並回溯重判 2026-08-18 entry",
+      "issue": "sell_stop_close_confirm 的成交價定義為『當日收盤價』，而 exit_priority 又規定『未觸及停損/目標則以當日收盤平倉』。兩條規則相乘的結果是：此單型的進場價與出場價恆等於同一個收盤價，模擬損益數學上必然為 0，無論隔日行情多順。",
+      "fix_applied": "sell_stop_close_confirm 成交後不套用同日平倉，改列為 open_position 留倉至次一交易日，以次日 OHLC 判定停損/目標/收盤平倉。",
+      "retroactive_effect": "2026-08-18 的破位空由『同日平倉 pts=0』改判為 open_position，成本 29,490.96，待 2026-08-19 美股 OHLC 判定。"
+    }
+  ],
+  "pending_rule_change_2": {
     "raised_on": "2026-08-19",
     "status": "AWAITING_APPROVAL — 未經核准前一律按現行規則判定，不得自行套用",
-    "issue": "sell_stop_close_confirm 的成交價定義為『當日收盤價』，而 exit_priority 又規定『未觸及停損/目標則以當日收盤平倉』。兩條規則相乘的結果是：此單型的進場價與出場價恆等於同一個收盤價，模擬損益數學上必然為 0，無論隔日行情多順。",
-    "evidence": "2026-08-19 首次判定即觸發此缺陷：破位空 entry 29,879，8/18 收盤 29,490.96 確認跌破成交，但同日收盤平倉 → pts=0。而該單的實際交易意圖是持有至次日，8/18 收盤後 NDX 續跌與否才是其真實績效。",
-    "impact": "主策略普遍採用 rule12 收盤確認（破底空），若不修訂，這本帳將長期低估空方策略的績效，且『破位空』永遠不會產生任何正負貢獻，帳本失去意義。",
-    "proposed_fix": "sell_stop_close_confirm 成交後不套用同日平倉，改列為 open_position 留倉至次一交易日，以次日 OHLC 判定停損/目標/收盤平倉。",
-    "note": "此為政策變更，需 Johnny 核准後才可改寫 sim_rules。本次記帳仍按現行規則記 0。"
+    "issue": "跳空穿越目標（gap-through invalidation）。收盤確認單的『訊號價』與『實際成交價』在跳空日可能相差極大，導致成交當下目標①就已經被穿越，剩餘風報比與策略表設計的完全不同。",
+    "evidence": "2026-08-18 破位空：訊號價 29,879，實際成交 29,490.96，滑價 388 點。原設計 T1 29,525 / T2 29,392 / 停損 30,196，風報比 1.54。但以實際成交價重算：T1 29,525 在成交當下已被穿越（成交價已低於 T1 34 點），剩餘只有 T2 的 99 點空間，而停損距離達 705 點 → 實際風報比僅 0.14，與設計值差 11 倍。",
+    "impact": "在真實交易中，這種單不會進場——訊號觸發時價格已經走完大半，追空的風險報酬完全不成立。若機械模擬照樣進場，會把『事後看對方向但實務上不可執行』的單計入績效，長期高估帳本可信度。",
+    "proposed_fix": "新增成交後檢查：若成交價已穿越 T1（空單成交價 ≤ T1、多單成交價 ≥ T1），標記為 GAP_INVALIDATED，視為訊號過期不進場，不計入損益，另立一類統計『因跳空而失效的訊號數』。",
+    "alternative": "或改為部分處理：成交即視為 T1 達成、以 T1 為出場記帳結算該段，剩餘部位再以 T2 追蹤。此法較寬鬆但會高估可執行性。",
+    "note": "此為新政策，需 Johnny 另案核准。本次仍按 prc-001 核准後的規則判定（留倉），並在該筆標記 gap_through_flag 供日後回溯。"
   },
   "entries": [
     {
@@ -47,12 +59,15 @@
           "filled": true,
           "fill_price": 29490.96,
           "fill_note": "收盤 29,490.96 < 29,879，rule12 收盤確認成立。依規則以收盤價進場。",
-          "exit_price": 29490.96,
-          "exit_reason": "同日收盤平倉（現行 exit_priority）",
-          "pts": 0.0,
-          "ret_pct": 0.0,
-          "weighted_bp": 0.0,
-          "flag": "RULE_CONFLICT — 進場價=出場價=同一收盤價，損益結構性歸零，見 pending_rule_change。若按提議修訂留倉至次日，此單將以 29,490.96 為空單成本，方向與隔日劇本一致。"
+          "exit_price": null,
+          "exit_reason": null,
+          "status": "OPEN — 依 prc-001 核准後的修訂規則留倉，待 2026-08-19 美股 OHLC 判定",
+          "slippage_pts": 388.04,
+          "slippage_note": "訊號價 29,879 vs 實際成交 29,490.96，跳空造成 388 點滑價",
+          "gap_through_flag": "T1_ALREADY_BREACHED — 成交價 29,490.96 已低於 T1 29,525 達 34 點。以實際成交價重算，剩餘空間僅至 T2 29,392（99 點），而停損 30,196 距離 705 點，實際風報比 0.14（設計值 1.54，差 11 倍）。此筆為 pending_rule_change_2 的首個案例，日後若該案核准，本筆應回溯改判為 GAP_INVALIDATED。",
+          "pts": null,
+          "ret_pct": null,
+          "weighted_bp": null
         },
         {
           "name": "突破多",
@@ -67,7 +82,22 @@
           "weighted_bp": 0.0
         }
       ],
-      "day_weighted_bp": 0.0
+      "day_weighted_bp": null,
+      "day_note": "破位空留倉未結算，本日無已實現損益"
+    }
+  ],
+  "open_positions": [
+    {
+      "opened_on": "2026-08-18",
+      "name": "破位空",
+      "dir": "short",
+      "entry": 29490.96,
+      "stop": 30196,
+      "t1": 29525,
+      "t2": 29392,
+      "weight": 15,
+      "eval_rule": "用 2026-08-19 美股 NDX OHLC 判定：Low ≤ 29,392 → T2 達成；Low ≤ 29,525 → T1 達成（註：成交價已低於 T1，見 gap_through_flag）；High ≥ 30,196 → 停損；皆未觸及 → 以 8/19 收盤平倉",
+      "gap_through_flag": "T1_ALREADY_BREACHED（見 entries[0] 與 pending_rule_change_2）"
     }
   ],
   "summary": {
@@ -77,12 +107,13 @@
     "trades_filled": 1,
     "filled_win": 0,
     "filled_loss": 0,
-    "filled_flat": 1,
+    "filled_flat": 0,
+    "trades_open": 1,
     "fill_rate_pct": 50.0,
     "cumulative_weighted_bp": 0.0,
-    "open_positions": 0,
+    "open_positions": 1,
     "gap_days": [],
-    "honest_read": "首次判定即暴露規則缺陷，而非產生有效績效。方向判斷完全正確（NDX -1.68%），但主策略『破位空』因 sell_stop_close_confirm 與同日平倉規則衝突，模擬損益歸零；『突破多』正確未觸發。實質結論：這一天的 cumulative_weighted_bp = 0 **不代表策略無效，而代表帳本規則需修訂**。在 pending_rule_change 核准前，本帳數字不具參考價值，請以 ndx_track_record.json 的方向命中率為準。"
+    "honest_read": "prc-001 已核准並套用：破位空改為留倉，不再結構性歸零。目前 cumulative_weighted_bp = 0 是因為【尚無任何已平倉部位】，而非策略無效——破位空以 29,490.96 為空單成本留倉至 8/19 判定。方向判斷完全正確（NDX -1.68%），『突破多』正確未觸發。\n\n但首筆即揭露第二個問題（pending_rule_change_2）：訊號價 29,879 與實際成交 29,490.96 相差 388 點，成交當下 T1 就已被穿越，剩餘風報比僅 0.14 對比設計值 1.54。這代表帳本可能把『事後看對方向但實務上不該進場』的單計入績效。待核准前先標記不改判。\n\n結論：本帳目前仍無有效績效數據，請以 ndx_track_record.json 的方向命中率為準。"
   },
   "trades_pending": {
     "report_date": "2026-08-19",

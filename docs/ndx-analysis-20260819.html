@@ -113,14 +113,24 @@ footer{margin-top:38px;padding-top:16px;border-top:1px solid var(--line);color:v
   <div class="kv"><span>突破多　buy_stop @ 30,196</span><span class="nt">正確未觸發（最高 29,677.29）</span></div>
 </div>
 
-<div class="alert">
-<b>⚠️ P&amp;L 帳本首次判定即暴露規則缺陷</b><br>
-<code>sell_stop_close_confirm</code> 的成交價定義為「當日收盤價」，而 exit_priority 又規定「未觸及停損／目標則以當日收盤平倉」——
+<div class="alert green">
+<b>✅ P&amp;L 規則缺陷已修訂（prc-001，2026-08-19 核准）</b><br>
+原問題：<code>sell_stop_close_confirm</code> 的成交價定義為「當日收盤價」，而 exit_priority 又規定「未觸及停損／目標則以當日收盤平倉」——
 兩條規則相乘，此單型的<b>進場價與出場價恆為同一個收盤價，模擬損益數學上必然為 0</b>。
-主策略普遍採用 rule12 收盤確認，若不修訂，這本帳將長期低估空方策略績效。
 <br><br>
-已寫入 <code>pending_rule_change</code>（狀態 AWAITING_APPROVAL）。<b>本次仍按現行規則記 0，未自行改規則。</b>
-建議修訂為：收盤確認單成交後留倉至次一交易日判定。
+<b>修訂內容：</b>收盤確認單成交後不套用同日平倉，改列 <code>open_position</code> 留倉至次一交易日判定。
+8/18 破位空已回溯改判為<b>持倉中</b>，空單成本 <b>29,490.96</b>，待 8/19 美股 OHLC 結算。
+</div>
+
+<div class="alert red">
+<b>⚠️ 但首筆即揭露第二個問題：跳空穿越目標（待核准）</b><br>
+破位空<b>訊號價 29,879</b>，實際<b>成交 29,490.96</b>，跳空造成 <b>388 點滑價</b>。
+以實際成交價重算：T1 29,525 <b>在成交當下就已被穿越</b>（成交價已低於 T1 達 34 點），
+剩餘只有 T2 的 99 點空間，而停損 30,196 距離 705 點 → <b>實際風報比僅 0.14，與設計值 1.54 差 11 倍</b>。
+<br><br>
+真實交易中這種單<b>根本不會進場</b>——訊號觸發時價格已經走完大半，追空的風險報酬完全不成立。
+若機械模擬照樣進場，會把「事後看對方向但實務上不可執行」的單計入績效。
+已記為 <code>pending_rule_change_2</code>，<b>待另案核准，本次未自行套用。</b>
 </div>
 
 <div class="alert cyan">
@@ -424,14 +434,15 @@ rule8 要求做多錨定支撐站穩即進、禁掛限價深接，故只能用 b
     <div>
       <div class="kv"><span>平均 Brier</span><span class="up">0.16</span></div>
       <div class="kv"><span>基準（永遠報50%）</span><span>0.25</span></div>
-      <div class="kv"><span>P&amp;L 累積</span><span class="nt">0 bp（規則待修訂）</span></div>
+      <div class="kv"><span>P&amp;L 持倉</span><span class="dn">空單 1 筆 @ 29,490.96</span></div>
     </div>
   </div>
   <div class="alert" style="margin-bottom:0">
   <b>誠實說明：n=1，統計上無意義。</b>100% 只代表「首筆命中」，不代表系統勝率，至少累積 20 筆才可談滾動勝率。
   另須留意<b>鑑別度風險</b>：目前兩筆報價 60、63 都落在中高區窄帶，若長期只在 55–65 游走，即使 Brier 達標也視為鑑別度不足。
   <br><br>
-  <b>P&amp;L 的 0 bp 不代表策略無效</b>，而是帳本規則需修訂（見第一區）。目前請以方向命中率為準。
+  <b>P&amp;L 累積仍為 0 bp，但原因已改變</b>：不再是規則衝突導致的結構性歸零，而是<b>尚無任何已平倉部位</b>——
+  破位空以 29,490.96 留倉至 8/19 判定。本帳目前仍無有效績效數據，請以方向命中率為準。
   </div>
 </div>
 
