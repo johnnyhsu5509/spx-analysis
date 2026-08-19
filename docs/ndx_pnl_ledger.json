@@ -10,61 +10,133 @@
     },
     "exit_priority": "成交後同日檢查：停損與目標若同日都在範圍內，保守假設『停損先到』；皆未觸及→以當日收盤平倉（1日模擬視野）",
     "pnl_calc": "pts=多:(出場-entry)/空:(entry-出場)；ret_pct=pts/entry；weighted_bp=ret_pct×策略倉位權重×10000",
-    "known_limits": "①僅按價格觸發，忽略策略附註的質化條件 ②持倉最長1日、收盤強制平倉，低估波段單潛力 ③不計滑價與成本"
+    "known_limits": "①僅按價格觸發，忽略策略附註的質化條件 ②持倉最長1日、收盤強制平倉，低估波段單潛力 ③不計滑價與成本 ④【2026-08-19 發現】sell_stop_close_confirm 與『同日收盤平倉』規則邏輯衝突，該單型在現行規則下損益恆為 0，見 pending_rule_change"
   },
   "ndx_specific": {
     "distance_cap_note": "rule27 的掛單距離上限不可沿用 SPX 數值。NDX 的 ATR14 與日波動約為 SPX 的 1.25-1.37 倍，掛單距離上限須以 NDX 自身的 ATR 計算，否則掛單會過近、被日常波動掃到。",
     "stop_width_note": "停損寬度同理必須用 NDX 波動計算。這正是建立本系統的初衷：用 SPX 波動設停損會系統性過窄。",
     "position_sizing_note": "同樣的『倉位%』在 NDX 上承擔的實際風險較 SPX 高約 1.3 倍。並列比較兩套策略表時，倉位數字不可直接對照。"
   },
-  "entries": [],
+  "pending_rule_change": {
+    "raised_on": "2026-08-19",
+    "status": "AWAITING_APPROVAL — 未經核准前一律按現行規則判定，不得自行套用",
+    "issue": "sell_stop_close_confirm 的成交價定義為『當日收盤價』，而 exit_priority 又規定『未觸及停損/目標則以當日收盤平倉』。兩條規則相乘的結果是：此單型的進場價與出場價恆等於同一個收盤價，模擬損益數學上必然為 0，無論隔日行情多順。",
+    "evidence": "2026-08-19 首次判定即觸發此缺陷：破位空 entry 29,879，8/18 收盤 29,490.96 確認跌破成交，但同日收盤平倉 → pts=0。而該單的實際交易意圖是持有至次日，8/18 收盤後 NDX 續跌與否才是其真實績效。",
+    "impact": "主策略普遍採用 rule12 收盤確認（破底空），若不修訂，這本帳將長期低估空方策略的績效，且『破位空』永遠不會產生任何正負貢獻，帳本失去意義。",
+    "proposed_fix": "sell_stop_close_confirm 成交後不套用同日平倉，改列為 open_position 留倉至次一交易日，以次日 OHLC 判定停損/目標/收盤平倉。",
+    "note": "此為政策變更，需 Johnny 核准後才可改寫 sim_rules。本次記帳仍按現行規則記 0。"
+  },
+  "entries": [
+    {
+      "report_date": "2026-08-18",
+      "basis_close": 29995.38,
+      "eval_date": "2026-08-18",
+      "eval_ohlc": {
+        "open": 29594.89,
+        "high": 29677.29,
+        "low": 29425.08,
+        "close": 29490.96
+      },
+      "trades": [
+        {
+          "name": "破位空",
+          "order": "sell_stop_close_confirm",
+          "entry_signal": 29879,
+          "dir": "short",
+          "weight": 15,
+          "filled": true,
+          "fill_price": 29490.96,
+          "fill_note": "收盤 29,490.96 < 29,879，rule12 收盤確認成立。依規則以收盤價進場。",
+          "exit_price": 29490.96,
+          "exit_reason": "同日收盤平倉（現行 exit_priority）",
+          "pts": 0.0,
+          "ret_pct": 0.0,
+          "weighted_bp": 0.0,
+          "flag": "RULE_CONFLICT — 進場價=出場價=同一收盤價，損益結構性歸零，見 pending_rule_change。若按提議修訂留倉至次日，此單將以 29,490.96 為空單成本，方向與隔日劇本一致。"
+        },
+        {
+          "name": "突破多",
+          "order": "buy_stop",
+          "entry_signal": 30196,
+          "dir": "long",
+          "weight": 5,
+          "filled": false,
+          "fill_note": "當日最高 29,677.29 < 30,196，未觸發。屬『正確未觸發』：方向判空，此單為對沖性小倉，未成交即為正確結果，不計入命中率。",
+          "pts": null,
+          "ret_pct": null,
+          "weighted_bp": 0.0
+        }
+      ],
+      "day_weighted_bp": 0.0
+    }
+  ],
   "summary": {
-    "as_of": "2026-08-18",
-    "days_evaluated": 0,
-    "trades_total": 0,
-    "trades_filled": 0,
+    "as_of": "2026-08-19",
+    "days_evaluated": 1,
+    "trades_total": 2,
+    "trades_filled": 1,
     "filled_win": 0,
     "filled_loss": 0,
-    "filled_flat": 0,
-    "fill_rate_pct": null,
-    "cumulative_weighted_bp": 0,
+    "filled_flat": 1,
+    "fill_rate_pct": 50.0,
+    "cumulative_weighted_bp": 0.0,
     "open_positions": 0,
     "gap_days": [],
-    "honest_read": "首份策略表已寫入 trades_pending（破位空 15%、突破多 5%），尚未評估。rule27 擋下第三張（深破位空 29,750，距現價 0.82% > 門檻 0.773%）。"
+    "honest_read": "首次判定即暴露規則缺陷，而非產生有效績效。方向判斷完全正確（NDX -1.68%），但主策略『破位空』因 sell_stop_close_confirm 與同日平倉規則衝突，模擬損益歸零；『突破多』正確未觸發。實質結論：這一天的 cumulative_weighted_bp = 0 **不代表策略無效，而代表帳本規則需修訂**。在 pending_rule_change 核准前，本帳數字不具參考價值，請以 ndx_track_record.json 的方向命中率為準。"
   },
   "trades_pending": {
-    "report_date": "2026-08-18",
-    "basis_close": 29995.38,
-    "eval_rule": "用 2026-08-18 美股 NDX OHLC 機械判定",
+    "report_date": "2026-08-19",
+    "basis_close": 29490.96,
+    "eval_rule": "用 2026-08-19 美股 NDX OHLC 機械判定",
     "trades": [
       {
-        "name": "破位空",
+        "name": "續跌空",
         "order": "sell_stop_close_confirm",
-        "entry": 29879,
-        "stop": 30196,
-        "t1": 29525,
-        "t2": 29392,
+        "entry": 29392,
+        "stop": 29692,
+        "t1": 29028,
+        "t2": 28969,
         "weight": 15,
-        "dir": "short"
+        "dir": "short",
+        "condition_note": "0.618 fib 收盤跌破確認。此單型受 pending_rule_change 影響，若未修訂則損益仍將歸零"
       },
       {
-        "name": "突破多",
-        "order": "buy_stop",
-        "entry": 30196,
-        "stop": 29879,
-        "t1": 30450,
-        "t2": 30762,
+        "name": "缺口回補空",
+        "order": "limit_sell",
+        "entry": 29716,
+        "stop": 30000,
+        "t1": 29392,
+        "t2": 29028,
         "weight": 5,
-        "dir": "long",
-        "condition_note": "須 QQQ 量能 >1.1 倍確認；機械模擬僅依價格觸發（已知限制①）"
+        "dir": "short",
+        "condition_note": "反彈進跳空缺口下半部掛空。停損 30,000 設於 0.786 fib 上方＝結構失效位"
       }
     ],
     "rejected_by_rule27": [
       {
-        "name": "深破位空",
-        "entry": 29750,
-        "dist_pct": -0.82,
-        "threshold": 0.773
+        "name": "深跌空（測 MA20）",
+        "entry": 29028,
+        "dist_pct": -1.57,
+        "threshold": 0.762,
+        "reason": "距現價 1.57% 遠超門檻 0.762%，當日數學上難以觸及。改列為續跌空的 T1 目標"
+      },
+      {
+        "name": "反壓空（MA5 受阻）",
+        "entry": 29872,
+        "dist_pct": 1.29,
+        "threshold": 0.762,
+        "reason": "MA5 為理想空點但距現價 1.29% 超標。改列為 watch_point，若明日反彈至此再評估"
+      }
+    ],
+    "rejected_by_rr": [
+      {
+        "name": "支撐站穩多",
+        "entry": 29716,
+        "stop": 29392,
+        "t1": 29872,
+        "rr_t1": 0.48,
+        "rr_t2": 0.86,
+        "reason": "rule8 要求做多錨定支撐站穩即進、禁掛深，故只能用 buy_stop 29,716。但上方 MA5 29,872 與 0.786 fib 29,995 壓力密集，t1 僅 156 點而停損需 324 點（0.65 ATR，rule34 不可再窄），風報比 0.48 不合格 → 今日多單無可執行且風報比合格的進場位，觀望。"
       }
     ]
   }

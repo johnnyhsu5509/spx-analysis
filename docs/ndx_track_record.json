@@ -27,6 +27,18 @@
       "basis_date": "2026-08-17",
       "pullback_prob": 60,
       "bias": "中性偏空",
+      "actual_date": "2026-08-18",
+      "actual_pct": -1.68,
+      "actual_dir": "down",
+      "grade": "hit",
+      "note": "首筆即命中。核心論據 0.786 斐波那契反壓（29,994.76）精準受阻成立——次日跳空低開 -1.34% 直接離開中樞，收 29,490.96。預測支撐序列 29,879/29,750/29,525 依序跌破，29,392（0.618 fib）守住（低點 29,425.08，差 33.2 點）。KD 死叉、MACD 柱續縮至 <150 兩項觀察點亦命中。"
+    },
+    {
+      "report_date": "2026-08-19",
+      "basis_close": 29490.96,
+      "basis_date": "2026-08-18",
+      "pullback_prob": 63,
+      "bias": "偏空",
       "actual_date": null,
       "actual_pct": null,
       "actual_dir": null,
@@ -34,22 +46,30 @@
     }
   ],
   "summary": {
-    "as_of": "2026-08-18",
-    "graded": 0,
-    "hits": 0,
+    "as_of": "2026-08-19",
+    "graded": 1,
+    "hits": 1,
     "half": 0,
     "miss": 0,
-    "rolling_direction_score_pct": null,
+    "rolling_direction_score_pct": 100.0,
     "gap_days": [],
+    "sample_caveat": "n=1，統計上無意義。100% 只代表『首筆命中』，不代表系統勝率。至少累積 20 筆才可談滾動勝率。",
     "brier": {
-      "as_of": "2026-08-18",
-      "included": 0,
+      "as_of": "2026-08-19",
+      "included": 1,
       "excluded_flat": 0,
-      "per_entry": [],
-      "mean_brier": null,
+      "per_entry": [
+        {
+          "report_date": "2026-08-18",
+          "p": 0.6,
+          "outcome": 1,
+          "brier": 0.16
+        }
+      ],
+      "mean_brier": 0.16,
       "benchmark_50pct": 0.25,
-      "prob_range_observed": null,
-      "honest_read": "首筆已寫入（8/18 報 60%、中性偏空，基準收盤 8/17 29,995.38）。尚未判定，無勝率可言。60% 的依據為 0.786 斐波那契反壓精準受阻（收盤距該位僅 0.62 點）＋RSI 73.92 超買＋KD 死叉逼近＋MACD 柱連縮，非窄帶折中。"
+      "prob_range_observed": "60-63（n=2，範圍過窄無法評估鑑別度）",
+      "honest_read": "首筆 brier 0.16 優於基準 0.25，但 n=1 不具統計意義。須留意鑑別度風險：目前兩筆報價 60、63 都落在中高區窄帶內，若長期只在 55-65 游走，即使 brier 達標也視為鑑別度不足。本次 63% 的依據為帶量下跌（QQQ 量能 123.2%）＋SOXX -4.96% 引擎崩跌＋KD 死叉成立＋中樞下離＋跳空缺口未回補，屬證據疊加而非折中。"
     }
   }
 }
