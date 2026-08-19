@@ -114,23 +114,40 @@ footer{margin-top:38px;padding-top:16px;border-top:1px solid var(--line);color:v
 </div>
 
 <div class="alert green">
-<b>✅ P&amp;L 規則缺陷已修訂（prc-001，2026-08-19 核准）</b><br>
+<b>✅ P&amp;L 帳本兩項規則修訂皆已核准套用（2026-08-19）</b><br><br>
+<b>prc-001 — 收盤確認單改為留倉判定</b><br>
 原問題：<code>sell_stop_close_confirm</code> 的成交價定義為「當日收盤價」，而 exit_priority 又規定「未觸及停損／目標則以當日收盤平倉」——
-兩條規則相乘，此單型的<b>進場價與出場價恆為同一個收盤價，模擬損益數學上必然為 0</b>。
+兩條規則相乘，此單型的<b>損益數學上必然為 0</b>。<br>
+修訂：成交後不套用同日平倉，改列 <code>open_position</code> 留倉至次一交易日判定。
 <br><br>
-<b>修訂內容：</b>收盤確認單成交後不套用同日平倉，改列 <code>open_position</code> 留倉至次一交易日判定。
-8/18 破位空已回溯改判為<b>持倉中</b>，空單成本 <b>29,490.96</b>，待 8/19 美股 OHLC 結算。
+<b>prc-002 — 跳空穿越目標即失效（採方案A・嚴格）</b><br>
+修訂：成交價已穿越 T1（空單成交價 ≤ T1）→ 標記 <code>GAP_INVALIDATED</code>，
+<b>視為訊號過期，不進場、不計入損益</b>，另立「跳空失效率」統計。<br>
+<span style="color:var(--dim)">方案B（成交即視為 T1 達成後追 T2）已否決：會高估可執行性，等於對自己放水。</span>
 </div>
 
 <div class="alert red">
-<b>⚠️ 但首筆即揭露第二個問題：跳空穿越目標（待核准）</b><br>
-破位空<b>訊號價 29,879</b>，實際<b>成交 29,490.96</b>，跳空造成 <b>388 點滑價</b>。
-以實際成交價重算：T1 29,525 <b>在成交當下就已被穿越</b>（成交價已低於 T1 達 34 點），
-剩餘只有 T2 的 99 點空間，而停損 30,196 距離 705 點 → <b>實際風報比僅 0.14，與設計值 1.54 差 11 倍</b>。
+<b>最終判定：8/18 兩張單，一張都沒有實際成交</b><br><br>
+<table style="margin:8px 0">
+<tr><th>項目</th><th class="num">設計值</th><th class="num">實際成交後</th></tr>
+<tr><td>進場</td><td class="num">29,879（訊號價）</td><td class="num dn">29,490.96（滑價 388 點）</td></tr>
+<tr><td>到 T1 29,525</td><td class="num">354 點</td><td class="num dn"><b>已穿越 34 點</b></td></tr>
+<tr><td>到 T2 29,392</td><td class="num">487 點</td><td class="num">99 點</td></tr>
+<tr><td>停損距離</td><td class="num">317 點</td><td class="num">705 點</td></tr>
+<tr style="background:var(--panel2)"><td><b>風報比</b></td><td class="num"><b>1.54</b></td><td class="num dn"><b>0.14（差 11 倍）</b></td></tr>
+</table>
+<b>破位空</b>：訊號有效觸發，但成交價已穿越 T1 → <span class="badge b-red">GAP_INVALIDATED</span> 不進場<br>
+<b>突破多</b>：<span class="badge b-gold">正確未觸發</span>（最高僅 29,677.29）
 <br><br>
-真實交易中這種單<b>根本不會進場</b>——訊號觸發時價格已經走完大半，追空的風險報酬完全不成立。
-若機械模擬照樣進場，會把「事後看對方向但實務上不可執行」的單計入績效。
-已記為 <code>pending_rule_change_2</code>，<b>待另案核准，本次未自行套用。</b>
+這比原本的「pts=0」更誠實：不是損益歸零，而是<b>這張單在真實世界裡根本進不去</b>。
+</div>
+
+<div class="alert cyan">
+<b>兩本帳從今日起正式分工，數字不一致是正常的：</b><br>
+<code>ndx_track_record.json</code> 衡量<b>方向準度</b> → 8/18 記 <b class="hit">HIT</b>（NDX −1.68%，判斷正確）<br>
+<code>ndx_pnl_ledger.json</code> 衡量<b>可執行性</b> → 8/18 記 <b class="dn">GAP_INVALIDATED</b>（進場價設計有問題）<br><br>
+失效反映的是<b>進場價設計問題</b>，不是<b>方向判斷問題</b>——兩者必須分開看待。
+若跳空失效率長期偏高，代表策略表的進場價與目標距離需重新設計。
 </div>
 
 <div class="alert cyan">
@@ -434,15 +451,15 @@ rule8 要求做多錨定支撐站穩即進、禁掛限價深接，故只能用 b
     <div>
       <div class="kv"><span>平均 Brier</span><span class="up">0.16</span></div>
       <div class="kv"><span>基準（永遠報50%）</span><span>0.25</span></div>
-      <div class="kv"><span>P&amp;L 持倉</span><span class="dn">空單 1 筆 @ 29,490.96</span></div>
+      <div class="kv"><span>實際成交筆數</span><span class="dn">0（跳空失效 1、未觸發 1）</span></div>
     </div>
   </div>
   <div class="alert" style="margin-bottom:0">
   <b>誠實說明：n=1，統計上無意義。</b>100% 只代表「首筆命中」，不代表系統勝率，至少累積 20 筆才可談滾動勝率。
   另須留意<b>鑑別度風險</b>：目前兩筆報價 60、63 都落在中高區窄帶，若長期只在 55–65 游走，即使 Brier 達標也視為鑑別度不足。
   <br><br>
-  <b>P&amp;L 累積仍為 0 bp，但原因已改變</b>：不再是規則衝突導致的結構性歸零，而是<b>尚無任何已平倉部位</b>——
-  破位空以 29,490.96 留倉至 8/19 判定。本帳目前仍無有效績效數據，請以方向命中率為準。
+  <b>P&amp;L 累積 0 bp，原因是本日無任何實際成交</b>（非規則衝突、非策略無效）。
+  跳空失效率 100%（n=1，同樣無統計意義）。本帳目前仍無有效績效數據，請以方向命中率為準。
   </div>
 </div>
 
