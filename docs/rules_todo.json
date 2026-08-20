@@ -1,0 +1,46 @@
+{
+ "purpose": "由候補清單分離出來的『待實作』項目。它們不是待驗證的假設，是卡在沒人動手的工程項目，故不佔 rule_candidates 名額、也不進每日讀寫。完成後在此標記並刪除。",
+ "as_of": "2026-08-20",
+ "items": {
+  "todo1_close_confirm_carry": {
+   "來源": "原 rule33_candidate",
+   "問題": "sell_stop_close_confirm 單在 1 日模擬視野下結構性恆為 0bp（以收盤價進場＋當日收盤強平＝進場價=出場價），破位空這條策略線至今從未被評分",
+   "修正": "允許 close_confirm 單持倉至次一交易日評價（carry over），或改以次日開盤價計入",
+   "檔案": "docs/pnl_ledger.json → sim_rules",
+   "狀態": "待實作",
+   "暴露次數": 2
+  },
+  "todo2_fetch_sector_10y": {
+   "來源": "原 rule35_candidate",
+   "問題": "macro_layer 為 null 時，類股與 10Y 維度整段留白，但它們的**日線收盤**在分析當下即可取得、不需期貨。2026-08-18 的兩大驅動（10Y 連三日≥4.70、SOXX 崩 4.96%）因此缺席三個交易日",
+   "修正": "fetch_today.py 納入 SOXX/SMH/QQQ/SPY/RSP/XLV 與 ^TNX 的日線收盤；期貨層（ES/NQ）仍歸 check_es.py",
+   "檔案": "scripts/fetch_today.py",
+   "狀態": "待實作",
+   "附帶效益": "可省下每日一趟額外 yfinance 往返"
+  },
+  "todo3_wilder_rsi_output": {
+   "來源": "原 rule36_candidate",
+   "問題": "腳本輸出 Cutler RSI（簡單14日均），大幅單日變動滑出窗口時會產生**與當日方向相反的假訊號**（2026-08-18：指數 -0.69% 而 Cutler RSI 由 70.77 升至 76.75）",
+   "修正": "fetch_today.py 同時輸出 wilder_rsi，並在兩者方向背離時於 txt 標記警示",
+   "檔案": "scripts/fetch_today.py",
+   "狀態": "待實作",
+   "現行替代": "rule14／rule5 已規定一律以 Wilder 判定，目前由分析當下手動複核"
+  },
+  "todo4_gap_fill_rule": {
+   "來源": "原 rule38_candidate",
+   "問題": "sim_rules 缺少 gap 成交定義。limit 單被跳空穿越時，現行慣例以掛單價成交，與真實世界的開盤價成交不符",
+   "修正": "limit 單於跳空穿越時以**開盤價**成交；若成交價已越過停損，記為當日開盤即出場",
+   "檔案": "docs/pnl_ledger.json → sim_rules",
+   "狀態": "待實作",
+   "現行做法": "一律採保守（對自己不利）的掛單價記法並加註，已於 8/18、8/19 兩次執行"
+  },
+  "todo5_threshold_in_script": {
+   "來源": "rule27／rule31 每日手算",
+   "問題": "兩道門檻（預期振幅×0.6、單邊移動均值）沒有任何腳本計算，每天必須手動額外抓一次日線資料才能算出",
+   "修正": "fetch_today.py 直接輸出 rule27_threshold_pct、rule31_up_pct、rule31_down_pct 與可執行區間",
+   "檔案": "scripts/fetch_today.py",
+   "狀態": "待實作",
+   "附帶效益": "可省下每日一趟額外 yfinance 往返"
+  }
+ }
+}

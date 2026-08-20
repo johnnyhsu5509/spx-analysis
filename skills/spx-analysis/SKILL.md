@@ -307,9 +307,15 @@ git add + commit + push（PowerShell 用分號串接，不能用 &&）
 - trade_date / close / change_pct / vix / pullback_prob / rating
 - predictions（short_bias、key_resistance、key_support、fib_targets、zhongshu、elliott、strategies、watch_points）
 - catalysts
-- **system_rules**（系統規則，回測學到的教訓累積於此，每次分析必須遵守並沿用）
+- **system_rules**（硬規則：每日必守，一行常則正文，**不得寫入當日數值快照**）
+- **rule_candidates**（候補：每日仍讀，單行命題 ＋ 結案條件，**不得無限期掛「觀察中」**）
+- **rule_status**（當日規則觸發狀態，與規則正文分離，每日重寫）
 - backtest_prev（本次回測結果摘要）
 - dashboard_url
+
+> 另有兩個**不進每日讀寫**的檔案，只在需要時開：
+> `docs\lessons.md`（案例敘事、演進史、證偽紀錄、已歸檔規則）、
+> `docs\rules_todo.json`（待實作的工程項目，不佔候補名額）。
 
 ---
 
@@ -360,6 +366,23 @@ git add + commit + push（PowerShell 用分號串接，不能用 &&）
 
 **權威來源＝`{repo}\docs\last_analysis.json` 的 `system_rules` 欄位**（每日沿用+進化），本節只列核心硬規則摘要，兩者不一致時以 JSON 為準。
 
+### 規則分層（2026-08-20 重構，對照表見 `docs\rules_migration_map.md`）
+
+規則膨脹的原因不是條數多，是把三種東西混在同一個欄位。分層後：
+
+| 層 | 位置 | 內容 | 每日讀寫 |
+|---|---|---|---|
+| **L1 硬規則** | `last_analysis.json` → `system_rules` | 一行常則正文，**嚴禁寫入當日數值快照** | ✅ |
+| **L2 候補** | `last_analysis.json` → `rule_candidates` | 單行命題 ＋ **結案條件**（n 樣本或到期日） | ✅ |
+| **當日狀態** | `last_analysis.json` → `rule_status` | 今天哪幾條觸發／不適用，每日重寫 | ✅（寫） |
+| **L3 教訓** | `docs\lessons.md` | 案例敘事、演進史、證偽紀錄、已歸檔規則 | ❌ |
+| **待實作** | `docs\rules_todo.json` | 工程項目（非待驗證假設），不佔候補名額 | ❌ |
+
+**三條維護紀律（違反即造成 2026-08-20 之前的膨脹）：**
+1. **規則正文不得混入當日數值**——「（現 VIX 14.89…）」這類快照隔天就過期卻被複製到永遠，一律寫進 `rule_status`
+2. **新增候補必須同時寫結案條件**——沒有「幾個樣本後判生死」的候補會永遠掛著（rule18／rule22 曾掛超過一個月、零樣本）
+3. **案例敘事寫 `lessons.md`，不寫規則正文**——規則是「該怎麼做」，案例是「為什麼」，後者不需要每天讀
+
 核心硬規則（2026-07-03 大掃除後版本）：
 1. MACD柱 <-15 且「利率/匯率/即時事件」因子評分 ≥70 → 評級不得高於中性，禁止突破做多（舊版引用已廢止的「地緣因子/20」，已改錨定六因子表）
 2. 脆弱停火/主動軍事威脅存在時 → 「利率/匯率/即時事件」因子評分下限 75
@@ -368,7 +391,11 @@ git add + commit + push（PowerShell 用分號串接，不能用 &&）
 5. rule12 破底空必須「收盤確認」，不看盤中插針
 6. rule15 類股與指數嚴重背離時（如半導體崩但 SPX 平），對重倉該類股者以類股訊號（SOXX/NQ）為準
 
-每次回測若發現新的系統性錯誤 → 新增規則寫入 last_analysis.json 的 system_rules，並同步更新本節。候補規則需經實戰驗證才轉正；被證偽的規則標記 RETIRED 歸檔，不佔用活動清單。
+每次回測若發現新的系統性錯誤 → 新增規則寫入 last_analysis.json 的 `rule_candidates`（**必附結案條件**），並同步更新本節。候補經實戰驗證後轉正至 `system_rules`；被證偽的規則連同證偽經過一起寫入 `docs\lessons.md` 歸檔，不佔用活動清單。
+
+> ⚠️ **本節摘要與 JSON 目前有兩處已知不一致**（2026-08-20 發現，未擅自處置，見 `lessons.md` 第五節）：
+> 摘要第 3 條寫「MACD柱**收窄**」而 JSON 寫「MACD柱正且**放大**」；摘要第 4 條多了「不掛限價單在支撐等接」而 JSON 無此禁令。
+> 依本節開頭規定，**執行時一律以 JSON 為準**；兩處分歧需另案決定。
 
 ---
 
