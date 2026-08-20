@@ -4,7 +4,7 @@
   "vol_index": "^VXN",
   "futures": "NQ=F",
   "scoring_rules": {
-    "actual": "次一交易日 NDX 收盤漲跌%：≥+0.4%=up、≤-0.4%=down、其間=flat",
+    "actual": "次一交易日 NDX 收盤漲跌%：>=+0.4%=up、<=-0.4%=down、其間=flat",
     "actual_note": "門檻用 ±0.4% 而非 SPX 的 ±0.3%：NDX 日波動為 SPX 的 1.25-1.37 倍，沿用 ±0.3% 會讓 flat 區間過窄、把雜訊判成方向。0.3% × 1.3 ≈ 0.4%",
     "bias_mapping": "偏多/中性偏多→預期up；偏空/中性偏空→預期down；中性→預期flat",
     "grade": "方向對=hit(1分)、方向錯=miss(0分)、其餘(偏向遇flat或中性遇方向)=half(0.5分)",
@@ -13,7 +13,7 @@
   "brier_rules": {
     "purpose": "追蹤 NDX 拉回機率的『機率報得準不準』，不只方向對錯",
     "formula": "brier = (p - outcome)²，p = pullback_prob/100，outcome：down=1、up=0、flat排除不計",
-    "pullback_def": "NDX 拉回定義為 5日內盤中低點 ≤ 訊號日收盤 -1.00%（SPX 為 -0.75%）。門檻放寬是因 NDX 日波動較大，沿用 -0.75% 會讓兩套機率不可比",
+    "pullback_def": "NDX 拉回定義為 5日內盤中低點 <= 訊號日收盤 -1.00%（SPX 為 -0.75%）。門檻放寬是因 NDX 日波動較大，沿用 -0.75% 會讓兩套機率不可比",
     "caveat": "pullback_prob 名義上是 5D 拉回機率，但此處按每日迴圈的實際用法對『次日方向』計分；flat日排除會縮小樣本，解讀時注意",
     "benchmark": "永遠報50%的無腦基準=0.25。低於0.25才代表機率有資訊量；越低越好",
     "discrimination_note": "同時觀察報價分布：若機率永遠在窄帶，即使brier達標也視為鑑別度不足",
@@ -39,6 +39,18 @@
       "basis_date": "2026-08-18",
       "pullback_prob": 63,
       "bias": "偏空",
+      "actual_date": "2026-08-19",
+      "actual_pct": -0.22,
+      "actual_dir": "flat",
+      "grade": "half",
+      "note": "方向對但力道嚴重不足：預測偏空 63%，實際僅 -0.22%（-64.94 點），未達 -0.4% 門檻 → flat，依 scoring_rules 記 half(0.5分)、Brier 排除不計。最高權重情景 C（收盤跌破 0.618 fib 29,392，45%）未觸發——盤中低點 29,288.75 破了 103.5 點，但收盤 29,426.02 站回，rule12 收盤確認救了這張單。實際落在情景 B（區間 29,392–29,872，35%）。結構預測全中：跳空缺口下沿 29,595 為壓力（高點 29,652 進入 57 點即被打回）、SOXX 續跌（-2.21%）、^NDX 量能續失真（15.0%）皆命中。最大偏差為過度外推 8/18 的帶量下跌——QQQ 量能由 123.2% 腰斬至 87.4%，賣壓一日即衰竭，此變數在昨日已列為觀察點但未給足權重。"
+    },
+    {
+      "report_date": "2026-08-20",
+      "basis_close": 29426.02,
+      "basis_date": "2026-08-19",
+      "pullback_prob": 56,
+      "bias": "中性偏空",
       "actual_date": null,
       "actual_pct": null,
       "actual_dir": null,
@@ -46,30 +58,36 @@
     }
   ],
   "summary": {
-    "as_of": "2026-08-19",
-    "graded": 1,
+    "as_of": "2026-08-20",
+    "graded": 2,
     "hits": 1,
-    "half": 0,
+    "half": 1,
     "miss": 0,
-    "rolling_direction_score_pct": 100.0,
+    "rolling_direction_score_pct": 75.0,
     "gap_days": [],
-    "sample_caveat": "n=1，統計上無意義。100% 只代表『首筆命中』，不代表系統勝率。至少累積 20 筆才可談滾動勝率。",
+    "sample_caveat": "n=2，統計上完全無意義。75% 只代表『一次全中、一次方向對但力道不足』。至少累積 20 筆才可談滾動勝率。",
     "brier": {
-      "as_of": "2026-08-19",
+      "as_of": "2026-08-20",
       "included": 1,
-      "excluded_flat": 0,
+      "excluded_flat": 1,
       "per_entry": [
         {
           "report_date": "2026-08-18",
           "p": 0.6,
           "outcome": 1,
           "brier": 0.16
+        },
+        {
+          "report_date": "2026-08-19",
+          "p": 0.63,
+          "outcome": "flat_excluded",
+          "brier": null
         }
       ],
       "mean_brier": 0.16,
       "benchmark_50pct": 0.25,
-      "prob_range_observed": "60-63（n=2，範圍過窄無法評估鑑別度）",
-      "honest_read": "首筆 brier 0.16 優於基準 0.25，但 n=1 不具統計意義。須留意鑑別度風險：目前兩筆報價 60、63 都落在中高區窄帶內，若長期只在 55-65 游走，即使 brier 達標也視為鑑別度不足。本次 63% 的依據為帶量下跌（QQQ 量能 123.2%）＋SOXX -4.96% 引擎崩跌＋KD 死叉成立＋中樞下離＋跳空缺口未回補，屬證據疊加而非折中。"
+      "prob_range_observed": "56-63（n=3，範圍 7pp 仍過窄，無法評估鑑別度）",
+      "honest_read": "Brier 仍只有 1 筆有效樣本（8/19 因 flat 排除），mean 0.16 不具統計意義。【鑑別度警訊已第二次浮現】：三次報價 60、63、56 全落在 56-63 的窄帶，正是 scoring 規則明文警告的『用 55-62 假裝有觀點』區間。\n\n本次 56% 的辯護：這是情景權重（C 33% + B 45%×0.5）的機械推導結果（rule16），不是折中。今日證據本身就是對立的——空方（SOXX 續跌 -2.21%、缺口未回補、KD 死叉擴大、lower high+lower low、宏觀順風下仍收黑）對上多方（QQQ 量能腰斬至 87.4%、0.618 fib 連兩日收盤守住、長下影 137.3 點、10Y -5.3bps、DXY -0.81%、QQQE +0.28%）。誠實的結論就是接近中性。\n\n【自我約束】若未來三次報價仍落在 50-65，須主動檢討是否為系統性的『不敢報極端值』偏誤，而非市場真的連續中性。"
     }
   }
 }
