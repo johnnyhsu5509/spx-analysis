@@ -199,9 +199,10 @@ footer{margin-top:38px;padding-top:16px;border-top:1px solid var(--line);color:v
 <strong>^NDX 成交量 11.72 億 = 20 日均量的 13.8% → 失真，禁止引用。</strong>改用 QQQ 代理：33,271,359 / 40,457,015 = <strong>82.2%（續縮）</strong>。^GSPC 同日 52.9%。
 </div>
 <div class="alert cyan">
-<strong>【rule36 新增校準】代理值有系統性偏差。</strong>8/19 的 QQQ 代理當日給 87.4%，而該日指數量 T+1 結算為 81.7 億 ≈ 均量的 <strong>96%</strong>——代理<strong>低估約 9pp</strong>。故引用代理時應給<strong>定性判斷</strong>（偏輕／正常／放量），不得給精確百分比並據此做門檻判定。
+<strong>【rule36 校準・已修訂】</strong>初稿曾寫「QQQ 代理低估約 9pp、屬結算落差」——<strong>該歸因是誤判，已撤回</strong>。750 日實測（n=729）顯示 QQQ 相對量中位數 <strong>0.941</strong> vs ^NDX <strong>0.982</strong>，差約 4pp，是<strong>標的分布差異</strong>而非結算落差，且已由新核准的 rule43 百分位定義完全抵銷。<br>
+結論：代理值可正常引用，但<strong>門檻必須換成該序列自身的分布</strong>。
 </div>
-<p style="font-size:13.5px"><strong>三日趨勢：123.2%（跳空放量）→ 87.4% → 82.2%。</strong>今日是<strong class="cy">縮量破位</strong>——這是情景 C 最大的減項：無量的破位跟隨性通常不足。同時，這也讓「突破做多」的必要條件「帶量 &gt;1.1 倍」<strong>連續第三日不成立</strong>。</p>
+<p style="font-size:13.5px"><strong>三日趨勢：123.2%（跳空放量）→ 87.4% → 82.2%。</strong>今日是<strong class="cy">縮量破位</strong>——這是情景 C 最大的減項：無量的破位跟隨性通常不足。同時，這也讓「突破做多」的必要條件「帶量」<strong>連續第三日不成立</strong>：依 <code>rule43</code>，QQQ 相對量 0.822 低於 QQQ 自身 750 日分布的 P75 門檻 <strong>1.155</strong>。</p>
 </div>
 
 <h3>2 ｜ 均線系統</h3>
@@ -451,14 +452,42 @@ footer{margin-top:38px;padding-top:16px;border-top:1px solid var(--line);color:v
 </div>
 
 <div class="alert red">
-<strong>多單裁決：今日無合格多單，觀望。</strong>唯一在 rule27 距離內的位置為 buy_stop 29,392（站回 0.618 fib，距 +0.61% &lt; 門檻 0.709%），但突破做多三必要條件中<strong>「帶量（相對量 &gt;1.1 倍）」不成立</strong>——QQQ 僅 82.2%，三缺一即否決。
+<strong>多單裁決：今日無合格多單，觀望。</strong>唯一在 rule27 距離內的位置為 buy_stop 29,392（站回 0.618 fib，距 +0.61% &lt; 門檻 0.709%），但突破做多三必要條件中<strong>「帶量」不成立</strong>——依新核准的 <code>rule43</code>，QQQ 相對量 <strong>0.822</strong> 低於 QQQ 自身 750 日分布的 P75 門檻 <strong>1.155</strong>，三缺一即否決。<br>
+<span style="color:var(--dim)">註：舊的固定 1.1 倍門檻同樣否決，結論不因規則修訂而改變——可確認本次修訂並非為了讓今日多單過關。</span>
 </div>
 
-<div class="alert pu">
-<strong>【須提請 Johnny 裁決 —— 我不自行修改規則】</strong><br>
-這是<strong>連續第三日</strong>多單被同一條「帶量」規則擋下（8/19 QQQ 87.4%、8/20 82.2%）。<br><br>
-問題的根源：<code>^NDX</code> 指數量能因 rule36 <strong>長期失真</strong>，量能維度只能靠 QQQ 代理；而 QQQ 若長期停在 80–90% 區間，「突破做多」將<strong>結構性永遠不可執行</strong>。<br><br>
-這是<strong>規則設計與資料現實的衝突</strong>，不是單日的市場判斷問題。可能的修正方向是把「帶量」改用 QQQ 相對自身 20 日均的<strong>百分位</strong>判定，而非固定 1.1 倍門檻——但這屬政策變更，須由你決定，我不會自行套用。
+<h2>規則修訂：rule43（已核准並套用）</h2>
+<div class="alert red">
+<strong>【先更正我自己】原提案的前提是錯的。</strong><br>
+我原本主張「QQQ 長期停在 80–90%，突破做多結構性永遠不可執行」，據此提請裁決。<br>
+<strong>750 日實測（n=729）推翻了這個前提</strong>：QQQ 有 <strong>30.9%</strong> 的交易日相對量 ≥ 1.1（近 250 日 30.8%、近 120 日 25.8%），完全不是不可達成。<br>
+連續三日多單被擋，純粹是<strong>當前市況量能確實清淡</strong>（近 15 日 QQQ 多在 0.58–0.90），規則本身運作正常。<strong>我不該用一個沒查證的前提去提規則變更。</strong>
+</div>
+
+<div class="alert green">
+<strong>【但查證過程確實找到一個真的缺陷 —— 這才是 rule43 修的東西】</strong><br>
+同一個「1.1 倍」，在不同標的上的<strong>嚴格度完全不同</strong>：
+<div class="scroll">
+<table style="margin:8px 0">
+<tr><th>序列</th><th class="num">相對量中位數</th><th class="num">1.1 倍所在百分位</th><th class="num">通過率</th><th class="num">P75 門檻</th></tr>
+<tr><td><strong>^NDX</strong>（名義上的標的）</td><td class="num">0.982</td><td class="num">P78</td><td class="num">22.1%</td><td class="num">1.087</td></tr>
+<tr><td><strong>QQQ</strong>（rule36 強制的代理）</td><td class="num">0.941</td><td class="num">P69</td><td class="num">30.9%</td><td class="num"><strong>1.155</strong></td></tr>
+</table>
+</div>
+也就是說：<strong>rule36 一旦強制換成 QQQ 代理，「帶量」的門檻就悄悄放寬了約 9 個百分點</strong>——而且是往鬆的方向。這正是 rule33 口徑一致性要防的事。
+</div>
+
+<div class="card">
+<h3 style="margin-top:0">rule43【硬・NDX 新增 2026-08-21・已核准】</h3>
+<p style="font-size:13.5px"><strong>「帶量」＝ 當日相對量（量 ÷ 前 20 日均量）≥ 該序列自身 750 交易日分布的 <strong>P75</strong>，禁用固定倍數。</strong></p>
+<ul>
+<li>依 rule36 用 <strong>QQQ 代理時，門檻 = 1.155</strong></li>
+<li><code>^NDX</code> 量能未失真時，門檻 = <strong>1.087</strong></li>
+<li>兩者通過率皆為 25.1%——<strong>無論用哪一支序列，「帶量」永遠等於「該標的前四分之一的量」</strong></li>
+<li>每季重跑 <code>python3 scripts/calib_volume.py</code> 更新 <code>vol_threshold.json</code></li>
+</ul>
+<p style="font-size:13.5px">附帶更正：昨日寫的「QQQ 代理低估約 9pp、屬結算落差」也是誤判。實際是 <strong>4pp 的標的分布差異</strong>，且百分位定義已完全抵銷它。</p>
+<p style="font-size:12.5px;color:var(--dim)">影響範圍：僅影響未來的策略產生，<strong>不回溯重判任何已記錄的交易</strong>（8/18–8/20 三日皆未提出多單，帳本無變動）。SPX 系統存在同樣的口徑問題（^GSPC 1.1＝P80、SPY 1.1＝P71），但<strong>不在本次授權範圍，未更動</strong>。</p>
 </div>
 
 <!-- ============ 觀察點 ============ -->
@@ -511,7 +540,7 @@ footer{margin-top:38px;padding-top:16px;border-top:1px solid var(--line);color:v
 <li><strong class="nt">rule27【觀察】</strong>8/20 深跌空 29,049 被否決，實際低點僅差 69.07 點（0.24%）擦身。若擦身案例累積增多，代表 0.6 係數可能偏保守，須長期追蹤命中與擦身比例。</li>
 <li><strong class="hit">rule39【驗證有效】</strong>修訂後的「實查掉出棒＋附 5 日投影」作法，昨日投影與實際方向量級皆符。</li>
 <li><strong class="hit">rule12【再次驗證】</strong>8/19 擋下假訊號、8/20 確認真破位，兩個方向都正確運作。</li>
-<li><strong class="pu">突破做多「帶量」條件【提請裁決・未自行修改】</strong>連續三日擋下多單，屬規則與資料現實的衝突，須由 Johnny 決定是否改判定基準。</li>
+<li><strong class="cy">rule43【新增・已核准】</strong>「帶量」改用該序列自身 750 日 <strong>P75</strong> 門檻（QQQ 1.155 / ^NDX 1.087），禁用固定倍數。理由是口徑一致性——固定 1.1 在 ^NDX 是 P78、在 QQQ 只有 P69，換代理等於放寬 9pp。<strong>原提案理由（「結構性不可執行」）經實測推翻並撤回</strong>。</li>
 </ul>
 </div>
 
@@ -536,7 +565,7 @@ SPX 對照：拉回機率 55%（同數字）｜【同向但動能相反：SPX �
 策略摘要：
 持倉　：續跌空 @29,213.16｜停損 29,662｜目標① 29,049｜目標② 28,969（實際 RR 0.37）
 回抽空：進場 29,378（限價）｜停損 29,633｜目標① 29,087｜目標② 28,969
-做多　：無合格進場位（帶量條件連三日不成立），觀望
+做多　：無合格進場位（rule43 帶量門檻 1.155，QQQ 僅 0.822），觀望
 
 📌 回測參照（下次勿刪）：
 拉回機率 55%｜支撐帶 28,969–29,087｜阻力 29,378 / 29,392｜MACD 柱 23.00 死叉迫近

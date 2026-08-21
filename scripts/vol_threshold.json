@@ -1,0 +1,32 @@
+{
+  "pctl": 75,
+  "lookback": "750d",
+  "QQQ": {
+    "n": 729,
+    "median": 0.941,
+    "threshold": 1.155,
+    "pctl_of_1_1": 69.1,
+    "pass_rate_pct": 25.1
+  },
+  "NDX": {
+    "n": 729,
+    "median": 0.982,
+    "threshold": 1.087,
+    "pctl_of_1_1": 77.9,
+    "pass_rate_pct": 25.1
+  },
+  "SPY": {
+    "n": 729,
+    "median": 0.944,
+    "threshold": 1.138,
+    "pctl_of_1_1": 71.1,
+    "pass_rate_pct": 25.1
+  },
+  "SPX": {
+    "n": 729,
+    "median": 0.986,
+    "threshold": 1.073,
+    "pctl_of_1_1": 80.1,
+    "pass_rate_pct": 25.1
+  }
+}
