@@ -1,6 +1,6 @@
 {
  "purpose": "由候補清單分離出來的『待實作』項目。它們不是待驗證的假設，是卡在沒人動手的工程項目，故不佔 rule_candidates 名額、也不進每日讀寫。完成後在此標記並刪除。",
- "as_of": "2026-08-20",
+ "as_of": "2026-08-22",
  "items": {
   "todo1_close_confirm_carry": {
    "來源": "原 rule33_candidate",
@@ -41,6 +41,14 @@
    "檔案": "scripts/fetch_today.py",
    "狀態": "待實作",
    "附帶效益": "可省下每日一趟額外 yfinance 往返"
+  },
+  "todo6_weekend_session_label": {
+   "來源": "2026-08-22 實測",
+   "問題": "check_es.py 的 session 標籤不辨識週末。2026-08-22(週六)08:17 執行時仍標 ASIA_THIN,但 CME 於週五收盤至週日 18:00 ET 為休市,讀到的是週五結算值而非即時報價。誤把休市值當亞洲薄盤讀數,會高估其時效性",
+   "修正": "check_es.py 依 UTC 時間判定 CME 休市窗口,標籤加入 WEEKEND_CLOSED,並在 note 標明『此為前一交易日結算值,非即時』",
+   "檔案": "scripts/check_es.py",
+   "狀態": "待實作",
+   "現行做法": "分析當下人工判斷並在 macro_layer 標註"
   }
  }
 }
