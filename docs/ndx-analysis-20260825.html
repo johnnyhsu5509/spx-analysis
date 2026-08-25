@@ -240,22 +240,28 @@ NDX 若僅跟隨 beta 應跌 −0.52%，實際<strong>超跌 0.45pp</strong>。
 
 <h2>第三區 · 明日策略</h2>
 
-<div class="box warn">
-<span class="tag a">留倉</span><strong>破位空 @29,023.18（權重 10%）</strong>——
-明日判定：High ≥ 29,410 停損／Low ≤ 28,969 T1／皆未觸及則收盤平倉。
-<strong>T1 僅距成交價 54 點（0.19%），極可能觸發並以約 +1.87bp 微利出場。</strong>
+<div class="box good">
+<span class="tag g">留倉・prc-003 已回溯套用</span><strong>破位空 @29,023.18（權重 10%）</strong>
+<div class="mono" style="margin-top:9px">           原固定目標        →   prc-003 浮動目標
+T1     28,969（距 54 點）   →   <span style="color:#34d399">28,740.84（距 282 點）</span>
+T2     28,546              →   <span style="color:#34d399">28,458.51（距 565 點）</span>
+停損   29,410              →   <span style="color:#34d399">29,305.52（距 282 點）</span>
+設計 RR  T1 0.14 / T2 1.23  →   <span style="color:#34d399">T1 1.00 / T2 2.00</span></div>
+<p style="margin:9px 0 0">明日判定：High ≥ 29,305.52 停損／Low ≤ 28,740.84 T1／皆未觸及則收盤平倉。
+<strong>不再是「微利出場的必然結局」。</strong></p>
 </div>
 
 <div class="tw"><table>
 <tr><th>策略</th><th>型態</th><th>進場</th><th>距現價</th><th>停損</th><th>目標①</th><th>目標②</th><th>RR(T2)</th><th>倉位</th></tr>
-<tr><td>★ 續跌空（主）</td><td>close_confirm</td><td class="dn">28,876</td><td>−0.51%</td><td>29,152</td><td>28,546</td><td>28,231</td><td>2.34</td><td class="dn">8%</td></tr>
+<tr><td>★ 續跌空（主）</td><td>close_confirm</td><td class="dn">28,876</td><td>−0.51%</td><td colspan="3" class="up">浮動：成交價 ∓0.8／1.6 ATR（prc-003）</td><td class="up">2.00</td><td class="dn">8%</td></tr>
 <tr><td>反彈空</td><td>limit_sell</td><td class="dn">29,195</td><td>+0.59%</td><td>29,430</td><td>28,876</td><td>28,546</td><td class="up">2.76</td><td class="nu">4%</td></tr>
 </table></div>
 
 <div class="box good">
-<span class="tag g">設計修正</span><strong>續跌空的 T1 刻意拉遠至 330 點（0.94 ATR）。</strong>
-前三次收盤確認單的 T1 都設在 0.5% 附近，結果一次失效、一次 RR 只剩 0.14。
-本次修正設計以降低跳空穿越風險——這是對 <code>known_limits ④</code> 的過渡處理。
+<span class="tag g">rule39</span><strong>續跌空改用 prc-003 浮動目標。</strong>
+成交後以 T1 = 成交價 − 0.8 ATR、T2 = 成交價 − 1.6 ATR、停損 = 成交價 + 0.8 ATR 判定
+（ATR14 1.216% ≈ 353 點 → 0.8 ATR ≈ 282 點）。<strong>風報比恆為 1.00／2.00，不受滑價影響</strong>，
+取代了原本「手動把 T1 拉遠」的過渡做法。反彈空為 limit_sell、成交價可控，維持固定目標。
 </div>
 <div class="box">
 <span class="tag">rule27 攔截</span><strong>兩張單被擋下</strong>：
@@ -268,8 +274,8 @@ RSI 36.94 未進超賣區，三均線全破趨勢向下。rule8 只能 buy_stop 
 上方 MA20 僅 43 點壓力而停損需 276 點 → <strong>RR 0.16</strong>。觀望。
 </div>
 
-<div class="box info">
-  <h4 class="vi">prc-003 提案（待核准）：收盤確認單改用浮動目標</h4>
+<div class="box good">
+  <h4 class="up">✅ prc-003 已核准實施（2026-08-25）：收盤確認單改用浮動目標</h4>
   <p><strong>問題</strong>：收盤確認單的成交價恆為收盤價，與訊號價距離不可控，固定價位目標被嚴重壓縮。</p>
   <div class="mono">三次樣本完整對照
 8/18  滑價 388 點  →  T1 被穿越，判 GAP_INVALIDATED
@@ -277,8 +283,12 @@ RSI 36.94 未進超賣區，三均線全破趨勢向下。rule8 只能 buy_stop 
 8/24  滑價  95 點  →  通過，但 T1 由 149 點縮到 54 點，RR 0.14（設計 1.96 的 1/14）</div>
   <p style="margin:11px 0 0"><strong>提案</strong>：T1 = 成交價 − 0.8 ATR、T2 = 成交價 − 1.6 ATR、停損 = 成交價 + 0.8 ATR
   → 風報比恆為 1.0／2.0，<strong>不受滑價影響</strong>。</p>
-  <p style="margin:9px 0 0">影響僅限此單型的目標計算，不改變 rule12 觸發條件、不改變 prc-002 檢查邏輯。
-  本日續跌空已先手動把 T1 拉遠作為過渡，但那不是規則化。<strong>需核准後才可實施。</strong></p>
+  <p style="margin:9px 0 0"><strong>已核准並實施</strong>，同時確立
+  <strong>rule40 政策變更的回溯原則</strong>：尚未評估的部位可回溯套用（不涉及事後諸葛），
+  已結算的只能前瞻套用。8/24 開倉的破位空因 8/25 OHLC 未出而完整回溯。</p>
+  <p style="margin:9px 0 0">副作用（預期內）：浮動 T1 恆距成交價 0.8 ATR，成交當下不可能已穿越
+  → prc-002 的 <code>GAP_INVALIDATED</code> 對此單型實質不再觸發。問題既已從源頭解決，
+  失效判定自然不再需要；統計欄位保留供監測其他型態的失效。</p>
 </div>
 
 <h3>關鍵價位</h3>
