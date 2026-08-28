@@ -1,501 +1,555 @@
 {
-  "purpose": "NDX 策略表 P&L 模擬帳本（2026-08-18 啟用）：與 SPX 的 pnl_ledger.json 完全分離。每天用隔日 NDX OHLC 機械判定策略表的成交/停損/停利，累積虛擬損益。命中率只看方向，這本帳看的是『如果真的照表執行，賺賠多少』。",
-  "index": "^NDX",
-  "sim_rules": {
-    "order_types": {
-      "limit_buy": "回踩接多：隔日 Low ≤ entry 即成交",
-      "buy_stop": "突破追多：隔日 High ≥ entry 即成交",
-      "sell_stop_close_confirm": "破底空(rule12收盤確認)：隔日『收盤』< entry 才成交、以收盤價進場，盤中插針不算。【2026-08-19 修訂・prc-001】成交後不套用同日平倉，改列 open_position 留倉至次一交易日。【2026-08-25 修訂・prc-003】目標與停損改用相對成交價的浮動值：T1 = 成交價 − 0.8 ATR、T2 = 成交價 − 1.6 ATR、停損 = 成交價 + 0.8 ATR（ATR 取訊號日的 ATR14）。策略表所列的固定 t1/t2/stop 僅供參考，實際判定一律用浮動值。",
-      "limit_sell": "反彈掛空：隔日 High ≥ entry 即成交"
-    },
-    "exit_priority": "成交後同日檢查：停損與目標若同日都在範圍內，保守假設『停損先到』；皆未觸及→以當日收盤平倉（1日模擬視野）。【例外・2026-08-19 核准】sell_stop_close_confirm 不適用同日平倉，一律留倉至次一交易日判定",
-    "pnl_calc": "pts=多:(出場-entry)/空:(entry-出場)；ret_pct=pts/entry；weighted_bp=ret_pct×策略倉位權重×10000",
-    "gap_invalidation": "【2026-08-19 核准・prc-002】成交後必先檢查跳空穿越：空單成交價 ≤ T1、或多單成交價 ≥ T1 → 標記 GAP_INVALIDATED，視為訊號過期【不進場、不計入損益】，另計入 trades_gap_invalidated 統計。理由：訊號觸發時價格已走完大半，剩餘風報比與設計值嚴重背離，真實交易中不會進場；若照樣計入會把『事後看對方向但實務上不可執行』的單算進績效，高估帳本可信度。",
-    "known_limits": "①僅按價格觸發，忽略策略附註的質化條件 ②持倉最長1日、收盤強制平倉，低估波段單潛力（sell_stop_close_confirm 已於 prc-001 修訂為例外）③不計滑價與成本 ④【2026-08-19 提出 → 2026-08-25 由 prc-003 解決】收盤確認單成交價不可控導致固定目標被壓縮，已改為浮動目標。",
-    "floating_targets": {
-      "applies_to": [
-        "sell_stop_close_confirm"
-      ],
-      "formula": "T1 = fill − 0.8×ATR；T2 = fill − 1.6×ATR；stop = fill + 0.8×ATR（空單；多單方向相反）",
-      "atr_source": "訊號日（策略表產出日）的 ATR14，以 %  乘以成交價換算為點數",
-      "rr_guarantee": "風報比恆為 T1 1.0 / T2 2.0，不受滑價影響",
-      "gap_check_note": "prc-002 的跳空穿越檢查改以浮動 T1 判定。因浮動 T1 恆距成交價 0.8 ATR，成交當下不可能已穿越 → 本質上消除了 GAP_INVALIDATED 的發生條件。跳空失效率統計仍保留，用於監測是否有其他型態的失效。",
-      "unaffected": "limit_sell / limit_buy / buy_stop 的成交價等於掛單價、可控，維持固定目標不變。"
-    }
+ "purpose": "NDX 策略表 P&L 模擬帳本（2026-08-18 啟用）：與 SPX 的 pnl_ledger.json 完全分離。每天用隔日 NDX OHLC 機械判定策略表的成交/停損/停利，累積虛擬損益。命中率只看方向，這本帳看的是『如果真的照表執行，賺賠多少』。",
+ "index": "^NDX",
+ "sim_rules": {
+  "order_types": {
+   "limit_buy": "回踩接多：隔日 Low ≤ entry 即成交",
+   "buy_stop": "突破追多：隔日 High ≥ entry 即成交",
+   "sell_stop_close_confirm": "破底空(rule12收盤確認)：隔日『收盤』< entry 才成交、以收盤價進場，盤中插針不算。【2026-08-19 修訂・prc-001】成交後不套用同日平倉，改列 open_position 留倉至次一交易日。【2026-08-25 修訂・prc-003】目標與停損改用相對成交價的浮動值：T1 = 成交價 − 0.8 ATR、T2 = 成交價 − 1.6 ATR、停損 = 成交價 + 0.8 ATR（ATR 取訊號日的 ATR14）。策略表所列的固定 t1/t2/stop 僅供參考，實際判定一律用浮動值。",
+   "limit_sell": "反彈掛空：隔日 High ≥ entry 即成交"
   },
-  "ndx_specific": {
-    "distance_cap_note": "rule27 的掛單距離上限不可沿用 SPX 數值。NDX 的 ATR14 與日波動約為 SPX 的 1.25-1.37 倍，掛單距離上限須以 NDX 自身的 ATR 計算，否則掛單會過近、被日常波動掃到。",
-    "stop_width_note": "停損寬度同理必須用 NDX 波動計算。這正是建立本系統的初衷：用 SPX 波動設停損會系統性過窄。",
-    "position_sizing_note": "同樣的『倉位%』在 NDX 上承擔的實際風險較 SPX 高約 1.3 倍。並列比較兩套策略表時，倉位數字不可直接對照。"
-  },
-  "approved_rule_changes": [
-    {
-      "id": "prc-001",
-      "raised_on": "2026-08-19",
-      "approved_on": "2026-08-19",
-      "status": "APPROVED — 已套用至 sim_rules，並回溯重判 2026-08-18 entry",
-      "issue": "sell_stop_close_confirm 的成交價定義為『當日收盤價』，而 exit_priority 又規定『未觸及停損/目標則以當日收盤平倉』。兩條規則相乘的結果是：此單型的進場價與出場價恆等於同一個收盤價，模擬損益數學上必然為 0，無論隔日行情多順。",
-      "fix_applied": "sell_stop_close_confirm 成交後不套用同日平倉，改列為 open_position 留倉至次一交易日，以次日 OHLC 判定停損/目標/收盤平倉。",
-      "retroactive_effect": "2026-08-18 的破位空由『同日平倉 pts=0』改判為 open_position，成本 29,490.96。後續再經 prc-002 改判為 GAP_INVALIDATED。"
-    },
-    {
-      "id": "prc-002",
-      "raised_on": "2026-08-19",
-      "approved_on": "2026-08-19",
-      "status": "APPROVED — 採方案A（嚴格），已套用至 sim_rules.gap_invalidation 並回溯重判",
-      "issue": "跳空穿越目標（gap-through invalidation）。收盤確認單的『訊號價』與『實際成交價』在跳空日可能相差極大，導致成交當下目標①就已經被穿越，剩餘風報比與策略表設計的完全不同。",
-      "evidence": "2026-08-18 破位空：訊號價 29,879，實際成交 29,490.96，滑價 388 點。原設計 T1 29,525 / T2 29,392 / 停損 30,196，風報比 1.54。以實際成交價重算：T1 已被穿越（成交價低於 T1 達 34 點），剩餘僅 T2 的 99 點，停損距離 705 點 → 實際風報比 0.14，與設計值差 11 倍。",
-      "fix_applied": "方案A（嚴格）：成交價已穿越 T1 → 標記 GAP_INVALIDATED，視為訊號過期不進場、不計入損益，另立 trades_gap_invalidated 統計。",
-      "rejected_alternative": "方案B（寬鬆，成交即視為 T1 達成、以 T1 結算後剩餘追 T2）已否決。理由：會高估策略的可執行性，等於對自己放水，違背本帳『誠實反映照表操作結果』的目的。",
-      "side_benefit": "方案A 額外產出可用指標：跳空失效率。若該率偏高，代表策略表的進場價與目標設計需調整，是可改進的訊號而非雜訊。",
-      "retroactive_effect": "2026-08-18 破位空由 open_position 改判為 GAP_INVALIDATED，移出持倉、不計損益。open_positions 歸零。"
-    },
-    {
-      "id": "prc-003",
-      "raised_on": "2026-08-25",
-      "approved_on": "2026-08-25",
-      "status": "APPROVED — 已套用至 sim_rules.floating_targets，並回溯套用至 8/24 留倉部位",
-      "issue": "收盤確認單（sell_stop_close_confirm）的成交價恆為收盤價，與訊號價的距離不可控，導致固定價位目標被嚴重壓縮。自 2026-08-19 列為 known_limits ④ 觀察，經三次樣本後定案。",
-      "evidence": "三次收盤確認單完整對照——8/18 滑價 388 點 → T1 被穿越判 GAP_INVALIDATED；8/20 滑價 179 點 → 留倉後虧損出場；8/24 滑價 95 點 → 通過但 T1 由設計的 149 點縮到 54.18 點，實際 RR 0.14（設計值 1.96 的 1/14）。滑價越小越可能通過，但無論哪一種，固定價位 T1 都被壓縮。三次樣本方向一致。",
-      "fix_applied": "T1 = 成交價 − 0.8 ATR、T2 = 成交價 − 1.6 ATR、停損 = 成交價 + 0.8 ATR。風報比恆為 1.0／2.0，不受滑價影響。",
-      "scope_limit": "僅改變 sell_stop_close_confirm 的目標計算方式。不改變 rule12 收盤確認的觸發條件；不改變 limit_sell/limit_buy/buy_stop 的固定目標；prc-002 的跳空檢查邏輯保留但改以浮動 T1 判定。",
-      "retroactive_effect": "回溯套用至 2026-08-24 開倉的破位空（fill 29,023.18，ATR14 1.216%＝352.92 點）：T1 由 28,969 改為 28740.84、T2 由 28,546 改為 28458.51、停損由 29,410 改為 29305.52。設計 RR 由 T1 0.14／T2 1.23 改為 T1 1.00／T2 2.00。",
-      "retroactive_justification": "此部位尚未評估（8/25 OHLC 未出），故回溯套用不涉及事後諸葛——不存在『已知結果後才改規則』的問題。若該部位已結算，則只應前瞻套用。此原則應適用於未來所有政策變更。",
-      "side_effect_note": "浮動 T1 恆距成交價 0.8 ATR，成交當下不可能已穿越，因此 prc-002 的 GAP_INVALIDATED 對此單型實質上不再會觸發。這是預期中的結果——該失效機制原本就是為了擋下『固定目標被滑價吃掉』的情況，問題既已從源頭解決，失效判定自然不再需要。統計欄位保留供監測。"
-    }
-  ],
-  "entries": [
-    {
-      "report_date": "2026-08-18",
-      "basis_close": 29995.38,
-      "eval_date": "2026-08-18",
-      "eval_ohlc": {
-        "open": 29594.89,
-        "high": 29677.29,
-        "low": 29425.08,
-        "close": 29490.96
-      },
-      "trades": [
-        {
-          "name": "破位空",
-          "order": "sell_stop_close_confirm",
-          "entry_signal": 29879,
-          "dir": "short",
-          "weight": 15,
-          "signal_triggered": true,
-          "filled": false,
-          "status": "GAP_INVALIDATED — 訊號觸發但因跳空穿越 T1 而失效，不進場、不計入損益（prc-002 方案A）",
-          "would_be_fill_price": 29490.96,
-          "fill_note": "收盤 29,490.96 < 29,879，rule12 收盤確認成立，訊號有效觸發。但成交價已穿越 T1，依 prc-002 判定為不可執行。",
-          "slippage_pts": 388.04,
-          "slippage_note": "訊號價 29,879 vs 假設成交 29,490.96，跳空造成 388 點滑價",
-          "gap_through_detail": {
-            "t1": 29525,
-            "breach_pts": 34.04,
-            "remaining_to_t2_pts": 98.96,
-            "stop_distance_pts": 705.04,
-            "rr_designed": 1.54,
-            "rr_actual": 0.14,
-            "rr_ratio": "設計值為實際值的 11 倍"
-          },
-          "direction_note": "方向判斷本身正確（NDX -1.68%），此筆失效不影響 ndx_track_record.json 的方向命中率。失效反映的是【進場價設計問題】，不是【方向判斷問題】——兩者須分開看待。",
-          "pts": null,
-          "ret_pct": null,
-          "weighted_bp": null
-        },
-        {
-          "name": "突破多",
-          "order": "buy_stop",
-          "entry_signal": 30196,
-          "dir": "long",
-          "weight": 5,
-          "filled": false,
-          "fill_note": "當日最高 29,677.29 < 30,196，未觸發。屬『正確未觸發』：方向判空，此單為對沖性小倉，未成交即為正確結果，不計入命中率。",
-          "pts": null,
-          "ret_pct": null,
-          "weighted_bp": 0.0
-        }
-      ],
-      "day_weighted_bp": 0.0,
-      "day_note": "破位空 GAP_INVALIDATED（不進場）、突破多正確未觸發 → 本日無任何成交，無已實現損益"
-    },
-    {
-      "report_date": "2026-08-19",
-      "basis_close": 29490.96,
-      "eval_date": "2026-08-19",
-      "eval_ohlc": {
-        "open": 29580.85,
-        "high": 29652.29,
-        "low": 29288.75,
-        "close": 29426.02
-      },
-      "trades": [
-        {
-          "name": "續跌空",
-          "order": "sell_stop_close_confirm",
-          "entry_signal": 29392,
-          "dir": "short",
-          "weight": 15,
-          "signal_triggered": false,
-          "filled": false,
-          "status": "NOT_TRIGGERED — rule12 收盤確認未成立",
-          "fill_note": "當日低點 29,288.75 已跌破 29,392 達 103.25 點，但收盤 29,426.02 > 29,392（高出 34.02 點），rule12『破底空必須收盤確認、不看盤中插針』的條件未滿足，訊號未觸發。",
-          "rule12_validation": "本筆為 rule12 的正面驗證案例：若採盤中觸發制，此單會在 29,392 成交，隨後價格反彈 137 點收在進場價之上，形成假突破虧損。收盤確認機制避免了這筆無效交易。",
-          "pts": null,
-          "ret_pct": null,
-          "weighted_bp": 0.0
-        },
-        {
-          "name": "缺口回補空",
-          "order": "limit_sell",
-          "entry_signal": 29716,
-          "dir": "short",
-          "weight": 5,
-          "signal_triggered": false,
-          "filled": false,
-          "status": "NOT_TRIGGERED — 高點未及掛單價",
-          "fill_note": "當日最高 29,652.29 < 29,716，差 63.71 點（0.21%）未成交。價格確實漲進跳空缺口下沿 29,594.89 之上 57.4 點後被打回，方向判斷正確但掛單價設高了 64 點。",
-          "design_note": "此單 entry 29,716 是昨日 rule27 可執行上緣（距現價 0.76%，門檻 0.762%）的極限值。壓在門檻上緣的單子成交率天然偏低——這是 rule27 的固有取捨，不是設計失誤，但值得長期追蹤『壓門檻上緣的掛單成交率』。",
-          "pts": null,
-          "ret_pct": null,
-          "weighted_bp": 0.0
-        }
-      ],
-      "day_weighted_bp": 0.0,
-      "day_note": "兩張單皆未觸發，本日無成交、無已實現損益。續跌空為 rule12 正面驗證（避開假跌破），缺口回補空為掛單價差 64 點錯過。另：昨日經 rule27 否決的兩張單（深跌空 29,028、反壓空 29,872）今日皆未被觸及（低 29,288.75 / 高 29,652.29），rule27 的距離門檻判斷正確。"
-    },
-    {
-      "report_date": "2026-08-20",
-      "basis_close": 29426.02,
-      "eval_date": "2026-08-20",
-      "eval_ohlc": {
-        "open": 29295.15,
-        "high": 29378.8,
-        "low": 29118.07,
-        "close": 29213.16
-      },
-      "trades": [
-        {
-          "name": "續跌空",
-          "order": "sell_stop_close_confirm",
-          "entry_signal": 29392,
-          "dir": "short",
-          "weight": 12,
-          "signal_triggered": true,
-          "filled": true,
-          "status": "FILLED → OPEN_POSITION（prc-001：收盤確認單留倉至次一交易日）",
-          "fill_price": 29213.16,
-          "fill_note": "收盤 29,213.16 < 29,392，rule12 收盤確認成立。同時跌破 MA50 29,308.88，結構破位確認。",
-          "slippage_pts": 178.84,
-          "gap_check": "通過。成交價 29,213.16 > T1 29,049（高出 164.16 點），未觸發 prc-002 跳空穿越失效條件。",
-          "rr_degradation": {
-            "designed": {
-              "entry": 29392,
-              "stop": 29662,
-              "t1": 29049,
-              "stop_pts": 270,
-              "t1_pts": 343,
-              "rr_t1": 1.27
-            },
-            "actual_from_fill": {
-              "entry": 29213.16,
-              "stop": 29662,
-              "t1": 29049,
-              "stop_pts": 448.84,
-              "t1_pts": 164.16,
-              "rr_t1": 0.37
-            },
-            "note": "【觀察・未提案】設計風報比 1.27，以實際成交價重算為 0.37，衰退 3.4 倍。原因與 prc-002 同源（收盤確認單成交價恆為收盤價、與訊號價距離不可控），但因未穿越 T1 而不符合 prc-002 的失效條件——屬『擦邊通過』。這是 known_limits ④ 的第二次實例。累積第三次前不提案修正，避免樣本不足就改規則。"
-          },
-          "pts": null,
-          "ret_pct": null,
-          "weighted_bp": null
-        },
-        {
-          "name": "缺口下沿空",
-          "order": "limit_sell",
-          "entry_signal": 29595,
-          "dir": "short",
-          "weight": 5,
-          "signal_triggered": false,
-          "filled": false,
-          "status": "NOT_TRIGGERED — 高點未及掛單價",
-          "fill_note": "當日最高 29,378.80 < 29,595，差 216.2 點未成交。價格未反彈進缺口，方向判斷正確（全日走低），此單屬『正確未觸發』。",
-          "pts": null,
-          "ret_pct": null,
-          "weighted_bp": 0.0
-        }
-      ],
-      "day_weighted_bp": 0.0,
-      "day_note": "續跌空首次成交（帳本第一筆有效成交），轉為 open_position 留倉至 8/21 判定，本日無已實現損益。缺口下沿空正確未觸發。rule27 否決的兩張單：反壓空 29,809 未及（高 29,378.80），深跌空 29,049 亦未及（低 29,118.07，差 69.07 點）——深跌空為驚險擦身，門檻判斷正確但幅度僅 0.24%。"
-    },
-    {
-      "report_date": "2026-08-21",
-      "basis_close": 29213.16,
-      "eval_date": "2026-08-21",
-      "eval_ohlc": {
-        "open": 29359.6,
-        "high": 29405.12,
-        "low": 29142.44,
-        "close": 29308.86
-      },
-      "trades": [
-        {
-          "name": "反彈空",
-          "order": "limit_sell",
-          "entry_signal": 29378,
-          "dir": "short",
-          "weight": 10,
-          "signal_triggered": true,
-          "filled": true,
-          "status": "FILLED → 同日收盤平倉",
-          "fill_price": 29378,
-          "fill_note": "當日最高 29,405.12 >= 掛單價 29,378，limit_sell 成交於 29,378。",
-          "gap_check": "通過。空單成交價 29,378 > T1 29,087（高出 291 點），未觸發 prc-002。",
-          "exit_price": 29308.86,
-          "exit_note": "停損 29,633 未觸及（高 29,405.12）、T1 29,087 未觸及（低 29,142.44）→ 依 exit_priority 以當日收盤 29,308.86 平倉。",
-          "pts": 69.14,
-          "ret_pct": 0.2353,
-          "weighted_bp": 2.35,
-          "design_note": "本帳首筆實際獲利單。掛單價 29,378 距前收 +0.56%，落在 rule27 門檻 0.762% 內但未壓上緣，成交後仍有 291 點的 T1 空間——與 8/19 那筆壓門檻上緣（差 64 點未成交）形成對照。"
-        }
-      ],
-      "closed_positions": [
-        {
-          "name": "續跌空",
-          "opened_on": "2026-08-20",
-          "order": "sell_stop_close_confirm",
-          "dir": "short",
-          "fill_price": 29213.16,
-          "weight": 12,
-          "weight_executed": 6,
-          "exit_price": 29308.86,
-          "exit_reason": "停損 29,662 未觸及（高 29,405.12）、T1 29,049 未觸及（低 29,142.44）→ 以 8/21 收盤平倉，prc-001 的留倉一日視野結束",
-          "pts": -95.7,
-          "ret_pct": -0.3276,
-          "weighted_bp": -1.97,
-          "note": "留倉一日後小幅虧損出場。8/21 收紅 +0.33%，空單逆風。停損與目標皆未觸及，屬『方向未再延續』而非『判斷錯誤』。"
-        }
-      ],
-      "day_weighted_bp": 0.39,
-      "day_note": "反彈空 +2.35bp、留倉續跌空平倉 -1.97bp → 當日淨 +0.39bp。本帳首次出現非零已實現損益，也是首筆獲利單。"
-    },
-    {
-      "report_date": "2026-08-24",
-      "basis_close": 29308.86,
-      "eval_date": "2026-08-24",
-      "eval_ohlc": {
-        "open": 29094.72,
-        "high": 29151.97,
-        "low": 28875.96,
-        "close": 29023.18
-      },
-      "trades": [
-        {
-          "name": "破位空",
-          "order": "sell_stop_close_confirm",
-          "entry_signal": 29118,
-          "dir": "short",
-          "weight": 10,
-          "signal_triggered": true,
-          "filled": true,
-          "status": "FILLED → OPEN_POSITION（prc-001 留倉至次一交易日）",
-          "fill_price": 29023.18,
-          "fill_note": "收盤 29,023.18 < 29,118，rule12 收盤確認成立。同時跌破 MA5/MA20/MA50 三條均線。",
-          "slippage_pts": 94.82,
-          "gap_check": "通過（驚險）。成交價 29,023.18 > T1 28,969 僅 54.18 點。盤中低點 28,875.96 曾穿越 T1 達 93.04 點，但收盤拉回——rule12 收盤確認與 prc-002 跳空檢查的組合在此起了決定性作用。",
-          "knife_edge_note": "8/24 23:17 睡前檢查時現價 28,975.54，距 T1 僅 6.54 點，判定懸於一線。最終收盤高出 54.18 點通過。若當時收在 28,969 之下，本單會被判 GAP_INVALIDATED。",
-          "rr_degradation": {
-            "designed": {
-              "entry": 29118,
-              "stop": 29410,
-              "t1": 28969,
-              "t2": 28546,
-              "stop_pts": 292,
-              "t1_pts": 149,
-              "t2_pts": 572,
-              "rr_t2": 1.96
-            },
-            "actual": {
-              "fill": 29023.18,
-              "stop_pts": 386.82,
-              "t1_pts": 54.18,
-              "t2_pts": 477.18,
-              "rr_t1": 0.14,
-              "rr_t2": 1.23
-            },
-            "note": "滑價 94.82 點使 T1 由 149 點縮到 54.18 點（RR 0.14），T2 風報比由 1.96 降至 1.23。T1 僅需明日再跌 0.19% 即達成——這正是 known_limits ④『固定價位目標配上不可控的成交價』的具體代價。"
-          },
-          "pts": null,
-          "ret_pct": null,
-          "weighted_bp": null
-        },
-        {
-          "name": "反彈空",
-          "order": "limit_sell",
-          "entry_signal": 29487,
-          "dir": "short",
-          "weight": 5,
-          "signal_triggered": false,
-          "filled": false,
-          "status": "NOT_TRIGGERED — 高點未及掛單價",
-          "fill_note": "當日最高 29,151.97 < 29,487，差 335 點（1.15%）未成交。屬『正確未觸發』：當日開低走低，反彈從未發生，掛單未成交即為正確結果。",
-          "pts": null,
-          "ret_pct": null,
-          "weighted_bp": 0.0
-        }
-      ],
-      "day_weighted_bp": 0.0,
-      "day_note": "破位空成交轉留倉（無已實現損益）、反彈空正確未觸發 → 當日 0bp。累積維持 +0.39bp。"
-    },
-    {
-      "report_date": "2026-08-25",
-      "basis_close": 29023.18,
-      "eval_date": "2026-08-25",
-      "eval_ohlc": {
-        "open": 29231.18,
-        "high": 29338.77,
-        "low": 29077.72,
-        "close": 29209.23
-      },
-      "closed_positions": [
-        {
-          "name": "破位空",
-          "opened_on": "2026-08-24",
-          "order": "sell_stop_close_confirm",
-          "dir": "short",
-          "fill_price": 29023.18,
-          "weight": 10,
-          "exit_price": 29305.52,
-          "exit_reason": "停損（prc-003 浮動停損 = 成交價 + 0.8 ATR）",
-          "exit_detail": "8/25 High 29,338.77 >= 停損 29,305.52，觸發出場。T1 28,740.84 未觸及（Low 29,077.72）。",
-          "pts": -282.34,
-          "ret_pct": -0.9728,
-          "weighted_bp": -9.73,
-          "counterfactual": {
-            "old_rule_stop": 29410,
-            "old_rule_t1": 28969,
-            "old_rule_outcome": "舊固定停損 29,410 未被觸及（High 29,338.77 差 71.23 點）；舊 T1 28,969 亦未觸及 → 會以收盤 29,209.23 平倉",
-            "old_rule_pts": -186.05,
-            "old_rule_bp": -6.41,
-            "delta_bp": -3.32,
-            "note": "【誠實記錄】prc-003 使本筆多虧 3.32bp。新規則把停損由 387 點收緊至 282 點（0.8 ATR），本日高點正好落在兩者之間 → 新規則被掃、舊規則沒被掃。"
-          },
-          "assessment": "單一樣本不足以判定 prc-003 對錯。收緊停損的本質是【降低單筆最大虧損、提高被掃機率】，這次落在對新規則不利的那一側。但舊規則的 RR 0.14（賺 54 點要冒 387 點風險）本身不可接受，不能因單日結果回頭肯定它。須累積至少 10 筆收盤確認單才可評估。"
-        }
-      ],
-      "trades": [
-        {
-          "name": "續跌空",
-          "order": "sell_stop_close_confirm",
-          "entry_signal": 28876,
-          "dir": "short",
-          "weight": 8,
-          "signal_triggered": false,
-          "filled": false,
-          "status": "NOT_TRIGGERED — 收盤未跌破",
-          "fill_note": "收盤 29,209.23 > 28,876，rule12 收盤確認未成立。當日低點 29,077.72 亦未觸及。屬正確未觸發。",
-          "pts": null,
-          "ret_pct": null,
-          "weighted_bp": 0.0
-        },
-        {
-          "name": "反彈空",
-          "order": "limit_sell",
-          "entry_signal": 29195,
-          "dir": "short",
-          "weight": 4,
-          "signal_triggered": true,
-          "filled": true,
-          "status": "FILLED → 同日收盤平倉",
-          "fill_price": 29195,
-          "fill_note": "當日最高 29,338.77 >= 29,195，成交於掛單價。",
-          "exit_price": 29209.23,
-          "exit_note": "停損 29,430 未觸及（高 29,338.77）、T1 28,876 未觸及（低 29,077.72）→ 收盤平倉。",
-          "pts": -14.23,
-          "ret_pct": -0.0487,
-          "weighted_bp": -0.19,
-          "design_note": "掛在 MA20／23.6% fib 匯合區，成交後價格續彈但未達停損，收盤幾乎回到掛單價 → 小虧。掛單位置判斷合理（當日高點僅超出 144 點），是方向錯而非設計錯。"
-        }
-      ],
-      "day_weighted_bp": -9.92,
-      "day_note": "留倉破位空觸發 prc-003 浮動停損 -9.73bp、反彈空小虧 -0.19bp、續跌空正確未觸發 → 當日 -9.92bp。累積由 +0.39 轉為 -9.53bp，首次為負。"
-    }
-  ],
-  "open_positions": [],
-  "summary": {
-    "as_of": "2026-08-26",
-    "days_evaluated": 6,
-    "trades_total": 11,
-    "signals_triggered": 5,
-    "trades_filled": 4,
-    "trades_gap_invalidated": 1,
-    "trades_not_triggered": 6,
-    "filled_win": 1,
-    "filled_loss": 3,
-    "filled_flat": 0,
-    "fill_rate_pct": 36.4,
-    "gap_invalidation_rate_pct": 20.0,
-    "cumulative_weighted_bp": -9.53,
-    "open_positions": 0,
-    "gap_days": [
-      "2026-08-18"
-    ],
-    "honest_read": "累積由 +0.39 轉為 -9.53bp，首次為負。成交 4 筆中 1 勝 3 敗。\n\n【prc-003 首次實測：讓虧損擴大 3.32bp】新浮動停損 29,305.52 被觸及，舊固定停損 29,410 則否——本日高點 29,338.77 正好落在兩者之間。這是必須記錄的反面樣本，不可掩蓋。\n\n【但不因此推翻 prc-003】收緊停損的本質是「降低單筆最大虧損、提高被掃機率」，本日落在不利的那一側。舊規則的 RR 0.14（賺 54 點要冒 387 點風險）本身不可接受，不能因單日結果回頭肯定它。判準應是【多筆樣本的期望值】而非單日。須累積至少 10 筆收盤確認單才可評估，屆時比較兩種規則的模擬總損益。\n\n【應同步追蹤的指標】自今日起記錄每筆收盤確認單的 counterfactual（舊規則下的損益），累積後可直接比較兩套規則的期望值差異，而非靠個案爭論。"
-  },
-  "trades_pending": {
-    "report_date": "2026-08-26",
-    "basis_close": 29209.23,
-    "eval_rule": "用 2026-08-26 美股 NDX OHLC 機械判定。收盤確認單套用 prc-003 浮動目標。",
-    "counterfactual_tracking": "自本日起，所有 sell_stop_close_confirm 成交後須同時記錄『舊固定目標規則下的損益』，供 10 筆後比較兩套規則期望值。",
-    "trades": [
-      {
-        "name": "反壓空",
-        "order": "limit_sell",
-        "entry": 29308,
-        "stop": 29520,
-        "t1": 29078,
-        "t2": 28876,
-        "weight": 6,
-        "dir": "short",
-        "condition_note": "MA50 29,307.90 掛空。三均線密集區 29,236–29,308（僅 72 點）的上沿。停損 29,520 為 212 點＝0.62 ATR，符合 rule34 下限。RR(T2) 2.04。"
-      },
-      {
-        "name": "破位空",
-        "order": "sell_stop_close_confirm",
-        "entry": 29078,
-        "weight": 6,
-        "dir": "short",
-        "t1_reference": 28805,
-        "t2_reference": 28532,
-        "stop_reference": 29351,
-        "target_spec": "prc-003 浮動目標：T1 = 成交價 − 0.8 ATR、T2 = 成交價 − 1.6 ATR、停損 = 成交價 + 0.8 ATR。ATR14 = 1.169%（8/25 基準）≈ 341 點 → 0.8 ATR ≈ 273 點、1.6 ATR ≈ 546 點。*_reference 為訊號價 29,078 下的參考值。",
-        "rr_designed": {
-          "t1": 1.0,
-          "t2": 2.0
-        },
-        "condition_note": "收盤確認跌破 8/25 低 29,078。"
-      }
-    ],
-    "rejected_by_rule27": [
-      {
-        "name": "深破位空（支撐區下沿）",
-        "entry": 28815,
-        "dist_pct": -1.35,
-        "threshold": 0.643,
-        "reason": "距現價 1.35% 遠超門檻，改列觀察點。"
-      }
-    ],
-    "rejected_by_condition": [
-      {
-        "name": "突破多",
-        "entry": 29339,
-        "stop": 29078,
-        "t1": 29536,
-        "t2": 29691,
-        "rr_t2": 1.35,
-        "reason": "突破做多必要條件『突破均線 + 帶量 + MACD柱收窄』缺一不可。突破位 ✓，但【帶量未達】QQQ 量能僅 60.5%（需 >110%）、【MACD 柱未收窄】反而由 -36.89 擴大至 -46.18。兩項不合格 → 不掛。"
-      }
-    ]
+  "exit_priority": "成交後同日檢查：停損與目標若同日都在範圍內，保守假設『停損先到』；皆未觸及→以當日收盤平倉（1日模擬視野）。【例外・2026-08-19 核准】sell_stop_close_confirm 不適用同日平倉，一律留倉至次一交易日判定",
+  "pnl_calc": "pts=多:(出場-entry)/空:(entry-出場)；ret_pct=pts/entry；weighted_bp=ret_pct×策略倉位權重×10000",
+  "gap_invalidation": "【2026-08-19 核准・prc-002】成交後必先檢查跳空穿越：空單成交價 ≤ T1、或多單成交價 ≥ T1 → 標記 GAP_INVALIDATED，視為訊號過期【不進場、不計入損益】，另計入 trades_gap_invalidated 統計。理由：訊號觸發時價格已走完大半，剩餘風報比與設計值嚴重背離，真實交易中不會進場；若照樣計入會把『事後看對方向但實務上不可執行』的單算進績效，高估帳本可信度。",
+  "known_limits": "①僅按價格觸發，忽略策略附註的質化條件 ②持倉最長1日、收盤強制平倉，低估波段單潛力（sell_stop_close_confirm 已於 prc-001 修訂為例外）③不計滑價與成本 ④【2026-08-19 提出 → 2026-08-25 由 prc-003 解決】收盤確認單成交價不可控導致固定目標被壓縮，已改為浮動目標。",
+  "floating_targets": {
+   "applies_to": [
+    "sell_stop_close_confirm"
+   ],
+   "formula": "T1 = fill − 0.8×ATR；T2 = fill − 1.6×ATR；stop = fill + 0.8×ATR（空單；多單方向相反）",
+   "atr_source": "訊號日（策略表產出日）的 ATR14，以 %  乘以成交價換算為點數",
+   "rr_guarantee": "風報比恆為 T1 1.0 / T2 2.0，不受滑價影響",
+   "gap_check_note": "prc-002 的跳空穿越檢查改以浮動 T1 判定。因浮動 T1 恆距成交價 0.8 ATR，成交當下不可能已穿越 → 本質上消除了 GAP_INVALIDATED 的發生條件。跳空失效率統計仍保留，用於監測是否有其他型態的失效。",
+   "unaffected": "limit_sell / limit_buy / buy_stop 的成交價等於掛單價、可控，維持固定目標不變。"
   }
+ },
+ "ndx_specific": {
+  "distance_cap_note": "rule27 的掛單距離上限不可沿用 SPX 數值。NDX 的 ATR14 與日波動約為 SPX 的 1.25-1.37 倍，掛單距離上限須以 NDX 自身的 ATR 計算，否則掛單會過近、被日常波動掃到。",
+  "stop_width_note": "停損寬度同理必須用 NDX 波動計算。這正是建立本系統的初衷：用 SPX 波動設停損會系統性過窄。",
+  "position_sizing_note": "同樣的『倉位%』在 NDX 上承擔的實際風險較 SPX 高約 1.3 倍。並列比較兩套策略表時，倉位數字不可直接對照。"
+ },
+ "approved_rule_changes": [
+  {
+   "id": "prc-001",
+   "raised_on": "2026-08-19",
+   "approved_on": "2026-08-19",
+   "status": "APPROVED — 已套用至 sim_rules，並回溯重判 2026-08-18 entry",
+   "issue": "sell_stop_close_confirm 的成交價定義為『當日收盤價』，而 exit_priority 又規定『未觸及停損/目標則以當日收盤平倉』。兩條規則相乘的結果是：此單型的進場價與出場價恆等於同一個收盤價，模擬損益數學上必然為 0，無論隔日行情多順。",
+   "fix_applied": "sell_stop_close_confirm 成交後不套用同日平倉，改列為 open_position 留倉至次一交易日，以次日 OHLC 判定停損/目標/收盤平倉。",
+   "retroactive_effect": "2026-08-18 的破位空由『同日平倉 pts=0』改判為 open_position，成本 29,490.96。後續再經 prc-002 改判為 GAP_INVALIDATED。"
+  },
+  {
+   "id": "prc-002",
+   "raised_on": "2026-08-19",
+   "approved_on": "2026-08-19",
+   "status": "APPROVED — 採方案A（嚴格），已套用至 sim_rules.gap_invalidation 並回溯重判",
+   "issue": "跳空穿越目標（gap-through invalidation）。收盤確認單的『訊號價』與『實際成交價』在跳空日可能相差極大，導致成交當下目標①就已經被穿越，剩餘風報比與策略表設計的完全不同。",
+   "evidence": "2026-08-18 破位空：訊號價 29,879，實際成交 29,490.96，滑價 388 點。原設計 T1 29,525 / T2 29,392 / 停損 30,196，風報比 1.54。以實際成交價重算：T1 已被穿越（成交價低於 T1 達 34 點），剩餘僅 T2 的 99 點，停損距離 705 點 → 實際風報比 0.14，與設計值差 11 倍。",
+   "fix_applied": "方案A（嚴格）：成交價已穿越 T1 → 標記 GAP_INVALIDATED，視為訊號過期不進場、不計入損益，另立 trades_gap_invalidated 統計。",
+   "rejected_alternative": "方案B（寬鬆，成交即視為 T1 達成、以 T1 結算後剩餘追 T2）已否決。理由：會高估策略的可執行性，等於對自己放水，違背本帳『誠實反映照表操作結果』的目的。",
+   "side_benefit": "方案A 額外產出可用指標：跳空失效率。若該率偏高，代表策略表的進場價與目標設計需調整，是可改進的訊號而非雜訊。",
+   "retroactive_effect": "2026-08-18 破位空由 open_position 改判為 GAP_INVALIDATED，移出持倉、不計損益。open_positions 歸零。"
+  },
+  {
+   "id": "prc-003",
+   "raised_on": "2026-08-25",
+   "approved_on": "2026-08-25",
+   "status": "APPROVED — 已套用至 sim_rules.floating_targets，並回溯套用至 8/24 留倉部位",
+   "issue": "收盤確認單（sell_stop_close_confirm）的成交價恆為收盤價，與訊號價的距離不可控，導致固定價位目標被嚴重壓縮。自 2026-08-19 列為 known_limits ④ 觀察，經三次樣本後定案。",
+   "evidence": "三次收盤確認單完整對照——8/18 滑價 388 點 → T1 被穿越判 GAP_INVALIDATED；8/20 滑價 179 點 → 留倉後虧損出場；8/24 滑價 95 點 → 通過但 T1 由設計的 149 點縮到 54.18 點，實際 RR 0.14（設計值 1.96 的 1/14）。滑價越小越可能通過，但無論哪一種，固定價位 T1 都被壓縮。三次樣本方向一致。",
+   "fix_applied": "T1 = 成交價 − 0.8 ATR、T2 = 成交價 − 1.6 ATR、停損 = 成交價 + 0.8 ATR。風報比恆為 1.0／2.0，不受滑價影響。",
+   "scope_limit": "僅改變 sell_stop_close_confirm 的目標計算方式。不改變 rule12 收盤確認的觸發條件；不改變 limit_sell/limit_buy/buy_stop 的固定目標；prc-002 的跳空檢查邏輯保留但改以浮動 T1 判定。",
+   "retroactive_effect": "回溯套用至 2026-08-24 開倉的破位空（fill 29,023.18，ATR14 1.216%＝352.92 點）：T1 由 28,969 改為 28740.84、T2 由 28,546 改為 28458.51、停損由 29,410 改為 29305.52。設計 RR 由 T1 0.14／T2 1.23 改為 T1 1.00／T2 2.00。",
+   "retroactive_justification": "此部位尚未評估（8/25 OHLC 未出），故回溯套用不涉及事後諸葛——不存在『已知結果後才改規則』的問題。若該部位已結算，則只應前瞻套用。此原則應適用於未來所有政策變更。",
+   "side_effect_note": "浮動 T1 恆距成交價 0.8 ATR，成交當下不可能已穿越，因此 prc-002 的 GAP_INVALIDATED 對此單型實質上不再會觸發。這是預期中的結果——該失效機制原本就是為了擋下『固定目標被滑價吃掉』的情況，問題既已從源頭解決，失效判定自然不再需要。統計欄位保留供監測。"
+  }
+ ],
+ "entries": [
+  {
+   "report_date": "2026-08-18",
+   "basis_close": 29995.38,
+   "eval_date": "2026-08-18",
+   "eval_ohlc": {
+    "open": 29594.89,
+    "high": 29677.29,
+    "low": 29425.08,
+    "close": 29490.96
+   },
+   "trades": [
+    {
+     "name": "破位空",
+     "order": "sell_stop_close_confirm",
+     "entry_signal": 29879,
+     "dir": "short",
+     "weight": 15,
+     "signal_triggered": true,
+     "filled": false,
+     "status": "GAP_INVALIDATED — 訊號觸發但因跳空穿越 T1 而失效，不進場、不計入損益（prc-002 方案A）",
+     "would_be_fill_price": 29490.96,
+     "fill_note": "收盤 29,490.96 < 29,879，rule12 收盤確認成立，訊號有效觸發。但成交價已穿越 T1，依 prc-002 判定為不可執行。",
+     "slippage_pts": 388.04,
+     "slippage_note": "訊號價 29,879 vs 假設成交 29,490.96，跳空造成 388 點滑價",
+     "gap_through_detail": {
+      "t1": 29525,
+      "breach_pts": 34.04,
+      "remaining_to_t2_pts": 98.96,
+      "stop_distance_pts": 705.04,
+      "rr_designed": 1.54,
+      "rr_actual": 0.14,
+      "rr_ratio": "設計值為實際值的 11 倍"
+     },
+     "direction_note": "方向判斷本身正確（NDX -1.68%），此筆失效不影響 ndx_track_record.json 的方向命中率。失效反映的是【進場價設計問題】，不是【方向判斷問題】——兩者須分開看待。",
+     "pts": null,
+     "ret_pct": null,
+     "weighted_bp": null
+    },
+    {
+     "name": "突破多",
+     "order": "buy_stop",
+     "entry_signal": 30196,
+     "dir": "long",
+     "weight": 5,
+     "filled": false,
+     "fill_note": "當日最高 29,677.29 < 30,196，未觸發。屬『正確未觸發』：方向判空，此單為對沖性小倉，未成交即為正確結果，不計入命中率。",
+     "pts": null,
+     "ret_pct": null,
+     "weighted_bp": 0.0
+    }
+   ],
+   "day_weighted_bp": 0.0,
+   "day_note": "破位空 GAP_INVALIDATED（不進場）、突破多正確未觸發 → 本日無任何成交，無已實現損益"
+  },
+  {
+   "report_date": "2026-08-19",
+   "basis_close": 29490.96,
+   "eval_date": "2026-08-19",
+   "eval_ohlc": {
+    "open": 29580.85,
+    "high": 29652.29,
+    "low": 29288.75,
+    "close": 29426.02
+   },
+   "trades": [
+    {
+     "name": "續跌空",
+     "order": "sell_stop_close_confirm",
+     "entry_signal": 29392,
+     "dir": "short",
+     "weight": 15,
+     "signal_triggered": false,
+     "filled": false,
+     "status": "NOT_TRIGGERED — rule12 收盤確認未成立",
+     "fill_note": "當日低點 29,288.75 已跌破 29,392 達 103.25 點，但收盤 29,426.02 > 29,392（高出 34.02 點），rule12『破底空必須收盤確認、不看盤中插針』的條件未滿足，訊號未觸發。",
+     "rule12_validation": "本筆為 rule12 的正面驗證案例：若採盤中觸發制，此單會在 29,392 成交，隨後價格反彈 137 點收在進場價之上，形成假突破虧損。收盤確認機制避免了這筆無效交易。",
+     "pts": null,
+     "ret_pct": null,
+     "weighted_bp": 0.0
+    },
+    {
+     "name": "缺口回補空",
+     "order": "limit_sell",
+     "entry_signal": 29716,
+     "dir": "short",
+     "weight": 5,
+     "signal_triggered": false,
+     "filled": false,
+     "status": "NOT_TRIGGERED — 高點未及掛單價",
+     "fill_note": "當日最高 29,652.29 < 29,716，差 63.71 點（0.21%）未成交。價格確實漲進跳空缺口下沿 29,594.89 之上 57.4 點後被打回，方向判斷正確但掛單價設高了 64 點。",
+     "design_note": "此單 entry 29,716 是昨日 rule27 可執行上緣（距現價 0.76%，門檻 0.762%）的極限值。壓在門檻上緣的單子成交率天然偏低——這是 rule27 的固有取捨，不是設計失誤，但值得長期追蹤『壓門檻上緣的掛單成交率』。",
+     "pts": null,
+     "ret_pct": null,
+     "weighted_bp": 0.0
+    }
+   ],
+   "day_weighted_bp": 0.0,
+   "day_note": "兩張單皆未觸發，本日無成交、無已實現損益。續跌空為 rule12 正面驗證（避開假跌破），缺口回補空為掛單價差 64 點錯過。另：昨日經 rule27 否決的兩張單（深跌空 29,028、反壓空 29,872）今日皆未被觸及（低 29,288.75 / 高 29,652.29），rule27 的距離門檻判斷正確。"
+  },
+  {
+   "report_date": "2026-08-20",
+   "basis_close": 29426.02,
+   "eval_date": "2026-08-20",
+   "eval_ohlc": {
+    "open": 29295.15,
+    "high": 29378.8,
+    "low": 29118.07,
+    "close": 29213.16
+   },
+   "trades": [
+    {
+     "name": "續跌空",
+     "order": "sell_stop_close_confirm",
+     "entry_signal": 29392,
+     "dir": "short",
+     "weight": 12,
+     "signal_triggered": true,
+     "filled": true,
+     "status": "FILLED → OPEN_POSITION（prc-001：收盤確認單留倉至次一交易日）",
+     "fill_price": 29213.16,
+     "fill_note": "收盤 29,213.16 < 29,392，rule12 收盤確認成立。同時跌破 MA50 29,308.88，結構破位確認。",
+     "slippage_pts": 178.84,
+     "gap_check": "通過。成交價 29,213.16 > T1 29,049（高出 164.16 點），未觸發 prc-002 跳空穿越失效條件。",
+     "rr_degradation": {
+      "designed": {
+       "entry": 29392,
+       "stop": 29662,
+       "t1": 29049,
+       "stop_pts": 270,
+       "t1_pts": 343,
+       "rr_t1": 1.27
+      },
+      "actual_from_fill": {
+       "entry": 29213.16,
+       "stop": 29662,
+       "t1": 29049,
+       "stop_pts": 448.84,
+       "t1_pts": 164.16,
+       "rr_t1": 0.37
+      },
+      "note": "【觀察・未提案】設計風報比 1.27，以實際成交價重算為 0.37，衰退 3.4 倍。原因與 prc-002 同源（收盤確認單成交價恆為收盤價、與訊號價距離不可控），但因未穿越 T1 而不符合 prc-002 的失效條件——屬『擦邊通過』。這是 known_limits ④ 的第二次實例。累積第三次前不提案修正，避免樣本不足就改規則。"
+     },
+     "pts": null,
+     "ret_pct": null,
+     "weighted_bp": null
+    },
+    {
+     "name": "缺口下沿空",
+     "order": "limit_sell",
+     "entry_signal": 29595,
+     "dir": "short",
+     "weight": 5,
+     "signal_triggered": false,
+     "filled": false,
+     "status": "NOT_TRIGGERED — 高點未及掛單價",
+     "fill_note": "當日最高 29,378.80 < 29,595，差 216.2 點未成交。價格未反彈進缺口，方向判斷正確（全日走低），此單屬『正確未觸發』。",
+     "pts": null,
+     "ret_pct": null,
+     "weighted_bp": 0.0
+    }
+   ],
+   "day_weighted_bp": 0.0,
+   "day_note": "續跌空首次成交（帳本第一筆有效成交），轉為 open_position 留倉至 8/21 判定，本日無已實現損益。缺口下沿空正確未觸發。rule27 否決的兩張單：反壓空 29,809 未及（高 29,378.80），深跌空 29,049 亦未及（低 29,118.07，差 69.07 點）——深跌空為驚險擦身，門檻判斷正確但幅度僅 0.24%。"
+  },
+  {
+   "report_date": "2026-08-21",
+   "basis_close": 29213.16,
+   "eval_date": "2026-08-21",
+   "eval_ohlc": {
+    "open": 29359.6,
+    "high": 29405.12,
+    "low": 29142.44,
+    "close": 29308.86
+   },
+   "trades": [
+    {
+     "name": "反彈空",
+     "order": "limit_sell",
+     "entry_signal": 29378,
+     "dir": "short",
+     "weight": 10,
+     "signal_triggered": true,
+     "filled": true,
+     "status": "FILLED → 同日收盤平倉",
+     "fill_price": 29378,
+     "fill_note": "當日最高 29,405.12 >= 掛單價 29,378，limit_sell 成交於 29,378。",
+     "gap_check": "通過。空單成交價 29,378 > T1 29,087（高出 291 點），未觸發 prc-002。",
+     "exit_price": 29308.86,
+     "exit_note": "停損 29,633 未觸及（高 29,405.12）、T1 29,087 未觸及（低 29,142.44）→ 依 exit_priority 以當日收盤 29,308.86 平倉。",
+     "pts": 69.14,
+     "ret_pct": 0.2353,
+     "weighted_bp": 2.35,
+     "design_note": "本帳首筆實際獲利單。掛單價 29,378 距前收 +0.56%，落在 rule27 門檻 0.762% 內但未壓上緣，成交後仍有 291 點的 T1 空間——與 8/19 那筆壓門檻上緣（差 64 點未成交）形成對照。"
+    }
+   ],
+   "closed_positions": [
+    {
+     "name": "續跌空",
+     "opened_on": "2026-08-20",
+     "order": "sell_stop_close_confirm",
+     "dir": "short",
+     "fill_price": 29213.16,
+     "weight": 12,
+     "weight_executed": 6,
+     "exit_price": 29308.86,
+     "exit_reason": "停損 29,662 未觸及（高 29,405.12）、T1 29,049 未觸及（低 29,142.44）→ 以 8/21 收盤平倉，prc-001 的留倉一日視野結束",
+     "pts": -95.7,
+     "ret_pct": -0.3276,
+     "weighted_bp": -1.97,
+     "note": "留倉一日後小幅虧損出場。8/21 收紅 +0.33%，空單逆風。停損與目標皆未觸及，屬『方向未再延續』而非『判斷錯誤』。"
+    }
+   ],
+   "day_weighted_bp": 0.39,
+   "day_note": "反彈空 +2.35bp、留倉續跌空平倉 -1.97bp → 當日淨 +0.39bp。本帳首次出現非零已實現損益，也是首筆獲利單。"
+  },
+  {
+   "report_date": "2026-08-24",
+   "basis_close": 29308.86,
+   "eval_date": "2026-08-24",
+   "eval_ohlc": {
+    "open": 29094.72,
+    "high": 29151.97,
+    "low": 28875.96,
+    "close": 29023.18
+   },
+   "trades": [
+    {
+     "name": "破位空",
+     "order": "sell_stop_close_confirm",
+     "entry_signal": 29118,
+     "dir": "short",
+     "weight": 10,
+     "signal_triggered": true,
+     "filled": true,
+     "status": "FILLED → OPEN_POSITION（prc-001 留倉至次一交易日）",
+     "fill_price": 29023.18,
+     "fill_note": "收盤 29,023.18 < 29,118，rule12 收盤確認成立。同時跌破 MA5/MA20/MA50 三條均線。",
+     "slippage_pts": 94.82,
+     "gap_check": "通過（驚險）。成交價 29,023.18 > T1 28,969 僅 54.18 點。盤中低點 28,875.96 曾穿越 T1 達 93.04 點，但收盤拉回——rule12 收盤確認與 prc-002 跳空檢查的組合在此起了決定性作用。",
+     "knife_edge_note": "8/24 23:17 睡前檢查時現價 28,975.54，距 T1 僅 6.54 點，判定懸於一線。最終收盤高出 54.18 點通過。若當時收在 28,969 之下，本單會被判 GAP_INVALIDATED。",
+     "rr_degradation": {
+      "designed": {
+       "entry": 29118,
+       "stop": 29410,
+       "t1": 28969,
+       "t2": 28546,
+       "stop_pts": 292,
+       "t1_pts": 149,
+       "t2_pts": 572,
+       "rr_t2": 1.96
+      },
+      "actual": {
+       "fill": 29023.18,
+       "stop_pts": 386.82,
+       "t1_pts": 54.18,
+       "t2_pts": 477.18,
+       "rr_t1": 0.14,
+       "rr_t2": 1.23
+      },
+      "note": "滑價 94.82 點使 T1 由 149 點縮到 54.18 點（RR 0.14），T2 風報比由 1.96 降至 1.23。T1 僅需明日再跌 0.19% 即達成——這正是 known_limits ④『固定價位目標配上不可控的成交價』的具體代價。"
+     },
+     "pts": null,
+     "ret_pct": null,
+     "weighted_bp": null
+    },
+    {
+     "name": "反彈空",
+     "order": "limit_sell",
+     "entry_signal": 29487,
+     "dir": "short",
+     "weight": 5,
+     "signal_triggered": false,
+     "filled": false,
+     "status": "NOT_TRIGGERED — 高點未及掛單價",
+     "fill_note": "當日最高 29,151.97 < 29,487，差 335 點（1.15%）未成交。屬『正確未觸發』：當日開低走低，反彈從未發生，掛單未成交即為正確結果。",
+     "pts": null,
+     "ret_pct": null,
+     "weighted_bp": 0.0
+    }
+   ],
+   "day_weighted_bp": 0.0,
+   "day_note": "破位空成交轉留倉（無已實現損益）、反彈空正確未觸發 → 當日 0bp。累積維持 +0.39bp。"
+  },
+  {
+   "report_date": "2026-08-25",
+   "basis_close": 29023.18,
+   "eval_date": "2026-08-25",
+   "eval_ohlc": {
+    "open": 29231.18,
+    "high": 29338.77,
+    "low": 29077.72,
+    "close": 29209.23
+   },
+   "closed_positions": [
+    {
+     "name": "破位空",
+     "opened_on": "2026-08-24",
+     "order": "sell_stop_close_confirm",
+     "dir": "short",
+     "fill_price": 29023.18,
+     "weight": 10,
+     "exit_price": 29305.52,
+     "exit_reason": "停損（prc-003 浮動停損 = 成交價 + 0.8 ATR）",
+     "exit_detail": "8/25 High 29,338.77 >= 停損 29,305.52，觸發出場。T1 28,740.84 未觸及（Low 29,077.72）。",
+     "pts": -282.34,
+     "ret_pct": -0.9728,
+     "weighted_bp": -9.73,
+     "counterfactual": {
+      "old_rule_stop": 29410,
+      "old_rule_t1": 28969,
+      "old_rule_outcome": "舊固定停損 29,410 未被觸及（High 29,338.77 差 71.23 點）；舊 T1 28,969 亦未觸及 → 會以收盤 29,209.23 平倉",
+      "old_rule_pts": -186.05,
+      "old_rule_bp": -6.41,
+      "delta_bp": -3.32,
+      "note": "【誠實記錄】prc-003 使本筆多虧 3.32bp。新規則把停損由 387 點收緊至 282 點（0.8 ATR），本日高點正好落在兩者之間 → 新規則被掃、舊規則沒被掃。"
+     },
+     "assessment": "單一樣本不足以判定 prc-003 對錯。收緊停損的本質是【降低單筆最大虧損、提高被掃機率】，這次落在對新規則不利的那一側。但舊規則的 RR 0.14（賺 54 點要冒 387 點風險）本身不可接受，不能因單日結果回頭肯定它。須累積至少 10 筆收盤確認單才可評估。"
+    }
+   ],
+   "trades": [
+    {
+     "name": "續跌空",
+     "order": "sell_stop_close_confirm",
+     "entry_signal": 28876,
+     "dir": "short",
+     "weight": 8,
+     "signal_triggered": false,
+     "filled": false,
+     "status": "NOT_TRIGGERED — 收盤未跌破",
+     "fill_note": "收盤 29,209.23 > 28,876，rule12 收盤確認未成立。當日低點 29,077.72 亦未觸及。屬正確未觸發。",
+     "pts": null,
+     "ret_pct": null,
+     "weighted_bp": 0.0
+    },
+    {
+     "name": "反彈空",
+     "order": "limit_sell",
+     "entry_signal": 29195,
+     "dir": "short",
+     "weight": 4,
+     "signal_triggered": true,
+     "filled": true,
+     "status": "FILLED → 同日收盤平倉",
+     "fill_price": 29195,
+     "fill_note": "當日最高 29,338.77 >= 29,195，成交於掛單價。",
+     "exit_price": 29209.23,
+     "exit_note": "停損 29,430 未觸及（高 29,338.77）、T1 28,876 未觸及（低 29,077.72）→ 收盤平倉。",
+     "pts": -14.23,
+     "ret_pct": -0.0487,
+     "weighted_bp": -0.19,
+     "design_note": "掛在 MA20／23.6% fib 匯合區，成交後價格續彈但未達停損，收盤幾乎回到掛單價 → 小虧。掛單位置判斷合理（當日高點僅超出 144 點），是方向錯而非設計錯。"
+    }
+   ],
+   "day_weighted_bp": -9.92,
+   "day_note": "留倉破位空觸發 prc-003 浮動停損 -9.73bp、反彈空小虧 -0.19bp、續跌空正確未觸發 → 當日 -9.92bp。累積由 +0.39 轉為 -9.53bp，首次為負。"
+  },
+  {
+   "report_date": "2026-08-26",
+   "basis_close": 29209.23,
+   "eval_date": "2026-08-26",
+   "eval_ohlc": {
+    "open": 29130.77,
+    "high": 29296.77,
+    "low": 29096.84,
+    "close": 29224.52
+   },
+   "trades": [
+    {
+     "name": "反壓空",
+     "order": "limit_sell",
+     "entry_signal": 29308,
+     "dir": "short",
+     "weight": 6,
+     "signal_triggered": false,
+     "filled": false,
+     "status": "NOT_TRIGGERED — 高點未及掛單價",
+     "fill_note": "當日最高 29,296.77 < 29,308，差 11.23 點（0.04%）未成交。屬「正確未觸發」，但差距極小、近乎擦邊。",
+     "near_miss_note": "【必須記錄的反面提醒】此單未成交是運氣而非設計優勢。若當日多漲 12 點成交，8/27 開 29,480.99、高 29,643.53 會直接貫穿停損 29,520，虧損 212 點 = 0.72% × 6% 權重 = -4.34bp。帳本因 11 點之差避開了這筆虧損，不可把 0bp 讀成判斷正確。",
+     "pts": null,
+     "ret_pct": null,
+     "weighted_bp": 0.0
+    },
+    {
+     "name": "破位空",
+     "order": "sell_stop_close_confirm",
+     "entry_signal": 29078,
+     "dir": "short",
+     "weight": 6,
+     "signal_triggered": false,
+     "filled": false,
+     "status": "NOT_TRIGGERED — 收盤未跌破",
+     "fill_note": "收盤 29,224.52 > 29,078，rule12 收盤確認未成立；當日低點 29,096.84 亦未觸及訊號價。屬正確未觸發。",
+     "pts": null,
+     "ret_pct": null,
+     "weighted_bp": 0.0
+    }
+   ],
+   "day_weighted_bp": 0.0,
+   "day_note": "兩筆皆正確未觸發 → 當日 0bp。累積維持 -9.53bp。反壓空差 11.23 點未成交，須記為「僥倖避開」而非「設計正確」（見 near_miss_note）。",
+   "prc003_note": "本日無收盤確認單成交，prc-003 counterfactual 樣本數維持 1 筆（8/25）。距離可評估的 10 筆仍遠。"
+  }
+ ],
+ "open_positions": [],
+ "summary": {
+  "as_of": "2026-08-28",
+  "days_evaluated": 7,
+  "trades_total": 13,
+  "signals_triggered": 5,
+  "trades_filled": 4,
+  "trades_gap_invalidated": 1,
+  "trades_not_triggered": 8,
+  "filled_win": 1,
+  "filled_loss": 3,
+  "filled_flat": 0,
+  "fill_rate_pct": 30.8,
+  "gap_invalidation_rate_pct": 20.0,
+  "cumulative_weighted_bp": -9.53,
+  "open_positions": 0,
+  "gap_days": [
+   "2026-08-18",
+   "2026-08-27"
+  ],
+  "honest_read": "累積維持 -9.53bp。8/26 兩筆皆正確未觸發、當日 0bp；8/27 為 gap day（未產報告、無單可判）。\n\n【本次最該記住的不是損益，是那 11.23 點】8/26 反壓空掛 29,308，當日高 29,296.77，差 11.23 點未成交。若成交，隔日 8/27 開盤 29,480.99 就已越過停損 29,520 之下、盤中高 29,643.53 必然掃損，該筆會是 -212 點 = -4.34bp。帳本沒有虧到這筆純粹是掛單價差 0.04% 的運氣。\n**「正確未觸發」的統計欄位天生會把這種僥倖記成好事**——這是本帳的已知盲點，從本日起在近乎擦邊（差距 < 0.1%）的未成交單上加註 near_miss_note，避免自我感覺良好。\n\n【prc-003 進度】counterfactual 樣本仍只有 8/25 一筆（-3.32bp）。距離承諾的 10 筆評估門檻還很遠，期間不得用單筆結果評價 prc-003 的優劣。\n\n【成交率下滑】fill_rate 由 36.4% 降至 30.8%（13 筆中成交 4 筆）。若持續下滑，代表 rule27 的距離門檻與實際掛單位置的搭配需要檢討——但目前 13 筆樣本仍不足以立案。"
+ },
+ "trades_pending": {
+  "report_date": "2026-08-28",
+  "basis_close": 29641.56,
+  "eval_rule": "用 2026-08-28 美股 NDX OHLC 機械判定。收盤確認單套用 prc-003 浮動目標（本日無此型單）。",
+  "counterfactual_tracking": "所有 sell_stop_close_confirm 成交後須同時記錄舊固定目標規則下的損益，供 10 筆後比較。",
+  "near_miss_tracking": "【2026-08-28 新增】未成交單若與掛單價差距 < 0.1%，須加註 near_miss_note 並試算「若成交」的損益，避免把僥倖記成正確。",
+  "trades": [
+   {
+    "name": "回踩多",
+    "order": "limit_buy",
+    "entry": 29481,
+    "stop": 29275,
+    "t1": 29691,
+    "t2": 29913,
+    "weight": 6,
+    "dir": "long",
+    "condition_note": "錨定 8/27 跳空開盤價 29,480.99（缺口上沿），回踩不破即為 gap-and-go 回測確認（rule8：錨定支撐位本身、站穩即進、禁掛深）。停損 29,275 取 MA5 29,281.47／MA50 29,274.99 密集帶下方，206 點＝0.63 ATR，符合 rule34。RR(T1) 1.02／RR(T2) 2.10。"
+   },
+   {
+    "name": "反壓空",
+    "order": "limit_sell",
+    "entry": 29691,
+    "stop": 29913,
+    "t1": 29446,
+    "t2": 29225,
+    "weight": 5,
+    "dir": "short",
+    "condition_note": "掛在 61.8% 費波回撤 29,691.57。停損 29,913 取 78.6% 回撤 29,913.29 之上，222 點＝0.68 ATR。T1 = MA20 29,446.05、T2 = 8/26 收盤 29,224.52（缺口下沿、完整回補位）。RR(T1) 1.10／RR(T2) 2.10。此為區間對做的空腳，與回踩多構成 29,481–29,691 的區間策略，符合 headline 43%（中性帶）的「區間策略為主」。"
+   }
+  ],
+  "rejected_by_rule27": [
+   {
+    "name": "破位空（收盤跌破 MA20）",
+    "entry": 29446,
+    "dist_pct": -0.66,
+    "threshold": 0.593,
+    "reason": "距現價 0.660% 超過門檻 0.593%，當日難以觸及 → 改列觀察點。"
+   },
+   {
+    "name": "深回踩多（今日低點）",
+    "entry": 29366,
+    "dist_pct": -0.93,
+    "threshold": 0.593,
+    "reason": "距現價 0.930% 遠超門檻 → 改列觀察點。"
+   }
+  ],
+  "rejected_by_condition": [
+   {
+    "name": "突破多（buy_stop）",
+    "entry": 29691,
+    "stop": 29446,
+    "t1": 29913,
+    "t2": 30196,
+    "reason": "突破做多必要條件缺一不可：【突破均線】✓（已站上 MA5／MA20／MA50／MA200 全部四條）、【MACD 柱收窄】✓（-49.67 → -23.58，兩日連續收斂）、【帶量】✗ —— QQQ 成交量 28,443,051 僅為 20 日均 35,971,120 的 79.1%，需 >110%。三缺一 → 不掛。\n\n注意：同一個價位 29,691 在本日同時是被否決的追多位與被採用的掛空位。這不是矛盾——沒有量能支撐時，61.8% 回撤的基準情境是受阻而非突破，故選擇 fade 而非 chase。若明日出現帶量突破，此單應改為追多。"
+   }
+  ]
+ },
+ "gap_note_2026_08_27": {
+  "date": "2026-08-27",
+  "status": "GAP DAY — 未產出報告，無 trades_pending 可判定",
+  "actual": "NDX 開 29,480.99 / 高 29,643.53 / 低 29,366.42 / 收 29,641.56（+1.43%）",
+  "note": "本交易日不計入 days_evaluated 與任何損益統計。記錄於此以免日後誤讀為「連續覆蓋」。"
+ }
 }
