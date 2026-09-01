@@ -3,6 +3,7 @@ import os as _os, sys as _sys
 _sys.path.insert(0, _os.path.dirname(_os.path.abspath(__file__)))
 import yf_compat
 import guard
+import gap_fix
 import json
 import os
 import sys
@@ -87,6 +88,10 @@ def _use_snapshot():
         return False
 
 
+# gap_fix 回補紀錄。非空 = 本次輸出含人工回補的日子，下游必須知道（寫進 data_integrity）。
+GAP_NOTES = []
+
+
 def _breadth():
     """等權 vs 市值權重比值 = 廣度代理。
     比值上升 = 中小型股同步參與(廣度好)；下降 = 少數權值撐盤(窄化)。
@@ -98,6 +103,9 @@ def _breadth():
         for df in (rsp, spy):
             if hasattr(df.columns, "levels"):
                 df.columns = [c[0] if isinstance(c, tuple) else c for c in df.columns]
+        rsp, _n1 = gap_fix.patch_missing_days(rsp, eq_sym, log=print)
+        spy, _n2 = gap_fix.patch_missing_days(spy, cap_sym, log=print)
+        GAP_NOTES.extend(_n1 + _n2)
         r = rsp["Close"].squeeze().dropna()
         p_ = spy["Close"].squeeze().dropna()
         idx = r.index.intersection(p_.index)
@@ -153,6 +161,12 @@ if hasattr(raw_spx.columns, 'levels'):
     raw_spx.columns = [c[0] if isinstance(c, tuple) else c for c in raw_spx.columns]
 if hasattr(raw_vix.columns, 'levels'):
     raw_vix.columns = [c[0] if isinstance(c, tuple) else c for c in raw_vix.columns]
+
+# 缺日回補（2026-09-01 新增）。Yahoo 日線曾整天遺失 2026-08-28，而 30m 完整存在；
+# 舊版不會報錯，但 MA/RSI/MACD/BB/KD/ATR 與 prev_close 全部靜默錯位一天。
+raw_spx, _gs = gap_fix.patch_missing_days(raw_spx, CFG["index"], log=print)
+raw_vix, _gv = gap_fix.patch_missing_days(raw_vix, CFG["vol"], log=print)
+GAP_NOTES.extend(_gs + _gv)
 
 # Yahoo 常在最新一列給「未結算」資料：只有 Volume、OHLC 全 NaN。
 # 不濾掉的話 close 會是 nan，而舊版完整性檢查只看 trade_date 是否存在，
@@ -300,6 +314,14 @@ if not spx_close.empty:
         "regime": regime,
         "recent_5": recent
     }
+    # 缺日回補紀錄。有值 = 本份資料含人工回補的交易日，分析時必須在報告標明。
+    if GAP_NOTES:
+        result["data_integrity"] = {
+            "status": "PATCHED",
+            "patched_days": GAP_NOTES,
+            "note": "Yahoo 日線缺日已由 gap_fix.py 回補（依據：該日 30m 有資料 = 確實有交易）。"
+                    "分析報告必須標明本次使用了回補資料。"
+        }
     # 每份輸出都蓋上 symbol，供下游 guard.require_symbol 驗證來源（兩套皆蓋）
     guard.stamp(result, CFG["label"])
 
