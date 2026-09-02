@@ -69,3 +69,32 @@ out["ndx_gap_pct"] = round(float((ndx["Open"].iloc[-1] / ndx["Close"].iloc[-2] -
 with open("ndx_aux_0901fix.txt", "w", encoding="utf-8") as f:
     json.dump(out, f, indent=2, ensure_ascii=False)
 print("OK")
+
+# --- extras ---
+ex = {}
+soxx = dl("SOXX"); qqq = dl("QQQ")
+qqqe, _ = patch(dl("QQQE"), "QQQE", "2026-08-28")
+for nm, dd in [("soxx", soxx), ("qqq", qqq), ("qqqe", qqqe)]:
+    ex[nm+"_close"] = round(float(dd["Close"].iloc[-1]), 2)
+    ex[nm+"_chg_pct"] = round(float(dd["Close"].pct_change().iloc[-1]*100), 2)
+    ex[nm+"_chg5_pct"] = round(float((dd["Close"].iloc[-1]/dd["Close"].iloc[-6]-1)*100), 2)
+ex["soxx_chg10_pct"] = round(float((soxx["Close"].iloc[-1]/soxx["Close"].iloc[-11]-1)*100), 2)
+ex["qqq_vol"] = int(qqq["Volume"].iloc[-1])
+ex["qqq_vol20"] = int(qqq["Volume"].tail(21).iloc[:-1].mean())
+ex["qqq_vol_ratio_pct"] = round(float(qqq["Volume"].iloc[-1]/qqq["Volume"].tail(21).iloc[:-1].mean()*100), 1)
+for t, k in [("^TNX","tnx"), ("DX-Y.NYB","dxy"), ("^VIX","vix")]:
+    try:
+        s = dl(t, "60d")["Close"]
+        ex[k] = round(float(s.iloc[-1]), 3)
+        ex[k+"_prev"] = round(float(s.iloc[-2]), 3)
+    except Exception as e:
+        ex[k+"_err"] = str(e)
+ndx2 = ndx
+o,h,l,c = [float(ndx2[x].iloc[-1]) for x in ["Open","High","Low","Close"]]
+pc = float(ndx2["Close"].iloc[-2])
+ex["gap_pct"] = round((o-pc)/pc*100, 3)
+ex["close_pos_pct"] = round((c-l)/(h-l)*100, 1)
+ex["upper_wick"] = round(h-max(o,c),1); ex["lower_wick"] = round(min(o,c)-l,1); ex["body"] = round(c-o,1)
+ex["ndx_chg"] = round((c/pc-1)*100, 2)
+with open("ndx_aux_0902b.txt","w",encoding="utf-8") as f: json.dump(ex,f,indent=2,ensure_ascii=False)
+print("OK2")
