@@ -5,6 +5,7 @@ import yf_compat
 import guard
 import gap_fix
 import json
+import pandas as pd
 import os
 import sys
 from datetime import datetime, timedelta
@@ -92,10 +93,35 @@ def _use_snapshot():
 GAP_NOTES = []
 
 
-def _breadth():
+def _tail_close_from_30m(ticker, want_day):
+    """rule51 尾端補值：ETF 日線落後時，用當日 30m 末根收盤補最後一筆。
+    30m 末根不含收盤撮合，會與官方收盤差 1-3 點，故回傳值一律標為 approx。"""
+    try:
+        raw = yf_compat.download(ticker, period="5d", interval="30m", progress=False)
+        if raw is None or raw.empty:
+            return None
+        if hasattr(raw.columns, "levels"):
+            raw.columns = [c[0] if isinstance(c, tuple) else c for c in raw.columns]
+        raw = raw.dropna(subset=["Close"])
+        sub = raw[raw.index.strftime("%Y-%m-%d") == want_day]
+        if sub.empty:
+            return None
+        return float(sub["Close"].iloc[-1])
+    except Exception:
+        return None
+
+
+def _breadth(index_day=None):
     """等權 vs 市值權重比值 = 廣度代理。
     比值上升 = 中小型股同步參與(廣度好)；下降 = 少數權值撐盤(窄化)。
-    抓不到不阻斷主流程,回傳 None。"""
+    抓不到不阻斷主流程,回傳 None。
+
+    rule51（2026-09-03 新增）：ETF 日線常落後指數一個交易日。舊版只取序列末兩筆算變動，
+    **不檢查末日是否與指數對齊**，會把前一日的廣度數字靜默當成當日輸出
+    （2026-09-03 實際發生：RSP/SPY 停在 09-01 而 ^GSPC 已有 09-02，
+    breadth 三個數字與前一日逐字相同才被人工察覺）。
+    現在一律比對 index_day：不一致時先用 30m 末根補最後一筆，補不到就標 stale 並照實回報。
+    """
     eq_sym, cap_sym = CFG["breadth"]
     try:
         rsp = yf_compat.download(eq_sym, period="3mo", progress=False)
@@ -112,6 +138,27 @@ def _breadth():
         ratio = (r.loc[idx] / p_.loc[idx]).dropna()
         if len(ratio) < 25:
             return None
+
+        # --- rule51：末日對齊檢查 -------------------------------------------
+        stale = None
+        approx_tail = False
+        if index_day:
+            last_day = str(ratio.index[-1].date())
+            if last_day < index_day:
+                r_tail = _tail_close_from_30m(eq_sym, index_day)
+                p_tail = _tail_close_from_30m(cap_sym, index_day)
+                if r_tail and p_tail:
+                    ratio = pd.concat(
+                        [ratio, pd.Series({pd.Timestamp(index_day): r_tail / p_tail})]
+                    ).sort_index()
+                    approx_tail = True
+                    print("[breadth] %s/%s daily lagged at %s; tail filled from 30m for %s"
+                          % (eq_sym, cap_sym, last_day, index_day))
+                else:
+                    stale = last_day
+                    print("[breadth] WARNING %s/%s daily last=%s but index=%s; 30m fallback failed"
+                          % (eq_sym, cap_sym, last_day, index_day))
+
         cur = float(ratio.iloc[-1])
         d1 = (cur / float(ratio.iloc[-2]) - 1) * 100
         d5 = (cur / float(ratio.iloc[-6]) - 1) * 100
@@ -123,7 +170,7 @@ def _breadth():
             read = "廣度窄化（少數權值撐盤，指數強度打折）"
         else:
             read = "廣度中性"
-        return {
+        out = {
             "%s_%s_ratio" % (eq_sym.lower(), cap_sym.lower()): round(cur, 4),
             "chg_1d_pct": round(d1, 2),
             "chg_5d_pct": round(d5, 2),
@@ -131,6 +178,17 @@ def _breadth():
             "read": read,
             "note": CFG["breadth_note"]
         }
+        # rule51：資料品質標記。stale 時下游必須在報告標明，不得當成當日數字引用。
+        out["as_of"] = str(ratio.index[-1].date())
+        if approx_tail:
+            out["tail_source"] = "30m_approx"
+            out["caveat"] = ("ETF 日線落後，最後一筆由 30m 末根補值（不含收盤撮合，與官方收盤約差 1-3 點）。"
+                             "1 日變動為近似值；5 日與 vs_MA20 含此近似值")
+        if stale:
+            out["stale"] = True
+            out["caveat"] = ("⚠廣度序列末日 %s 落後指數 %s，且 30m 補值失敗 → "
+                             "本區塊全部是前一日的數字，**不得當成當日引用**" % (stale, index_day))
+        return out
     except Exception:
         return None
 
@@ -310,7 +368,7 @@ if not spx_close.empty:
         "bb_pct": round(bb_pct, 1),
         "kd_k": round(float(k.iloc[-1]), 2),
         "kd_d": round(float(d.iloc[-1]), 2),
-        "breadth": _breadth(),
+        "breadth": _breadth(str(raw_spx.index[-1].date())),
         "regime": regime,
         "recent_5": recent
     }
