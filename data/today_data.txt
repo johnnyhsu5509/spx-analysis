@@ -1,41 +1,41 @@
 {
-  "trade_date": "2026-09-10",
-  "close": 7591.7,
-  "open": 7594.74,
-  "high": 7612.86,
-  "low": 7580.06,
-  "volume": 2763396000,
-  "prev_close": 7636.36,
-  "change_pct": -0.58,
-  "vix": 17.84,
-  "ma5": 7673.58,
-  "ma20": 7692.29,
-  "ma50": 7603.86,
-  "ma200": 7157.28,
-  "rsi": 45.13,
-  "macd_hist": -16.34,
-  "macd_line": 10.13,
-  "signal": 26.46,
-  "bb_upper": 7796.7,
-  "bb_lower": 7587.88,
-  "bb_pct": 1.8,
-  "kd_k": 26.43,
-  "kd_d": 35.99,
+  "trade_date": "2026-09-11",
+  "close": 7656.98,
+  "open": 7636.75,
+  "high": 7677.02,
+  "low": 7636.75,
+  "volume": 2659812000,
+  "prev_close": 7591.7,
+  "change_pct": 0.86,
+  "vix": 15.84,
+  "ma5": 7655.43,
+  "ma20": 7685.19,
+  "ma50": 7607.34,
+  "ma200": 7162.55,
+  "rsi": 48.39,
+  "macd_hist": -14.43,
+  "macd_line": 8.42,
+  "signal": 22.85,
+  "bb_upper": 7777.68,
+  "bb_lower": 7592.7,
+  "bb_pct": 34.8,
+  "kd_k": 31.01,
+  "kd_d": 34.33,
   "breadth": {
-    "rsp_spy_ratio": 0.2813,
-    "chg_1d_pct": -0.09,
-    "chg_5d_pct": -1.54,
-    "vs_ma20_pct": -1.8,
+    "rsp_spy_ratio": 0.2811,
+    "chg_1d_pct": -0.05,
+    "chg_5d_pct": -1.22,
+    "vs_ma20_pct": -1.76,
     "read": "廣度窄化（少數權值撐盤，指數強度打折）",
     "note": "RSP(等權)/SPY(市值權重);升=廣度好,降=窄化。與指數方向背離時,指數漲勢品質打折",
-    "as_of": "2026-09-10"
+    "as_of": "2026-09-11"
   },
   "regime": {
     "base_5d_pullback": 61.65,
     "vix": {
-      "regime": "VIX 16-20（中波動）",
-      "pullback_5d": 63.08,
-      "vs_base": 1.4
+      "regime": "VIX<16（低波動）",
+      "pullback_5d": 49.45,
+      "vs_base": -12.2
     },
     "trend": {
       "regime": "SPX 在 MA200 之上（多頭結構）",
@@ -46,20 +46,12 @@
       "regime": "距 MA20 +/-3% 內（正常）",
       "pullback_5d": 59.89,
       "vs_base": -1.8,
-      "ext_pct": -1.31
+      "ext_pct": -0.37
     },
-    "regime_avg_5d": 60.0,
-    "regime_avg_vs_base": -1.6
+    "regime_avg_5d": 55.4,
+    "regime_avg_vs_base": -6.2
   },
   "recent_5": [
-    {
-      "date": "2026-09-03",
-      "open": 7686.71,
-      "high": 7756.76,
-      "low": 7686.71,
-      "close": 7747.71,
-      "volume": 4726400000
-    },
     {
       "date": "2026-09-04",
       "open": 7750.19,
@@ -90,7 +82,15 @@
       "high": 7612.86,
       "low": 7580.06,
       "close": 7591.7,
-      "volume": 2763396000
+      "volume": 4893500000
+    },
+    {
+      "date": "2026-09-11",
+      "open": 7636.75,
+      "high": 7677.02,
+      "low": 7636.75,
+      "close": 7656.98,
+      "volume": 2659812000
     }
   ],
   "symbol": "SPX"
