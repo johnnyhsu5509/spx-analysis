@@ -1,48 +1,48 @@
 {
-  "checked_at": "2026-09-11 23:17",
+  "checked_at": "2026-09-14 23:53",
   "session": {
     "label": "US_REGULAR",
     "note": "美股盤中：即時讀數"
   },
   "nq": {
-    "last": 29391.75,
-    "prev_close": 29070.0,
-    "change_pct": 1.11,
+    "last": 29457.25,
+    "prev_close": 29015.0,
+    "change_pct": 1.52,
     "signal": "BULLISH"
   },
   "implied_ndx_open": {
-    "approx": 29378.9,
-    "index_prev_close": 29368.44,
-    "fut_at_prior_close": 29381.25,
-    "fut_pt_chg": 10.5,
+    "approx": 29125.7,
+    "index_prev_close": 29127.16,
+    "fut_at_prior_close": 29458.75,
+    "fut_pt_chg": -1.5,
     "method": "point_anchor",
     "note": "方案A：NQ=F點數錨定，基差已抵銷"
   },
-  "es_change_pct": 0.76,
+  "es_change_pct": 0.96,
   "soxx_semis": {
-    "last": 527.07,
-    "change_pct": 2.37
+    "last": 497.4,
+    "change_pct": -5.74
   },
   "semi_vs_ndx": {
-    "divergence_pp": 1.26,
-    "read": "半導體領漲"
+    "divergence_pp": -7.26,
+    "read": "半導體領跌(輪動殺半導體)"
   },
-  "vxn": 21.02,
+  "vxn": 22.05,
   "us10y": {
-    "yield_pct": 4.975,
-    "prev_pct": 4.944,
-    "change_bps": 3.1,
-    "signal": "UP_RISK_OFF"
+    "yield_pct": 4.961,
+    "prev_pct": 4.975,
+    "change_bps": -1.4,
+    "signal": "FLAT"
   },
   "dxy": {
-    "last": 99.1,
-    "prev_close": 99.15,
-    "change_pct": -0.05,
+    "last": 99.47,
+    "prev_close": 99.32,
+    "change_pct": 0.14,
     "signal": "FLAT"
   },
   "macro_backdrop": {
-    "score": 1,
-    "read": "MIXED 中性",
+    "score": 2,
+    "read": "RISK_ON 偏多",
     "note": "NQ+ES+10Y+DXY+VXN 合成；±2 以上才定調"
   },
   "data_status": "OK"
