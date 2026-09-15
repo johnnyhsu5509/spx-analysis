@@ -77,7 +77,7 @@ footer{margin-top:56px;padding-top:18px;border-top:1px solid var(--line);color:v
 <tr><td>方向</td><td>中性偏空 56% → 預期 down</td><td>29,103.51，<b>-1.08%</b></td><td class="up">✅ hit（Brier 0.1936）</td></tr>
 <tr><td>情景 C（39%，最高權重）</td><td>收盤跌破 29,334 → 29,230 → 29,166</td><td>收 29,103.51，兩個目標皆穿越，低 29,038.22</td><td class="up">✅ 完整實現</td></tr>
 <tr><td>反壓空 29,564</td><td>limit_sell</td><td>高 29,250.41，差 314 點</td><td class="up">正確未觸發</td></tr>
-<tr><td>回踩多 29,334</td><td>limit_buy</td><td><b>開盤 29,097.34 已在進場價與停損 29,220 之下</b></td><td class="dn">-114 點 / -1.94bp</td></tr>
+<tr><td>回踩多 29,334</td><td>limit_buy</td><td><b>開盤 29,097.34 已在進場價與停損 29,220 之下</b></td><td class="nu">GAP_INVALIDATED / 0bp（更正）</td></tr>
 </table></div>
 
 <div class="box good">
@@ -87,11 +87,11 @@ footer{margin-top:56px;padding-top:18px;border-top:1px solid var(--line);color:v
 </div>
 
 <div class="box hot">
-  <h4>🔴 跳空穿越停損：8 個交易日內第二次（prc-004 第二筆樣本）</h4>
+  <h4>🔴 跳空穿越停損：8 個交易日內第二次（已依 prc-004 更正）</h4>
   <div class="mono">9/1   回踩多 29,384 / 停損 29,225   開盤 29,056.58   → -3.25bp
-9/10  回踩多 29,334 / 停損 29,220   開盤 29,097.34   → -1.94bp</div>
+9/10  回踩多 29,334 / 停損 29,220   開盤 29,097.34   → GAP_INVALIDATED（0bp）</div>
   兩次都是<b>開盤直接越過進場價與停損</b>。現行規則把它們記成「在停損價出場」，但真實交易會以開盤價成交、停損已失效。<br><br>
-  SPX 系統已在自己的帳本採用同類規則並產生首筆 GAP_INVALIDATED。<b>建議核准 prc-004（僅前瞻生效，這兩筆不回溯）。</b>
+  <b>更正：prc-004 已於 9/3 由 Johnny 核准（經 SPX session），NDX 先前四份報告誤寫為「待核准」。</b>9/10 這筆在核准後才產出，改判 GAP_INVALIDATED、不計損益；9/1 早於核准，維持 -3.25bp。
 </div>
 
 <div class="box info">
@@ -104,7 +104,7 @@ footer{margin-top:56px;padding-top:18px;border-top:1px solid var(--line);color:v
 <tr><th>累積</th><th>數值</th><th>說明</th></tr>
 <tr><td>Mean Brier</td><td class="nu">0.2484</td><td>重回基準 0.25 之下，但優勢僅 0.0016——一筆 hit 就能拉回，n=8 仍無結論</td></tr>
 <tr><td>方向勝率</td><td class="nu">60.7%</td><td>n=14（6 hit / 5 half / 3 miss）</td></tr>
-<tr><td>P&amp;L</td><td class="dn">-9.10 bp</td><td>成交 12 筆 3 勝 9 敗；9/1、9/10 兩筆跳空穿越合計 -5.19bp</td></tr>
+<tr><td>P&amp;L</td><td class="dn">-7.16 bp</td><td>成交 11 筆 3 勝 8 敗；跳空失效 2 筆（9/10 已更正）</td></tr>
 </table></div>
 
 <h2>二、三日走勢與今天的畫面</h2>
@@ -234,7 +234,7 @@ Beta：預期 -0.70%、實際 -0.82% → 落後 0.12pp，實質符合（4 符合
 <h2>七、待 Johnny 決定</h2>
 <div class="box warn">
   <ol>
-    <li><b>prc-004 是否核准</b>：兩次跳空穿越停損（9/1、9/10），SPX 帳本已採同類規則。核准後僅前瞻生效。</li>
+    <li><b>prc-004 已套用</b>：9/3 核准、9/15 補套用，9/10 已更正為 GAP_INVALIDATED。</li>
     <li><b>覆蓋率 73.7%</b>：9/11、9/14 未跑，統計可信度持續被稀釋。</li>
   </ol>
 </div>

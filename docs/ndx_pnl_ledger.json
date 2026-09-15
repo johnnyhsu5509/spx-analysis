@@ -10,7 +10,7 @@
   },
   "exit_priority": "成交後同日檢查：停損與目標若同日都在範圍內，保守假設『停損先到』；皆未觸及→以當日收盤平倉（1日模擬視野）。【例外・2026-08-19 核准】sell_stop_close_confirm 不適用同日平倉，一律留倉至次一交易日判定",
   "pnl_calc": "pts=多:(出場-entry)/空:(entry-出場)；ret_pct=pts/entry；weighted_bp=ret_pct×策略倉位權重×10000",
-  "gap_invalidation": "【2026-08-19 核准・prc-002】成交後必先檢查跳空穿越：空單成交價 ≤ T1、或多單成交價 ≥ T1 → 標記 GAP_INVALIDATED，視為訊號過期【不進場、不計入損益】，另計入 trades_gap_invalidated 統計。理由：訊號觸發時價格已走完大半，剩餘風報比與設計值嚴重背離，真實交易中不會進場；若照樣計入會把『事後看對方向但實務上不可執行』的單算進績效，高估帳本可信度。",
+  "gap_invalidation": "【2026-08-19 核准・prc-002】成交後必先檢查跳空穿越：空單成交價 ≤ T1、或多單成交價 ≥ T1 → 標記 GAP_INVALIDATED，視為訊號過期【不進場、不計入損益】，另計入 trades_gap_invalidated 統計。理由：訊號觸發時價格已走完大半，剩餘風報比與設計值嚴重背離，真實交易中不會進場；若照樣計入會把『事後看對方向但實務上不可執行』的單算進績效，高估帳本可信度。【2026-09-03 核准・2026-09-15 套用・prc-004】擴充至停損側：limit_buy／limit_sell 若開盤即越過停損（多單開盤 ≤ 停損、空單開盤 ≥ 停損）→ GAP_INVALIDATED，不進場、不計損益，計入 trades_gap_invalidated。sell_stop_close_confirm 不適用。與 SPX rule50 判準一致。",
   "known_limits": "①僅按價格觸發，忽略策略附註的質化條件 ②持倉最長1日、收盤強制平倉，低估波段單潛力（sell_stop_close_confirm 已於 prc-001 修訂為例外）③不計滑價與成本 ④【2026-08-19 提出 → 2026-08-25 由 prc-003 解決】收盤確認單成交價不可控導致固定目標被壓縮，已改為浮動目標。",
   "floating_targets": {
    "applies_to": [
@@ -66,7 +66,7 @@
   {
    "id": "prc-004",
    "raised_on": "2026-09-02",
-   "status": "**APPROVED 2026-09-03（Johnny）** — 尚未套用至 sim_rules，由下一次 NDX 分析的 session 執行套用與統計重算",
+   "status": "APPROVED 2026-09-03（Johnny，經 SPX session）— 2026-09-15 已套用至 sim_rules；Johnny 於 2026-09-15 再次確認",
    "issue": "跳空同時穿越進場價與停損價時，sim_rules 無定義。2026-09-01 實例：回踩多掛 29,384、停損 29,225，當日跳空開 29,056.58，開盤價在兩者之下。現行規則機械判定為「成交 29,384 → 停損 29,225 → -159 點」，但真實世界會以 29,056.58 成交，而 29,225 的停損位於成交價之上，作為停損無法執行。",
    "proposed_fix": "擴充 prc-002 的跳空失效判定至停損側：**多單成交價 ≤ 停損價、或空單成交價 ≥ 停損價 → 標記 GAP_INVALIDATED，不進場、不計損益**，併入既有的 trades_gap_invalidated 統計。理由與 prc-002 完全一致：訊號觸發時價格已走完大半，真實交易中不會在該價位進場。",
    "scope_limit": "僅適用於 limit_buy／limit_sell（掛單價可控者）。sell_stop_close_confirm 已由 prc-003 的浮動目標處理，不受影響。",
@@ -76,7 +76,9 @@
    "approved_by": "Johnny",
    "approval_context": "由 SPX session 於 2026-09-03 提請決定。起因：SPX 當日實作跳空穿越處理（rule50）後，與 NDX 條文逐字對照，發現**兩套各只做了一半**——SPX 只處理停損側（判以開盤價成交、記 0 pts），NDX prc-002 只處理目標側。Johnny 核准：**兩套都補齊雙側，並統一採 prc-002 既有的「不算成交」處置**（不進場、不計損益、另計 trades_gap_invalidated）。理由：跳空穿越代表該單的風報比設計前提已消失，計入成交率會讓掛單品質看起來比實際好。",
    "spx_counterpart": "SPX 已於 2026-09-03 同步改為雙側 GAP_INVALIDATED（見 spx pnl_ledger.json 的 sim_rules.rule50_gap_invalidation），判準與本案完全一致，同樣不回溯。",
-   "handover_note": "⚠**本次僅記錄核准，未動 NDX 的 sim_rules、entries 或 summary。**套用工作留給 NDX session，因為涉及 prc-003 浮動目標的交互作用與 trades_gap_invalidated 統計重算，由熟悉該系統的一方執行較安全。另：SPX 對 close-confirm 單走「結算日出場滑價」路線，NDX 走 prc-003 浮動目標路線，**此處兩套作法不同屬已知差異，非疏漏，不需統一**。"
+   "handover_note": "⚠**本次僅記錄核准，未動 NDX 的 sim_rules、entries 或 summary。**套用工作留給 NDX session，因為涉及 prc-003 浮動目標的交互作用與 trades_gap_invalidated 統計重算，由熟悉該系統的一方執行較安全。另：SPX 對 close-confirm 單走「結算日出場滑價」路線，NDX 走 prc-003 浮動目標路線，**此處兩套作法不同屬已知差異，非疏漏，不需統一**。",
+   "applied_on": "2026-09-15",
+   "application_lapse": "**NDX session 9/4、9/9、9/10、9/15 四份報告未察覺 9/3 已核准，持續記為『待核准』，且 9/10 回踩多誤依舊規則記 -1.94bp。**9/15 更正：9/10 該單於核准後才產出，依核准當時已生效的規則應判 GAP_INVALIDATED。這是記帳錯誤的更正，不是回溯改規則（不違反 rule40）。9/1 回踩多早於核准日，維持 -3.25bp。"
   }
  ],
  "entries": [
@@ -896,19 +898,19 @@
      "dir": "long",
      "weight": 5,
      "signal_triggered": true,
-     "filled": true,
-     "status": "FILLED → 停損出場（跳空穿越，prc-004 第 2 筆樣本）",
-     "fill_price": 29334,
-     "exit_price": 29220,
-     "exit_reason": "停損 29,220（Low 29,038.22）",
-     "pts": -114,
-     "ret_pct": -0.3886,
-     "weighted_bp": -1.94,
-     "prc004_note": "**依現行規則記入虧損**（prc-004 尚未核准）。若 prc-004 已生效，本筆應判 GAP_INVALIDATED、不計損益。**這是 8 個交易日內第二次跳空穿越停損**（9/1、9/10）。SPX 系統已於其帳本採用同類規則並產生首筆 GAP_INVALIDATED，建議 NDX 核准 prc-004（僅前瞻生效，本筆與 9/1 不回溯）。"
+     "filled": false,
+     "status": "GAP_INVALIDATED — 開盤 29,097.34 已低於停損 29,220（prc-004，9/15 更正）",
+     "fill_price": null,
+     "exit_price": null,
+     "exit_reason": null,
+     "pts": null,
+     "ret_pct": null,
+     "weighted_bp": 0.0,
+     "correction": "原記 -114 點／-1.94bp。prc-004 已於 9/3 核准，本單 9/10 產出，應判 GAP_INVALIDATED。9/15 更正。"
     }
    ],
-   "day_weighted_bp": -1.94,
-   "day_note": "回踩多遭跳空穿越停損 -1.94bp、反壓空未觸發 → 當日 **-1.94bp**。累積 -7.16 → **-9.10bp**。",
+   "day_weighted_bp": 0.0,
+   "day_note": "回踩多 GAP_INVALIDATED（prc-004）、反壓空未觸發 → 當日 **0bp**。累積維持 **-7.16bp**。（9/15 更正，原誤記 -1.94bp）",
    "excluded_order_check": {
     "name": "破位空（收盤跌破 9/9 低 29,334）",
     "hypothetical": "若有掛：9/10 收盤 29,103.51 成交；浮動停損 29,345.4（訊號日 ATR 1.039% ≈ 302 點 × 0.8）；9/11 高 29,473.12 觸及停損 → -241.9 點 ≈ -0.83%，以 4% 權重計約 **-3.32bp**。",
@@ -922,15 +924,15 @@
   "days_evaluated": 14,
   "trades_total": 28,
   "signals_triggered": 13,
-  "trades_filled": 12,
-  "trades_gap_invalidated": 1,
+  "trades_filled": 11,
+  "trades_gap_invalidated": 2,
   "trades_not_triggered": 15,
   "filled_win": 3,
-  "filled_loss": 9,
+  "filled_loss": 8,
   "filled_flat": 0,
-  "fill_rate_pct": 42.9,
-  "gap_invalidation_rate_pct": 7.7,
-  "cumulative_weighted_bp": -9.1,
+  "fill_rate_pct": 39.3,
+  "gap_invalidation_rate_pct": 15.4,
+  "cumulative_weighted_bp": -7.16,
   "open_positions": 0,
   "gap_days": [
    "2026-08-18",
@@ -940,7 +942,7 @@
    "2026-09-11",
    "2026-09-14"
   ],
-  "honest_read": "累積 -7.16 → **-9.10bp**。成交 12 筆，3 勝 9 敗。\n\n【跳空穿越停損已成主要虧損型態】9/1 與 9/10 兩筆回踩多皆為開盤直接穿越進場價與停損，合計 -5.19bp，佔 8/28 以來全部新增虧損的主要部分。**現行 sim_rules 把這兩筆記成『在停損價出場』，實際上真實交易會以開盤價成交且停損已失效。**prc-004 已有兩筆樣本，建議核准（前瞻）。\n\n【刻意排除破位空的兩次檢驗】9/9 零成本、9/10 避開約 -3.32bp（假設值）。結果偏正面，但代價是 prc-003 樣本停滯在 2 筆。\n\n【覆蓋率】又增兩個 gap day（9/11、9/14），帳本評估天數僅 14。"
+  "honest_read": "累積 **-7.16bp**（9/15 更正：9/10 回踩多由 -1.94bp 改判 GAP_INVALIDATED）。成交 11 筆，3 勝 8 敗；跳空失效 2 筆。\n\n【更正說明】prc-004 已於 9/3 由 Johnny 核准（經 SPX session），但 NDX session 四份報告未察覺，9/10 回踩多誤依舊規則入帳。9/1 回踩多早於核准日，維持 -3.25bp。\n\n【刻意排除破位空的兩次檢驗】9/9 零成本、9/10 避開約 -3.32bp（假設值），代價是 prc-003 樣本停滯在 2 筆。\n\n【覆蓋率】9/11、9/14 為 gap day，評估天數 14。"
  },
  "trades_pending": {
   "report_date": "2026-09-15",
@@ -987,7 +989,8 @@
     "threshold": 0.594,
     "reason": "距離 0.61% 略超門檻；且條件三缺二：帶量 ✗（QQQ 114.6% < rule43 門檻 115.5%，**僅差 0.9pp**）、MACD 柱收窄 ✗（擴大至 -32.73）。"
    }
-  ]
+  ],
+  "prc004_note": "本批單適用 prc-004（rule50）：評估時先檢查開盤是否已越過停損。"
  },
  "gap_note_2026_08_27": {
   "date": "2026-08-27",
@@ -1001,7 +1004,6 @@
   "actual": "NDX 開 29,404.29 / 高 29,483.90 / 低 29,304.49 / 收 29,456.97（+0.09%）",
   "note": "本交易日不計入 days_evaluated 與任何損益統計。這是連續八個交易日中的第二個斷點（前一個為 8/27）。"
  },
- "proposed_rule_changes": [],
  "candidate_rules_pnl": [
   {
    "id": "cand-006",
