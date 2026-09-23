@@ -21,7 +21,8 @@
    "rr_guarantee": "風報比恆為 T1 1.0 / T2 2.0，不受滑價影響",
    "gap_check_note": "prc-002 的跳空穿越檢查改以浮動 T1 判定。因浮動 T1 恆距成交價 0.8 ATR，成交當下不可能已穿越 → 本質上消除了 GAP_INVALIDATED 的發生條件。跳空失效率統計仍保留，用於監測是否有其他型態的失效。",
    "unaffected": "limit_sell / limit_buy / buy_stop 的成交價等於掛單價、可控，維持固定目標不變。"
-  }
+  },
+  "intraday_sequencing": "【2026-09-23 核准・prc-006】限價單（limit_buy／limit_sell／buy_stop）成交當日，若目標或停損亦在日線範圍內，改以 30 分 K 判定：只計入成交那根 K 棒之後的價格行為；同一根 K 棒內無法判序時，保守視為未觸及目標（停損仍計入）。30 分 K 無法取得時退回日線規則並標註。sell_stop_close_confirm 以收盤成交、當日不判出場，不受影響。"
  },
  "ndx_specific": {
   "distance_cap_note": "rule27 的掛單距離上限不可沿用 SPX 數值。NDX 的 ATR14 與日波動約為 SPX 的 1.25-1.37 倍，掛單距離上限須以 NDX 自身的 ATR 計算，否則掛單會過近、被日常波動掃到。",
@@ -79,6 +80,21 @@
    "handover_note": "⚠**本次僅記錄核准，未動 NDX 的 sim_rules、entries 或 summary。**套用工作留給 NDX session，因為涉及 prc-003 浮動目標的交互作用與 trades_gap_invalidated 統計重算，由熟悉該系統的一方執行較安全。另：SPX 對 close-confirm 單走「結算日出場滑價」路線，NDX 走 prc-003 浮動目標路線，**此處兩套作法不同屬已知差異，非疏漏，不需統一**。",
    "applied_on": "2026-09-15",
    "application_lapse": "**NDX session 9/4、9/9、9/10、9/15 四份報告未察覺 9/3 已核准，持續記為『待核准』，且 9/10 回踩多誤依舊規則記 -1.94bp。**9/15 更正：9/10 該單於核准後才產出，依核准當時已生效的規則應判 GAP_INVALIDATED。這是記帳錯誤的更正，不是回溯改規則（不違反 rule40）。9/1 回踩多早於核准日，維持 -3.25bp。"
+  },
+  {
+   "id": "prc-006",
+   "raised_on": "2026-09-22",
+   "status": "APPROVED — 2026-09-23 已套用至 sim_rules.intraday_sequencing，自 2026-09-23 策略表起生效",
+   "issue": "日線 OHLC 無法判斷『限價單成交』與『觸及目標／停損』的先後。當成交與目標同日皆在範圍內時，現行規則會把『成交前就已發生的目標觸及』算成獲利。",
+   "evidence": "2026-09-18 反壓空：30 分 K 顯示低點在盤中、成交在最後一根，成交後未再觸及 T1。日線規則記 +2.23bp，實際 -0.06bp。",
+   "proposed_fix": "限價單成交當日，若目標或停損亦在日線範圍內，改以 30 分 K 判定：只計入**成交那根 K 棒之後**（含同根但無法判序時保守視為未觸及目標）的價格行為。30 分 K 無法取得時，退回日線規則並標註。",
+   "retroactive_policy": "依 rule40，已結算的 8/28、9/18 不重判；summary.cumulative_if_intraday_checked 保留作為揭露口徑。",
+   "expected_side_effect": "區間策略在同日雙向觸及的日子，獲利會被系統性下修——這是修正高估，不是新增成本。",
+   "approved_on": "2026-09-23",
+   "approved_by": "Johnny",
+   "approval_context": "NDX session 2026-09-23 直接核准。",
+   "effective_from": "trades_pending report_date 2026-09-23（尚未評估，依 rule40 可套用）",
+   "handover_note": "僅套用於 NDX 帳本。SPX 帳本是否採用同一規則未處理，須由 SPX session 另行提請 Johnny 決定。"
   }
  ],
  "entries": [
@@ -1137,7 +1153,7 @@
  "trades_pending": {
   "report_date": "2026-09-23",
   "basis_close": 30732.4,
-  "eval_rule": "用 2026-09-23 美股 NDX OHLC 判定；適用 rule50（prc-004）。**prc-006 仍待核准，照日線規則記帳，另以 30 分 K 揭露。**",
+  "eval_rule": "用 2026-09-23 美股 NDX OHLC 判定；適用 rule50（prc-004）與 **prc-006（30 分 K 判定成交與目標／停損先後）**。",
   "signal_atr14_pct": 1.231,
   "divergence_check": "【rule49】NDX 52 vs SPX 51 同側 → 數字同向，不減半；但結構相反（NDX 突破歷史高、SPX 測壓失敗、regime 超額 +1.5 vs -6.2），倉位本身已壓低。",
   "trades": [
@@ -1243,16 +1259,5 @@
   "actual": "NDX 收 30,482.35（+2.83%）",
   "note": "不計入統計。"
  },
- "proposed_rule_changes": [
-  {
-   "id": "prc-006",
-   "raised_on": "2026-09-22",
-   "status": "PROPOSED — 待核准，只能前瞻套用",
-   "issue": "日線 OHLC 無法判斷『限價單成交』與『觸及目標／停損』的先後。當成交與目標同日皆在範圍內時，現行規則會把『成交前就已發生的目標觸及』算成獲利。",
-   "evidence": "2026-09-18 反壓空：30 分 K 顯示低點在盤中、成交在最後一根，成交後未再觸及 T1。日線規則記 +2.23bp，實際 -0.06bp。",
-   "proposed_fix": "限價單成交當日，若目標或停損亦在日線範圍內，改以 30 分 K 判定：只計入**成交那根 K 棒之後**（含同根但無法判序時保守視為未觸及目標）的價格行為。30 分 K 無法取得時，退回日線規則並標註。",
-   "retroactive_policy": "依 rule40，已結算的 8/28、9/18 不重判；僅在報告中註明可能高估。",
-   "expected_side_effect": "區間策略在同日雙向觸及的日子，獲利會被系統性下修——這是修正高估，不是新增成本。"
-  }
- ]
+ "proposed_rule_changes": []
 }

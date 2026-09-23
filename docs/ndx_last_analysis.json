@@ -71,17 +71,36 @@
   "alignment": "主觀 52（中性）vs 客觀 +1.5pp（偏空側）→ 弱同向偏空。regime 三維內部分歧（趨勢維偏多、其餘偏空）→ 依規則視為中性，以主觀為主。單位不同，禁比絕對值。"
  },
  "spx_cross_check": {
-  "ndx": {"pullback_prob": 52, "chg_pct": 0.82, "vxn": 20.18, "vs_base": 1.5},
-  "spx": {"pullback_prob": 51, "chg_pct": 0.0, "vix": 14.21, "vs_base": -6.2},
+  "ndx": {
+   "pullback_prob": 52,
+   "chg_pct": 0.82,
+   "vxn": 20.18,
+   "vs_base": 1.5
+  },
+  "spx": {
+   "pullback_prob": 51,
+   "chg_pct": 0.0,
+   "vix": 14.21,
+   "vs_base": -6.2
+  },
   "verdict": "【數字同向、結構相反】rule49 以數字判同側、不減半；但兩者接近的理由不同，不可寫成「一致」。",
   "divergence_reason": "結構位置不同（類型 2）：NDX 已突破並站上歷史高點；SPX 9/22 盤中測 7,782 壓力簇失敗收回、振幅壓縮至 0.33%。regime 超額方向也相反（NDX +1.5pp、SPX -6.2pp）。",
   "beta_check": "SPX 0.00% × ATR 比 1.403 ＝ beta 預期 0.00%，實際 +0.82% → 領先 0.82pp：資金輪入科技，而非輪出。"
  },
  "predictions": {
   "short_bias": "中性",
-  "key_resistance": [30771, 30960, 31040],
+  "key_resistance": [
+   30771,
+   30960,
+   31040
+  ],
   "key_resistance_note": "30,771＝9/22 盤中高（新紀錄）｜30,960＝可執行帶上緣｜31,040＝+1 預期振幅。**歷史新高之上無結構壓力**。",
-  "key_support": [30661, 30591, 30496, 30196],
+  "key_support": [
+   30661,
+   30591,
+   30496,
+   30196
+  ],
   "key_support_note": "**30,661＝舊歷史收盤高，突破後第一道回測位**｜30,591＝9/22 盤中雙底（11:30／12:00 棒）｜30,496＝9/22 全日低／開盤｜30,196＝8/17 高",
   "fib_targets": {
    "swing": "9/16 低 28,753 → 9/22 高 30,771（2,018 點）",
@@ -95,23 +114,87 @@
    "alt": "8/24 起的 ABC 反彈之 C 浪末端，在歷史高點附近完成（需見到收盤跌破 30,496 才提高此方案權重）"
   },
   "scenarios": {
-   "A_extend": {"prob": 30, "trigger": "收盤 > 30,860（+0.42%）", "target": "30,960 → 31,040"},
-   "B_range": {"prob": 37, "trigger": "收盤 30,600–30,860", "target": "新高附近消化，回測 30,661"},
-   "C_pullback": {"prob": 33, "trigger": "收盤 < 30,600（-0.43%）", "target": "30,496 → 30,295（23.6% 回撤）"}
+   "A_extend": {
+    "prob": 30,
+    "trigger": "收盤 > 30,860（+0.42%）",
+    "target": "30,960 → 31,040"
+   },
+   "B_range": {
+    "prob": 37,
+    "trigger": "收盤 30,600–30,860",
+    "target": "新高附近消化，回測 30,661"
+   },
+   "C_pullback": {
+    "prob": 33,
+    "trigger": "收盤 < 30,600（-0.43%）",
+    "target": "30,496 → 30,295（23.6% 回撤）"
+   }
   },
   "weight_adjustments": [
-   {"factor": "基準", "effect": "A30 / B40 / C30"},
-   {"factor": "歷史新高、MACD 柱擴大、QQQ 123%、SOXX 5日 +14.8%、VXN 降、油價鬆", "effect": "A +6、B -2、C -4"},
-   {"factor": "距 MA200 +12.65%、RSI 74、%B 121、距 MA20 +4.37%", "effect": "A -4、B -1、C +5"},
-   {"factor": "廣度 5日 -1.73%（仍窄，但 1 日止跌，只計小量）", "effect": "A -1、C +1"},
-   {"factor": "SPX 壓力簇測試失敗、大盤未跟", "effect": "A -1、C +1"},
-   {"factor": "9/24 峰會（排程事件，不計）", "effect": "0"},
-   {"factor": "最終", "effect": "A30 / B37 / C33 → 33 + 18.5 ＝ 51.5 → **52**"}
+   {
+    "factor": "基準",
+    "effect": "A30 / B40 / C30"
+   },
+   {
+    "factor": "歷史新高、MACD 柱擴大、QQQ 123%、SOXX 5日 +14.8%、VXN 降、油價鬆",
+    "effect": "A +6、B -2、C -4"
+   },
+   {
+    "factor": "距 MA200 +12.65%、RSI 74、%B 121、距 MA20 +4.37%",
+    "effect": "A -4、B -1、C +5"
+   },
+   {
+    "factor": "廣度 5日 -1.73%（仍窄，但 1 日止跌，只計小量）",
+    "effect": "A -1、C +1"
+   },
+   {
+    "factor": "SPX 壓力簇測試失敗、大盤未跟",
+    "effect": "A -1、C +1"
+   },
+   {
+    "factor": "9/24 峰會（排程事件，不計）",
+    "effect": "0"
+   },
+   {
+    "factor": "最終",
+    "effect": "A30 / B37 / C33 → 33 + 18.5 ＝ 51.5 → **52**"
+   }
   ],
   "strategies": {
-   "pullback_long": {"order": "limit_buy", "entry": 30661, "dist_pct": -0.23, "stop": 30480, "t1": 30960, "t2": 31040, "rr_t1": 1.65, "rr_t2": 2.09, "weight": 4},
-   "breakout_long": {"order": "buy_stop", "entry": 30775, "dist_pct": 0.14, "stop": 30640, "t1": 30960, "t2": 31040, "rr_t1": 1.37, "rr_t2": 1.96, "weight": 3},
-   "breakdown_short": {"order": "sell_stop_close_confirm", "entry": 30590, "dist_pct": -0.46, "t1_reference": 30289, "t2_reference": 29987, "stop_reference": 30891, "rr_t1": 1.0, "rr_t2": 2.0, "weight": 3, "note": "prc-003 浮動目標，ATR14 1.231%"}
+   "pullback_long": {
+    "order": "limit_buy",
+    "entry": 30661,
+    "dist_pct": -0.23,
+    "stop": 30480,
+    "t1": 30960,
+    "t2": 31040,
+    "rr_t1": 1.65,
+    "rr_t2": 2.09,
+    "weight": 4
+   },
+   "breakout_long": {
+    "order": "buy_stop",
+    "entry": 30775,
+    "dist_pct": 0.14,
+    "stop": 30640,
+    "t1": 30960,
+    "t2": 31040,
+    "rr_t1": 1.37,
+    "rr_t2": 1.96,
+    "weight": 3
+   },
+   "breakdown_short": {
+    "order": "sell_stop_close_confirm",
+    "entry": 30590,
+    "dist_pct": -0.46,
+    "t1_reference": 30289,
+    "t2_reference": 29987,
+    "stop_reference": 30891,
+    "rr_t1": 1.0,
+    "rr_t2": 2.0,
+    "weight": 3,
+    "note": "prc-003 浮動目標，ATR14 1.231%"
+   }
   },
   "position_note": "中性帶（40–60）任一方向 ≤15%。多單合計 7%、空單 3%，全部小倉。歷史新高之上沒有結構壓力，故不掛反壓空。",
   "watch_points": [
@@ -120,8 +203,7 @@
    "**距 MA200 +12.65%**：系統上線以來最大乖離，任何回檔的空間都會被放大",
    "**SOXX 5 日 +14.81%**：引擎轉弱時廣度缺口會立刻反映；Micron 財報 9/30",
    "**9/24 川習峰會**：預定事件，實際結果出爐前不計入評分",
-   "**10Y 4.968**：推翻空方的最後一個條件 < 4.85 仍未達",
-   "**prc-006 待核准**"
+   "**10Y 4.968**：推翻空方的最後一個條件 < 4.85 仍未達"
   ]
  },
  "six_factor_reference": {
@@ -140,7 +222,8 @@
   "rule40 政策變更回溯原則",
   "rule43 帶量＝QQQ 相對量 ≥ 75 百分位門檻（1.155）",
   "rule49 新聞檢索必做，在評分前完成",
-  "rule16 禁止折中；rule27 超過預期振幅×0.6 不掛；rule12 破底空收盤確認；rule15 SOXX 優先；rule32 分析潔淨；rule8 回踩錨定支撐本身"
+  "rule16 禁止折中；rule27 超過預期振幅×0.6 不掛；rule12 破底空收盤確認；rule15 SOXX 優先；rule32 分析潔淨；rule8 回踩錨定支撐本身",
+  "rule51 限價單同日成交＋觸價改以 30 分 K 判序（prc-006，2026-09-23 核准）"
  ],
  "system_rules_notes": [
   "rule36：^NDX 13.30 億＝殘值，改用 QQQ 123.1%",
@@ -149,7 +232,8 @@
   "rule27：門檻 0.74%，已否決回踩 30,196（-1.74%）",
   "rule8：回踩多錨定舊歷史收盤高 30,661 本身",
   "rule49：新聞已查，無即時突發衝擊；峰會為預定事件",
-  "rule50：9/22 反壓空開盤未越過停損，正常判定"
+  "rule50：9/22 反壓空開盤未越過停損，正常判定",
+  "prc-006 於 2026-09-23 核准，自本日策略表起生效（rule51）"
  ],
  "candidate_updates": {
   "cand-003": "regime 維持 58.6（+1.5pp），VXN 維仍凍結在中波動檔。",
