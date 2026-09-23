@@ -1069,23 +1069,57 @@
    ],
    "day_weighted_bp": 2.23,
    "day_note": "回踩多未觸發、反壓空依規則記 T1 +2.23bp → 當日 **+2.23bp**（30 分 K 核對的實際值為 -0.06bp）。累積 -4.85 → **-2.62bp**。"
+  },
+  {
+   "report_date": "2026-09-22",
+   "basis_close": 30482.35,
+   "eval_date": "2026-09-22",
+   "eval_ohlc": {
+    "open": 30496.43,
+    "high": 30770.63,
+    "low": 30496.43,
+    "close": 30732.4
+   },
+   "rule50_check": "反壓空開盤 30,496.43 < 停損 30,820 → 未跳空穿越，正常判定。",
+   "trades": [
+    {
+     "name": "反壓空",
+     "order": "limit_sell",
+     "entry_signal": 30660,
+     "dir": "short",
+     "weight": 4,
+     "signal_triggered": true,
+     "filled": true,
+     "status": "FILLED → 停損與目標皆未觸及，收盤平倉",
+     "fill_price": 30660,
+     "exit_price": 30732.4,
+     "exit_reason": "收盤平倉（高 30,770.63 未及停損 30,820，差 49.37 點；低 30,496.43 未及 T1 30,482）",
+     "pts": -72.4,
+     "ret_pct": -0.2361,
+     "weighted_bp": -0.94,
+     "intraday_check": "30 分 K：10:00 棒高 30,679.5 首次觸及 30,660 成交；成交後最低 30,590.7（12:00 棒），未回到 T1 30,482。日線與 30 分 K 判定一致，prc-006 不影響本筆。"
+    }
+   ],
+   "day_weighted_bp": -0.94,
+   "day_note": "反壓空成交後收盤平倉 -72.4 點 → 當日 **-0.94bp**。累積 -2.62 → **-3.56bp**。",
+   "honest_note": "在歷史高點上做均值回歸，遇到的是突破日。停損設在歷史盤中高之上的 30,820 讓這筆只小虧；**若停損貼著 30,762 設，就會被掃掉**。"
   }
  ],
  "open_positions": [],
  "summary": {
-  "as_of": "2026-09-22",
-  "days_evaluated": 17,
-  "trades_total": 34,
-  "signals_triggered": 17,
-  "trades_filled": 15,
+  "as_of": "2026-09-23",
+  "days_evaluated": 18,
+  "trades_total": 35,
+  "signals_triggered": 18,
+  "trades_filled": 16,
   "trades_gap_invalidated": 2,
   "trades_not_triggered": 17,
   "filled_win": 5,
-  "filled_loss": 10,
+  "filled_loss": 11,
   "filled_flat": 0,
-  "fill_rate_pct": 44.1,
-  "gap_invalidation_rate_pct": 11.8,
-  "cumulative_weighted_bp": -2.62,
+  "fill_rate_pct": 45.7,
+  "gap_invalidation_rate_pct": 11.1,
+  "cumulative_weighted_bp": -3.56,
   "open_positions": 0,
   "gap_days": [
    "2026-08-18",
@@ -1097,42 +1131,62 @@
    "2026-09-17",
    "2026-09-21"
   ],
-  "honest_read": "累積 -4.85 → **-2.62bp**（依現行日線規則）。**以 30 分 K 核對 9/18 的實際值則為 -4.91bp**，兩者差 2.29bp，已提 prc-006。\n\n【同日成交＋同日觸及目標是系統性高估來源】8/28 的 +8.40bp 是本帳最大的一筆獲利，也是同日成交、同日觸 T1，可能同樣被高估。依 rule40 不重判。\n\n【機會成本】9/18 以 RR 否決的突破多，9/21 若持有可賺約 987 點。",
-  "cumulative_if_intraday_checked": -4.91
+  "honest_read": "累積 -2.62 → **-3.56bp**（現行日線規則）；30 分 K 核對口徑 -4.91 → **-5.85bp**。9/22 反壓空遇突破日小虧 -0.94bp。成交 16 筆 5 勝 11 敗。",
+  "cumulative_if_intraday_checked": -5.85
  },
  "trades_pending": {
-  "report_date": "2026-09-22",
-  "basis_close": 30482.35,
-  "eval_rule": "用 2026-09-22 美股 NDX OHLC 判定；適用 rule50。**若 prc-006 於評估前核准，改用 30 分 K 判定成交與目標先後。**",
-  "divergence_check": "【rule49】NDX 51 vs SPX 53 同側、差 2pp → 同向，不減半。",
+  "report_date": "2026-09-23",
+  "basis_close": 30732.4,
+  "eval_rule": "用 2026-09-23 美股 NDX OHLC 判定；適用 rule50（prc-004）。**prc-006 仍待核准，照日線規則記帳，另以 30 分 K 揭露。**",
+  "signal_atr14_pct": 1.231,
+  "divergence_check": "【rule49】NDX 52 vs SPX 51 同側 → 數字同向，不減半；但結構相反（NDX 突破歷史高、SPX 測壓失敗、regime 超額 +1.5 vs -6.2），倉位本身已壓低。",
   "trades": [
    {
-    "name": "反壓空",
-    "order": "limit_sell",
-    "entry": 30660,
-    "stop": 30820,
-    "t1": 30482,
-    "t2": 30252,
+    "name": "回踩多（舊歷史收盤高轉支撐）",
+    "order": "limit_buy",
+    "entry": 30661,
+    "stop": 30480,
+    "t1": 30960,
+    "t2": 31040,
     "weight": 4,
+    "dir": "long",
+    "condition_note": "錨定 6/2 歷史收盤高 30,660.60（突破後回測）。停損置於 9/22 全日低 30,496 之下，181 點＝0.48 ATR。T1＝可執行帶上緣、T2＝進場＋1 預期振幅。RR 1.65／2.09。"
+   },
+   {
+    "name": "突破多（新盤中高之上）",
+    "order": "buy_stop",
+    "entry": 30775,
+    "stop": 30640,
+    "t1": 30960,
+    "t2": 31040,
+    "weight": 3,
+    "dir": "long",
+    "condition_note": "9/22 盤中高 30,770.63 之上。三條件：QQQ 123.1% ≥ 115.5% ✓、MACD 柱 +77 → +135 擴大 ✓、價格在所有均線之上 ✓。停損回到舊高 30,661 之下。RR 1.37／1.96。過熱中追價，倉位最小。"
+   },
+   {
+    "name": "破位空（收盤確認）",
+    "order": "sell_stop_close_confirm",
+    "entry": 30590,
+    "weight": 3,
     "dir": "short",
-    "condition_note": "掛在**歷史收盤高 30,660.60（6/2）**。停損 30,820 置於歷史盤中高 30,762.20（6/3）之上，160 點 ＝ 0.41 ATR。T1 ＝ 9/21 收盤 30,482、T2 ＝ 可執行帶下緣 30,252。RR 1.11／2.55。**這不是方向性看空，是在唯一可驗證的結構壓力上做均值回歸的小單。**"
+    "t1_reference": 30289,
+    "t2_reference": 29987,
+    "stop_reference": 30891,
+    "condition_note": "收盤跌破 9/22 盤中雙底 30,591／30,590.7 才成立。浮動目標（prc-003）：T1＝成交−0.8 ATR、T2＝成交−1.6 ATR、停損＝成交＋0.8 ATR，ATR14＝1.231%。參考值以 30,590 成交估算。"
    }
   ],
-  "no_long_reason": "**本日無可掛的多單。**最近的結構支撐是 8/17 高 30,195.72 與 9/21 盤中 10:30 棒低點 30,206（兩者相距 10 點），距現價 0.91–0.94%，超過 rule27 門檻 0.755%。可執行帶內只有盤中整理的小低點（30,364），不符合 rule8『錨定支撐位本身』的要求。**寧可只掛一邊，也不為了對稱而硬造一個支撐。**",
   "rejected_by_rule27": [
    {
     "name": "回踩多（8/17 高轉支撐 30,196）",
     "entry": 30196,
-    "dist_pct": -0.94,
-    "threshold": 0.755,
-    "reason": "超過門檻，改列觀察點。"
+    "dist_pct": -1.75,
+    "threshold": 0.74,
+    "reason": "超過門檻。"
    },
    {
-    "name": "突破多（buy_stop 歷史高 30,762 之上）",
-    "entry": 30765,
-    "dist_pct": 0.93,
-    "threshold": 0.755,
-    "reason": "三條件全過（突破均線 ✓、QQQ 148.5% ✓、MACD 柱轉正並擴大 ✓），但距離超標。"
+    "name": "反壓空",
+    "entry": null,
+    "reason": "歷史新高之上無可驗證的結構壓力，不在未知區域硬造壓力。"
    }
   ]
  },
