@@ -243,6 +243,18 @@
    "basis_date": "2026-09-22",
    "pullback_prob": 52,
    "bias": "中性",
+   "actual_date": "2026-09-23",
+   "actual_pct": -0.85,
+   "actual_dir": "down",
+   "grade": "half",
+   "note": "9/23 開 30,706.23（＝全日高）→ 低 30,353.88 → 收 30,470.29（-0.85%，以官方 9/22 收盤 30,732.40 計；Yahoo 9/22 列被撤回、30 分 K 補值為 30,728.40）→ **down**。預測中性 52% 遇 down → **half**。Brier (0.52-1)² = 0.2304。\n\n【情景 C（33%）實現】收盤 < 30,600 成立，並跌回舊歷史收盤高 30,661 之下。\n\n【病因】PMI 偏熱 + Fed 理事 Barr 稱需再升息 → 10Y 4.963 → 5.114（盤中 5.135%，2007 年以來最高）。**這是已發生的數據驅動衝擊，前一日新聞檢查時尚未存在，不構成漏查。**"
+  },
+  {
+   "report_date": "2026-09-24",
+   "basis_close": 30470.29,
+   "basis_date": "2026-09-23",
+   "pullback_prob": 59,
+   "bias": "中性偏空",
    "actual_date": null,
    "actual_pct": null,
    "actual_dir": null,
@@ -250,12 +262,12 @@
   }
  ],
  "summary": {
-  "as_of": "2026-09-23",
-  "graded": 18,
+  "as_of": "2026-09-24",
+  "graded": 19,
   "hits": 8,
-  "half": 7,
+  "half": 8,
   "miss": 3,
-  "rolling_direction_score_pct": 63.9,
+  "rolling_direction_score_pct": 63.2,
   "gap_days": [
    "2026-08-27",
    "2026-08-31",
@@ -265,10 +277,10 @@
    "2026-09-17",
    "2026-09-21"
   ],
-  "sample_caveat": "n=18。63.9% ＝ (8 hit + 7 half×0.5 + 3 miss) / 18 = 11.5/18。",
+  "sample_caveat": "n=19。63.2% ＝ (8 hit + 8 half×0.5 + 3 miss) / 19 = 12/19。",
   "brier": {
-   "as_of": "2026-09-23",
-   "included": 11,
+   "as_of": "2026-09-24",
+   "included": 12,
    "excluded_flat": 7,
    "per_entry": [
     {
@@ -378,12 +390,18 @@
      "p": 0.51,
      "outcome": 0,
      "brier": 0.2601
+    },
+    {
+     "report_date": "2026-09-23",
+     "p": 0.52,
+     "outcome": 1,
+     "brier": 0.2304
     }
    ],
-   "mean_brier": 0.2403,
+   "mean_brier": 0.2395,
    "benchmark_50pct": 0.25,
    "prob_range_observed": "43-63（n=16，範圍 20pp）",
-   "honest_read": "mean brier 0.2384 → **0.2403**（n=11），仍低於基準 0.25。9/22 報中性 51% 遇 up，Brier 0.2601 略高於基準——中性報價在方向日的固定成本。"
+   "honest_read": "mean brier 0.2403 → **0.2395**（n=12）。連兩日報中性（51、52）連兩日拿 half：方向一次上、一次下，中性判斷本身沒錯，但也沒有提供資訊。"
   },
   "gap_days_note": "2026-08-27 與 2026-08-31 兩個美股交易日未產出報告，無預測可回測，不計入任何統計。兩次都是「前一日已產報告、隔天沒跑」造成的斷點。連續八個交易日中斷兩次＝覆蓋率 75%，這個比率本身值得注意：帳本的統計效力會被斷點稀釋。",
   "coverage_note": "**9/21 為 gap day**（NDX +2.83%，本波最大漲幅日未被覆蓋）。累積覆蓋率 17/24 = **70.8%**，續創新低。",
