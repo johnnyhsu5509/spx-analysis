@@ -1,34 +1,34 @@
 {
-  "trade_date": "2026-09-24",
-  "close": 30478.86,
-  "open": 30225.19,
-  "high": 30529.35,
-  "low": 30204.16,
-  "volume": 1135003000,
-  "prev_close": 30470.29,
-  "change_pct": 0.03,
-  "vxn": 21.24,
-  "ma5": 30360.81,
-  "ma20": 29572.06,
-  "ma50": 29255.62,
-  "ma200": 27328.9,
-  "rsi": 65.31,
-  "macd_hist": 146.65,
-  "macd_line": 274.98,
-  "signal": 128.33,
-  "bb_upper": 30655.1,
-  "bb_lower": 28489.03,
+  "trade_date": "2026-09-25",
+  "close": 30608.13,
+  "open": 30517.46,
+  "high": 30667.56,
+  "low": 30413.59,
+  "volume": 1056650000,
+  "prev_close": 30478.86,
+  "change_pct": 0.42,
+  "vxn": 20.87,
+  "ma5": 30554.41,
+  "ma20": 29620.59,
+  "ma50": 29287.34,
+  "ma200": 27353.82,
+  "rsi": 65.97,
+  "macd_hist": 145.82,
+  "macd_line": 310.72,
+  "signal": 164.9,
+  "bb_upper": 30799.56,
+  "bb_lower": 28441.62,
   "bb_pct": 91.9,
-  "kd_k": 83.38,
-  "kd_d": 74.27,
+  "kd_k": 86.24,
+  "kd_d": 78.26,
   "breadth": {
-    "qqqe_qqq_ratio": 0.1627,
-    "chg_1d_pct": -0.27,
-    "chg_5d_pct": -0.76,
-    "vs_ma20_pct": -2.17,
-    "read": "廣度窄化（少數權值撐盤，指數強度打折）",
+    "qqqe_qqq_ratio": 0.1626,
+    "chg_1d_pct": -0.08,
+    "chg_5d_pct": -0.43,
+    "vs_ma20_pct": -2.0,
+    "read": "廣度中性",
     "note": "QQQE(等權NDX)/QQQ(市值權重);升=廣度好,降=窄化。科技股權重極集中,窄化時指數強度打折更明顯",
-    "as_of": "2026-09-24"
+    "as_of": "2026-09-25"
   },
   "regime": {
     "base_5d_pullback": 57.14,
@@ -46,20 +46,12 @@
       "regime": "距 MA20 +3% 以上（過度延伸）",
       "pullback_5d": 60.74,
       "vs_base": 3.6,
-      "ext_pct": 3.07
+      "ext_pct": 3.33
     },
     "regime_avg_5d": 58.6,
     "regime_avg_vs_base": 1.5
   },
   "recent_5": [
-    {
-      "date": "2026-09-18",
-      "open": 29529.64,
-      "high": 29647.8,
-      "low": 29371.89,
-      "close": 29644.17,
-      "volume": 13286960000
-    },
     {
       "date": "2026-09-21",
       "open": 29947.16,
@@ -70,11 +62,11 @@
     },
     {
       "date": "2026-09-22",
-      "open": 30507.29,
-      "high": 30769.74,
-      "low": 30507.29,
-      "close": 30728.4,
-      "volume": 948108060
+      "open": 30496.43,
+      "high": 30770.63,
+      "low": 30496.43,
+      "close": 30732.4,
+      "volume": 9334690000
     },
     {
       "date": "2026-09-23",
@@ -90,32 +82,16 @@
       "high": 30529.35,
       "low": 30204.16,
       "close": 30478.86,
-      "volume": 1135003000
+      "volume": 8078820000
+    },
+    {
+      "date": "2026-09-25",
+      "open": 30517.46,
+      "high": 30667.56,
+      "low": 30413.59,
+      "close": 30608.13,
+      "volume": 1056650000
     }
   ],
-  "data_integrity": {
-    "status": "PATCHED",
-    "patched_days": [
-      {
-        "date": "2026-09-22",
-        "ticker": "^NDX",
-        "source": "30m aggregate (13 bars)",
-        "close": 30728.4
-      },
-      {
-        "date": "2026-09-22",
-        "ticker": "^VXN",
-        "source": "30m aggregate (13 bars)",
-        "close": 19.95
-      },
-      {
-        "date": "2026-09-22",
-        "ticker": "QQQE",
-        "source": "30m aggregate (13 bars)",
-        "close": 121.74
-      }
-    ],
-    "note": "Yahoo 日線缺日已由 gap_fix.py 回補（依據：該日 30m 有資料 = 確實有交易）。分析報告必須標明本次使用了回補資料。"
-  },
   "symbol": "NDX"
 }
