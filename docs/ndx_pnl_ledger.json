@@ -1191,39 +1191,88 @@
    ],
    "day_weighted_bp": -2.36,
    "day_note": "回踩多停損 -2.36bp、突破多未觸發、破位空成交留倉 → 當日 **-2.36bp**。累積 -3.56 → **-5.92bp**。"
-  }
- ],
- "open_positions": [
+  },
   {
-   "opened_report": "2026-09-23",
-   "name": "破位空",
-   "order": "sell_stop_close_confirm",
-   "dir": "short",
-   "weight": 3,
-   "fill_date": "2026-09-23",
-   "fill_price": 30470.29,
-   "t1": 30170.22,
-   "t2": 29870.15,
-   "stop": 30770.36,
-   "eval_on": "2026-09-24",
-   "exit_rule": "次一交易日依浮動 T1／T2／停損判定；皆未觸及則收盤平倉。"
+   "report_date": "2026-09-24",
+   "basis_close": 30470.29,
+   "eval_date": "2026-09-24",
+   "eval_ohlc": {
+    "open": 30225.19,
+    "high": 30529.35,
+    "low": 30204.16,
+    "close": 30478.86
+   },
+   "rule50_check": "雙底接多：開盤 30,225.19 低於進場 30,360、但高於停損 30,180 → 未觸發 prc-004，正常成交。反彈空未觸發。",
+   "rule51_check": "雙底接多於 09:30 首棒成交（開盤即低於掛單價）；全日低 30,204.16 未及停損 30,180，高 30,529.35 未及 T1 30,590 → 收盤平倉。",
+   "closed_positions": [
+    {
+     "name": "破位空（9/23 成交）",
+     "order": "sell_stop_close_confirm",
+     "dir": "short",
+     "weight": 3,
+     "fill_price": 30470.29,
+     "t1": 30170.22,
+     "t2": 29870.15,
+     "stop": 30770.36,
+     "exit_price": 30478.86,
+     "exit_reason": "收盤平倉（低 30,204.16 距浮動 T1 30,170.22 僅 33.94 點；高 30,529.35 未及停損）",
+     "pts": -8.57,
+     "ret_pct": -0.0281,
+     "weighted_bp": -0.08
+    }
+   ],
+   "trades": [
+    {
+     "name": "反彈空（舊歷史高轉壓力）",
+     "order": "limit_sell",
+     "entry_signal": 30661,
+     "dir": "short",
+     "weight": 4,
+     "signal_triggered": false,
+     "filled": false,
+     "status": "NOT_TRIGGERED — 高 30,529.35 未及 30,661",
+     "pts": null,
+     "ret_pct": null,
+     "weighted_bp": 0.0
+    },
+    {
+     "name": "回踩多（9/23 盤中雙底）",
+     "order": "limit_buy",
+     "entry_signal": 30360,
+     "dir": "long",
+     "weight": 3,
+     "signal_triggered": true,
+     "filled": true,
+     "status": "FILLED → 收盤平倉",
+     "fill_price": 30360,
+     "exit_price": 30478.86,
+     "exit_reason": "收盤平倉（T1 30,590、停損 30,180 皆未觸及）",
+     "pts": 118.86,
+     "ret_pct": 0.3915,
+     "weighted_bp": 1.17,
+     "fill_note": "開盤 30,225.19 已低於掛單價，實務上會以開盤價附近成交（約 +253 點）；帳本依慣例以掛單價計，屬保守。"
+    }
+   ],
+   "day_weighted_bp": 1.09,
+   "day_note": "雙底接多 +1.17bp、留倉破位空收盤平倉 -0.08bp、反彈空未觸發 → 當日 **+1.09bp**。累積 -5.92 → **-4.83bp**。"
   }
  ],
+ "open_positions": [],
  "summary": {
-  "as_of": "2026-09-24",
-  "days_evaluated": 19,
-  "trades_total": 38,
-  "signals_triggered": 20,
-  "trades_filled": 18,
+  "as_of": "2026-09-30",
+  "days_evaluated": 20,
+  "trades_total": 40,
+  "signals_triggered": 21,
+  "trades_filled": 19,
   "trades_gap_invalidated": 2,
-  "trades_not_triggered": 18,
-  "filled_win": 5,
-  "filled_loss": 12,
+  "trades_not_triggered": 19,
+  "filled_win": 6,
+  "filled_loss": 13,
   "filled_flat": 0,
-  "fill_rate_pct": 47.4,
-  "gap_invalidation_rate_pct": 10.0,
-  "cumulative_weighted_bp": -5.92,
-  "open_positions": 1,
+  "fill_rate_pct": 47.5,
+  "gap_invalidation_rate_pct": 9.5,
+  "cumulative_weighted_bp": -4.83,
+  "open_positions": 0,
   "gap_days": [
    "2026-08-18",
    "2026-08-27",
@@ -1232,58 +1281,59 @@
    "2026-09-11",
    "2026-09-14",
    "2026-09-17",
-   "2026-09-21"
+   "2026-09-21",
+   "2026-09-25",
+   "2026-09-28"
   ],
-  "honest_read": "累積 -3.56 → **-5.92bp**（30 分 K 揭露口徑 -8.21bp；prc-006 自 9/23 起兩口徑一致）。9/23 回踩多被利率衝擊掃掉 -2.36bp；破位空成交留倉。已結算成交 17 筆 5 勝 12 敗，另 1 筆留倉。",
-  "cumulative_if_intraday_checked": -8.21
+  "honest_read": "累積 -5.92 → **-4.83bp**（30 分 K 揭露口徑 -7.12bp）。9/24 雙底接多 +1.17bp；破位空浮動 T1 差 34 點未達，收盤平倉 -0.08bp。成交 19 筆 6 勝 13 敗。",
+  "cumulative_if_intraday_checked": -7.12
  },
  "trades_pending": {
-  "report_date": "2026-09-24",
-  "basis_close": 30470.29,
-  "eval_rule": "用 2026-09-24 美股 NDX OHLC 判定；適用 rule50（prc-004）與 rule51（prc-006，30 分 K 判序）。另判 open_positions 的 9/23 破位空。",
-  "signal_atr14_pct": 1.284,
-  "divergence_check": "【rule49】NDX 59 vs SPX 60 同側，且理由相同（利率衝擊、半導體轉弱）→ 同向，不減半。",
+  "report_date": "2026-09-30",
+  "basis_close": 30339.33,
+  "eval_rule": "用 2026-09-30 美股 NDX OHLC 判定；適用 rule50（prc-004）與 rule51（30 分 K 判序）。",
+  "signal_atr14_pct": 1.339,
+  "divergence_check": "【rule49】NDX 54 vs SPX 59 同側 → 不因跨系統減半。【regime】主觀 54 偏空側 vs 客觀 -1.0pp 偏多側 → 弱分歧，倉位減半（反彈空 4→3%、回踩多 4→2%）。",
   "trades": [
    {
-    "name": "反彈空（舊歷史高轉壓力）",
+    "name": "反彈空（9/28 高）",
     "order": "limit_sell",
-    "entry": 30661,
-    "stop": 30790,
-    "t1": 30360,
-    "t2": 30196,
-    "weight": 4,
+    "entry": 30480,
+    "stop": 30620,
+    "t1": 30240,
+    "t2": 30090,
+    "weight": 3,
     "dir": "short",
-    "condition_note": "舊歷史收盤高 30,661 跌破後轉為壓力（9/23 11:00 後未再站回 30,533 之上）。停損置於 9/23 開盤高 30,706 與歷史盤中高 30,770 之上。RR 2.33／3.60。"
+    "condition_note": "9/23 起高點連續下移（30,706 → 30,668 → 30,480 → 30,430）；掛 9/28 高 30,480。停損置於 9/24 高 30,529 與 9/25 收 30,608 之上，140 點＝0.34 ATR。RR 1.71／2.79。"
    },
    {
-    "name": "回踩多（9/23 盤中雙底）",
+    "name": "回踩多（9/29 低）",
     "order": "limit_buy",
-    "entry": 30360,
-    "stop": 30180,
-    "t1": 30590,
-    "t2": 30706,
-    "weight": 3,
+    "entry": 30240,
+    "stop": 30060,
+    "t1": 30430,
+    "t2": 30529,
+    "weight": 2,
     "dir": "long",
-    "condition_note": "錨定 9/23 盤中雙底 30,354.3（10:00）／30,355.0（13:00）。停損 8/17 高 30,196 之下。RR 1.28／1.92。逆利率衝擊接刀，倉位最小。"
+    "condition_note": "9/29 盤中低 30,236／30,241（12:30、13:30 棒）。停損 9/28 低 30,081 之下。RR 1.06／1.61，T1 風報比偏低，倉位最小。"
    }
   ],
   "rejected_by_rule27": [
    {
-    "name": "回踩多（8/17 高 30,196）",
-    "entry": 30196,
-    "dist_pct": -0.9,
-    "threshold": 0.723,
+    "name": "回踩多（9/28 低 30,081）",
+    "entry": 30090,
+    "dist_pct": -0.82,
+    "threshold": 0.702,
     "reason": "超過門檻。"
    },
    {
-    "name": "突破多（歷史高 30,771 之上）",
-    "entry": 30775,
-    "dist_pct": 1.0,
-    "threshold": 0.723,
-    "reason": "超過門檻，且利率環境不支持追高。"
+    "name": "破位空（收盤 < 30,080）",
+    "entry": 30080,
+    "dist_pct": -0.86,
+    "threshold": 0.702,
+    "reason": "超過門檻。"
    }
-  ],
-  "not_added": "不再加掛收盤確認空：9/23 破位空已留倉 3%，不疊加同型態部位。"
+  ]
  },
  "gap_note_2026_08_27": {
   "date": "2026-08-27",
@@ -1338,5 +1388,17 @@
   "actual": "NDX 收 30,482.35（+2.83%）",
   "note": "不計入統計。"
  },
- "proposed_rule_changes": []
+ "proposed_rule_changes": [],
+ "gap_note_2026_09_25": {
+  "date": "2026-09-25",
+  "status": "GAP DAY",
+  "actual": "NDX 收 30,608.13（+0.42%），高 30,667.56 回測舊歷史高 30,661 失敗",
+  "note": "不計入統計。"
+ },
+ "gap_note_2026_09_28": {
+  "date": "2026-09-28",
+  "status": "GAP DAY",
+  "actual": "NDX 收 30,276.81（-1.08%），低 30,081.06",
+  "note": "不計入統計。"
+ }
 }
