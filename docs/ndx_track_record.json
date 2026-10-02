@@ -279,6 +279,18 @@
    "basis_date": "2026-09-30",
    "pullback_prob": 54,
    "bias": "中性",
+   "actual_date": "2026-10-01",
+   "actual_pct": 0.31,
+   "actual_dir": "flat",
+   "grade": "hit",
+   "note": "10/1 開 30,533.60 → 低 30,274.65 → 高 30,616.24 → 收 30,501.56（+0.31%）→ **flat**。預測中性 54%（預期 flat）遇 flat → **hit**，Brier 排除。\n\n【情景 B（39%）實現】收盤 30,287–30,530 之間。盤中下探 30,275（距 9/29 低 30,236 僅 39 點）後收回，下影 227 點。\n\n【當日】10Y 盤中 5.344%（2002 年以來最高）後回落收 5.24%；ISM 製造業 54.5、物價分項 77.9 偏熱；SOXX +1.35%（Micron 財報帶動）。"
+  },
+  {
+   "report_date": "2026-10-02",
+   "basis_close": 30501.56,
+   "basis_date": "2026-10-01",
+   "pullback_prob": 49,
+   "bias": "中性",
    "actual_date": null,
    "actual_pct": null,
    "actual_dir": null,
@@ -286,12 +298,12 @@
   }
  ],
  "summary": {
-  "as_of": "2026-10-01",
-  "graded": 21,
-  "hits": 9,
+  "as_of": "2026-10-02",
+  "graded": 22,
+  "hits": 10,
   "half": 9,
   "miss": 3,
-  "rolling_direction_score_pct": 64.3,
+  "rolling_direction_score_pct": 65.9,
   "gap_days": [
    "2026-08-27",
    "2026-08-31",
@@ -303,11 +315,11 @@
    "2026-09-25",
    "2026-09-28"
   ],
-  "sample_caveat": "n=21。64.3% ＝ (9 hit + 9 half×0.5 + 3 miss) / 21 = 13.5/21。",
+  "sample_caveat": "n=22。65.9% ＝ (10 hit + 9 half×0.5 + 3 miss) / 22 = 14.5/22。",
   "brier": {
-   "as_of": "2026-10-01",
+   "as_of": "2026-10-02",
    "included": 12,
-   "excluded_flat": 9,
+   "excluded_flat": 10,
    "per_entry": [
     {
      "report_date": "2026-08-18",
@@ -434,12 +446,18 @@
      "p": 0.54,
      "outcome": "flat_excluded",
      "brier": null
+    },
+    {
+     "report_date": "2026-10-01",
+     "p": 0.54,
+     "outcome": "flat_excluded",
+     "brier": null
     }
    ],
    "mean_brier": 0.2395,
    "benchmark_50pct": 0.25,
    "prob_range_observed": "43-63（n=16，範圍 20pp）",
-   "honest_read": "mean brier 維持 **0.2395**（n=12）；9/24、9/30 連兩筆 flat 排除。"
+   "honest_read": "mean brier 維持 **0.2395**（n=12）；9/24、9/30、10/1 連三筆 flat 排除——中樞整理期，Brier 樣本停止增加。"
   },
   "gap_days_note": "2026-08-27 與 2026-08-31 兩個美股交易日未產出報告，無預測可回測，不計入任何統計。兩次都是「前一日已產報告、隔天沒跑」造成的斷點。連續八個交易日中斷兩次＝覆蓋率 75%，這個比率本身值得注意：帳本的統計效力會被斷點稀釋。",
   "coverage_note": "**9/21 為 gap day**（NDX +2.83%，本波最大漲幅日未被覆蓋）。累積覆蓋率 17/24 = **70.8%**，續創新低。",
