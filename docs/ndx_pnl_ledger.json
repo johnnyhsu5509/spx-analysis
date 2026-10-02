@@ -95,6 +95,34 @@
    "approval_context": "NDX session 2026-09-23 直接核准。",
    "effective_from": "trades_pending report_date 2026-09-23（尚未評估，依 rule40 可套用）",
    "handover_note": "僅套用於 NDX 帳本。SPX 帳本是否採用同一規則未處理，須由 SPX session 另行提請 Johnny 決定。"
+  },
+  {
+   "id": "prc-007",
+   "status": "APPROVED — 2026-10-02 寫入 system_rules rule52",
+   "issue": "停損 0.34–0.41 ATR 的限價單常被盤中雜訊掃掉（cand-011）",
+   "proposed_fix": "limit_buy／limit_sell／buy_stop 停損 ≥ max(0.5×ATR14, 結構位外)；放寬後 T1 RR <1.0 不掛、1.0–1.5 倉位減半",
+   "handover_note": "SPX 同日實施為 rule61",
+   "raised_on": "2026-10-02",
+   "approved_on": "2026-10-02",
+   "approved_by": "Johnny",
+   "approval_context": "跨系統稽核 session 提出，Johnny 2026-10-02 核准「全部依建議」；SPX 同步實施為 rule61／rule62",
+   "evidence": "2026-10-02 稽核重放 37 筆成交限價單（SPX 20＋NDX 17，日線、單位 ATR）：0.35×ATR 停損每筆 −0.14、0.5×ATR −0.03，且 0.35 在所有子集與持倉視野都最差；成交後收在有利側的單 90% MAE ≤0.49 ATR。順 lean 單 14 筆勝率 50%、累計 +0.81；逆 lean 12 筆 25%、−1.02；中性日 10 筆 30%、−0.61。headline 恰為 45／55 的順 lean 單 5 筆合計 +0.36，故不掛區間取 46–54",
+   "retroactive_policy": "依 rule40：已結算不重判；自 2026-10-05 報告的策略表起前瞻生效",
+   "effective_from": "trades_pending report_date 2026-10-05"
+  },
+  {
+   "id": "prc-008",
+   "status": "APPROVED — 2026-10-02 寫入 system_rules rule53",
+   "issue": "雙邊對做與中性日掛單是虧損主要來源（逆 lean 勝率 25%、中性日 30%）",
+   "proposed_fix": "只掛順 lean 單，逆 lean weight 0；bias 中性、headline 46–54（含）或情景離散度 <10pp 時全日不掛",
+   "handover_note": "SPX 同日實施為 rule62；cand-006 隨之結案",
+   "raised_on": "2026-10-02",
+   "approved_on": "2026-10-02",
+   "approved_by": "Johnny",
+   "approval_context": "跨系統稽核 session 提出，Johnny 2026-10-02 核准「全部依建議」；SPX 同步實施為 rule61／rule62",
+   "evidence": "2026-10-02 稽核重放 37 筆成交限價單（SPX 20＋NDX 17，日線、單位 ATR）：0.35×ATR 停損每筆 −0.14、0.5×ATR −0.03，且 0.35 在所有子集與持倉視野都最差；成交後收在有利側的單 90% MAE ≤0.49 ATR。順 lean 單 14 筆勝率 50%、累計 +0.81；逆 lean 12 筆 25%、−1.02；中性日 10 筆 30%、−0.61。headline 恰為 45／55 的順 lean 單 5 筆合計 +0.36，故不掛區間取 46–54",
+   "retroactive_policy": "依 rule40：已結算不重判；自 2026-10-05 報告的策略表起前瞻生效",
+   "effective_from": "trades_pending report_date 2026-10-05"
   }
  ],
  "entries": [
@@ -1449,7 +1477,8 @@
    "hypothesis": "若前一日的纏論中樞寬度顯著小於預期振幅（如 < 70%），次日出現趨勢日（|漲跌| > 預期振幅×0.7）的機率升高，此時應改為單邊或觀望，而非雙邊對做。",
    "evidence_so_far": "9/2 中樞寬 193.7 點 vs 預期振幅 296 點（65%）→ 9/3 實際 +1.16%（338.99 點），確為趨勢日。9/3 報告當時也寫了「明日大機率選邊」——**判斷是對的，但沒有反映在策略型態上，仍然掛了雙邊。**",
    "verification_plan": "用 backtest_ndx.py 統計：中樞寬度／預期振幅 的比值分檔，各檔次日 |漲跌%| 的分布。若低比值檔的趨勢日機率顯著較高，則此規則成立。",
-   "why_not_now": "三個樣本不足以立案，且這會改變策略型態（最核心的東西）。須先驗證。"
+   "why_not_now": "三個樣本不足以立案，且這會改變策略型態（最核心的東西）。須先驗證。",
+   "status": "CLOSED — 由 rule53 處置，不再雙邊對做（prc-008，2026-10-02）"
   },
   {
    "id": "cand-011",
@@ -1458,7 +1487,8 @@
    "hypothesis": "限價單停損距離下限設為 0.5 ATR，可降低被掃比例而不顯著降低 RR。",
    "verification_plan": "回溯本帳所有限價單成交紀錄，按停損/ATR 分檔統計停損出場率與收盤反向比例。",
    "spx_note": "SPX 系統同日提出 rule60 候補（同一現象），兩套各自驗證，不互相引用結論。",
-   "why_not_now": "兩個樣本不足以立案。"
+   "why_not_now": "兩個樣本不足以立案。",
+   "status": "CLOSED — 轉正為 rule52（prc-007，2026-10-02）"
   }
  ],
  "gap_note_2026_09_08": {
