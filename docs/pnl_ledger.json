@@ -3637,7 +3637,7 @@
   },
   {
    "report_date": "2026-10-02",
-   "eval_date": "pending(2026-10-02 US close)",
+   "eval_date": "2026-10-02",
    "basis_close": 7666.45,
    "thresholds": {
     "rule27_pct": 0.494,
@@ -3677,12 +3677,84 @@
      "reason": "rule9（event_score 8.0）禁追高；MACD 柱 -3.02，rule3 不成立"
     }
    ],
-   "structure_note": "**今日無可執行進場位，觀望（rule27 明文允許的正確結果）**。理由四條：①rule45 觸發（情景離散度 1pp）＝無 edge ②**非農 20:30（台北）在開盤前公布**，開盤跳空將決定所有限價單的成敗——rule23 已 14 樣本證明這件事 ③依 rule60（已 3 樣本），停損必須放結構位外，**在 7,617–7,723 的區間裡，T1 的 RR 一律 <1** ④週五收盤觸發的單要留倉過週末。**非農後若在開盤確認時臨時進場，屬裁量，須記入 discretionary_log**"
+   "structure_note": "**今日無可執行進場位，觀望（rule27 明文允許的正確結果）**。理由四條：①rule45 觸發（情景離散度 1pp）＝無 edge ②**非農 20:30（台北）在開盤前公布**，開盤跳空將決定所有限價單的成敗——rule23 已 14 樣本證明這件事 ③依 rule60（已 3 樣本），停損必須放結構位外，**在 7,617–7,723 的區間裡，T1 的 RR 一律 <1** ④週五收盤觸發的單要留倉過週末。**非農後若在開盤確認時臨時進場，屬裁量，須記入 discretionary_log**",
+   "ohlc": {
+    "o": 7726.24,
+    "h": 7754.67,
+    "l": 7700.51,
+    "c": 7722.72
+   },
+   "results": [],
+   "day_weighted_bp": 0.0,
+   "day_note": "**0bp（無掛單），累積維持 -1.88bp。**rule23 驗證：非農偏冷、開盤跳空 +0.78% 至 7,726.24，越過所有候選限價位。對照（不入帳）：long_pullback 7,633 未成交（低 7,700.51）；short_resist 7,690 會以開盤價 7,726 成交、停損 7,726 同時被越過＝gap_through_flat 0；short_breakdown 未觸發。post_nfp_playbook ②「回踩 MA20 7,671 再多」未觸發（低 7,700.51），無裁量進場，discretionary_log 不新增"
+  },
+  {
+   "report_date": "2026-10-05",
+   "eval_date": "pending(2026-10-05 US close)",
+   "basis_close": 7722.72,
+   "thresholds": {
+    "rule27_pct": 0.495,
+    "rule31_up_pct": 0.444,
+    "rule31_down_pct": 0.329,
+    "exec_band": "7,685–7,761 (rule27)｜上行掛單<=7,757｜下行掛單>=7,697 (rule31)",
+    "note": "ATR14（Wilder）67.62（0.876%）、近5日均振幅 0.773% → 預期振幅 0.824%，rule27 門檻 0.495%；rule61 停損下限 0.5×ATR＝33.8 點"
+   },
+   "trades_pending": [],
+   "rule27_rejected": [
+    {
+     "name": "short_resist",
+     "order": "limit_sell",
+     "entry": 7752,
+     "stop": 7786,
+     "t1": 7701,
+     "t2": 7671,
+     "dist_pct": 0.38,
+     "threshold_pct": 0.495,
+     "rr_t1": 1.5,
+     "weight": 0,
+     "reason": "**rule62：bias 中性／headline 49／離散度 8pp → 全日不掛**。距離與 RR 皆過（停損放 9/22 高 7,782.19 之外，risk 34＝0.50×ATR）"
+    },
+    {
+     "name": "short_breakdown",
+     "order": "sell_stop_close_confirm",
+     "entry": 7697,
+     "stop": 7735,
+     "t1": 7670,
+     "t2": 7640,
+     "dist_pct": -0.33,
+     "threshold_pct": 0.495,
+     "weight": 0,
+     "reason": "rule62 全日不掛；收盤跌破 7,697＝回補缺口並跌回中樞"
+    },
+    {
+     "name": "long_pullback",
+     "order": "limit_buy",
+     "entry": 7701,
+     "stop": 7667,
+     "t1": 7745,
+     "t2": 7782,
+     "dist_pct": -0.28,
+     "threshold_pct": 0.495,
+     "rr_t1": 1.29,
+     "weight": 0,
+     "reason": "rule62 全日不掛（若有 lean，RR 1.29 依 rule61 亦須減半）。錨定中樞上沿 7,699.6／10/2 低 7,700.51，停損 MA20 之下"
+    },
+    {
+     "name": "breakout_long",
+     "order": "buy_stop",
+     "entry": 7783,
+     "dist_pct": 0.78,
+     "threshold_pct": 0.495,
+     "weight": 0,
+     "reason": "rule27 超標（0.78% > 0.495%）；rule3：MACD 柱 -0.14 仍為負"
+    }
+   ],
+   "structure_note": "**今日無 edge，不掛（rule62）**：bias 中性、headline 49 落在 46–54、情景離散度 8pp <10pp，三條全中。四種策略照列供對照，weight 皆 0"
   }
  ],
  "summary": {
-  "as_of": "2026-10-02",
-  "days_evaluated": 53,
+  "as_of": "2026-10-05",
+  "days_evaluated": 54,
   "trades_total": 141,
   "trades_filled": 47,
   "filled_win": 17,
@@ -3701,7 +3773,7 @@
    "2026-09-25",
    "2026-09-28"
   ],
-  "honest_read": "10/1 當日 **-0.68bp**，累積降至 **-1.88bp**。**連兩個評價日同一個病**：9/30 空單、10/1 多單，都是成交後被盤中穿刺掃出停損（0.35／0.39×ATR），收盤又回到有利方向——**rule60 已 3 樣本**。10/1 的教訓更進一步：**連 0.5×ATR 都不夠，真正該參考的是結構位（費波 0.618）**。另一面，rule12 收盤確認第三次擋下假破位。53 個交易日累積 -1.88bp、方向勝率 63.1%、成交率 33.3%。10/2 非農日不預掛。",
+  "honest_read": "10/2 非農日不預掛，**0bp，累積維持 -1.88bp**（54 日）。非農偏冷、開盤跳空 +0.78% 越過所有候選掛單位——rule23 再次證明開盤前數據日的限價單由跳空決定。10/5 起 rule61／rule62 生效：首日即因 headline 49、離散度 8pp 全日不掛。",
   "fill_rate_pct": 33.3,
   "filled_flat": 5,
   "count_note": "win10+loss12+flat2=24 與 filled=25 差1筆,為2026-08-18之前既有的分類遺漏(彼時已存在,非本次新增);entries陣列僅保留部分明細故無法回溯重算,照實標記不平帳,不以調整數字掩蓋",
