@@ -1424,12 +1424,29 @@
    ],
    "day_weighted_bp": 0.0,
    "day_note": "反彈空 GAP_INVALIDATED、回踩多未觸發 → 當日 **0bp**。累積維持 **-3.95bp**。"
+  },
+  {
+   "report_date": "2026-10-05",
+   "basis_close": 30807.93,
+   "eval_date": "2026-10-05",
+   "eval_ohlc": {
+    "open": 30812.76,
+    "high": 31117.36,
+    "low": 30798.42,
+    "close": 31076.44
+   },
+   "rule50_check": "rule53 全日不掛，無單可判。",
+   "rule51_check": "無成交單，不需判序。",
+   "trades": [],
+   "day_weighted_bp": 0.0,
+   "shadow_rejected": "【僅揭露、不計帳】被 rule53 擋下的三張：回踩多 30,740 未觸發（低 30,798）；反彈空 31,000 會在 11:00 棒成交（高 31,005.6）、未觸停損 31,200、收盤 31,076 → 約 -0.25%×3 ≈ -0.74bp；破位空未觸發。rule53 讓帳本避開約 -0.74bp。",
+   "day_note": "rule53 全日不掛 → 當日 **0bp**。累積維持 **-3.95bp**。"
   }
  ],
  "open_positions": [],
  "summary": {
-  "as_of": "2026-10-05",
-  "days_evaluated": 23,
+  "as_of": "2026-10-06",
+  "days_evaluated": 24,
   "trades_total": 46,
   "signals_triggered": 24,
   "trades_filled": 21,
@@ -1454,54 +1471,56 @@
    "2026-09-25",
    "2026-09-28"
   ],
-  "honest_read": "累積維持 **-3.95bp**（30 分 K 揭露口徑 -6.24bp）。10/2 非農跳空讓反彈空依 prc-004 失效、回踩多未觸發。成交 21 筆 7 勝 14 敗。10/5 起 rule52／53 生效，首日即因中性全日不掛。",
+  "honest_read": "累積維持 **-3.95bp**（30 分 K 揭露口徑 -6.24bp）。rule52／53 生效後連兩日（10/5、10/6 報告）中性全日不掛；10/5 影子帳顯示 rule53 擋下一筆約 -0.74bp 的反彈空。成交 21 筆 7 勝 14 敗。",
   "cumulative_if_intraday_checked": -6.24
  },
  "trades_pending": {
-  "report_date": "2026-10-05",
-  "basis_close": 30807.93,
-  "eval_rule": "用 2026-10-05 美股 NDX OHLC 判定。**本日 rule53 全日不掛**（bias 中性、headline 52 落在 46–54），無單可評估；明日只需記 0bp 並更新 days_evaluated。",
-  "signal_atr14_pct": 1.294,
-  "divergence_check": "NDX 52 vs SPX 49 同為中性、同為全日不掛。regime：VXN 中波動 +1.5pp vs SPX VIX<16 -6.2pp → 波動檔分歧，風險集中在科技側。",
+  "report_date": "2026-10-06",
+  "basis_close": 31076.44,
+  "eval_rule": "用 2026-10-06 美股 NDX OHLC 判定。**本日 rule53 全日不掛**（bias 中性、headline 53 落在 46–54），無單可評估；明日記 0bp 並更新 days_evaluated。",
+  "signal_atr14_pct": 1.3,
+  "divergence_check": "NDX 53 vs SPX 48 同為中性、同為全日不掛。regime：VXN 中波動 +1.5pp vs SPX VIX<16 -6.2pp → 波動檔分歧持續。",
   "trades": [],
   "rejected_by_rule53": [
    {
-    "name": "回踩多（缺口上緣 30,737）",
+    "name": "回踩多（10/5 午盤平台 30,960）",
     "order": "limit_buy",
-    "entry": 30740,
-    "stop": 30540,
-    "t1": 31000,
-    "dist_pct": -0.22,
-    "rr_t1": 1.3,
-    "reason": "rule53 中性全日不掛；即使可掛，RR 1.3 依 rule52 亦須減半。"
+    "entry": 30960,
+    "stop": 30750,
+    "t1": 31117,
+    "dist_pct": -0.37,
+    "rr_t1": 0.75,
+    "reason": "rule53 中性全日不掛；且依 rule52 停損放寬到 0.5 ATR 外後 T1 RR 0.75 <1.0，本來就不掛。"
    },
    {
-    "name": "反彈空（31,000 前高）",
+    "name": "反彈空（31,250）",
     "order": "limit_sell",
-    "entry": 31000,
-    "stop": 31200,
-    "t1": 30740,
-    "dist_pct": 0.62,
-    "rr_t1": 1.3,
+    "entry": 31250,
+    "stop": 31460,
+    "t1": 31000,
+    "dist_pct": 0.56,
+    "rr_t1": 1.19,
     "reason": "rule53 中性全日不掛。"
    },
    {
-    "name": "破位空（收盤 < 30,616 回補缺口）",
+    "name": "破位空（收盤 < 30,873）",
     "order": "sell_stop_close_confirm",
-    "entry": 30615,
-    "dist_pct": -0.63,
+    "entry": 30873,
+    "dist_pct": -0.65,
     "reason": "rule53 中性全日不掛。"
+   },
+   {
+    "name": "突破多（31,120 歷史高之上）",
+    "order": "buy_stop",
+    "entry": 31120,
+    "stop": 30915,
+    "t1": 31330,
+    "dist_pct": 0.14,
+    "rr_t1": 1.02,
+    "reason": "rule53 中性全日不掛；QQQ 量 75.4% 未達 rule43 帶量。"
    }
   ],
-  "rejected_by_rule27": [
-   {
-    "name": "突破多（31,018 歷史高之上）",
-    "entry": 31020,
-    "dist_pct": 0.69,
-    "threshold": 0.671,
-    "reason": "超過門檻；且 QQQ 量 102.5% 未達 rule43 帶量。"
-   }
-  ]
+  "rejected_by_rule27": []
  },
  "gap_note_2026_08_27": {
   "date": "2026-08-27",
