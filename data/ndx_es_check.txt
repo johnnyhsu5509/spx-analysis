@@ -1,47 +1,47 @@
 {
-  "checked_at": "2026-10-06 01:46",
+  "checked_at": "2026-10-07 00:45",
   "session": {
     "label": "US_REGULAR",
     "note": "美股盤中：即時讀數"
   },
   "nq": {
-    "last": 31348.25,
-    "prev_close": 31077.0,
-    "change_pct": 0.87,
+    "last": 31505.75,
+    "prev_close": 31350.0,
+    "change_pct": 0.5,
     "signal": "BULLISH"
   },
   "implied_ndx_open": {
-    "approx": 31093.7,
-    "index_prev_close": 31076.44,
-    "fut_at_prior_close": 31333.5,
-    "fut_pt_chg": 17.25,
+    "approx": 31236.2,
+    "index_prev_close": 31224.69,
+    "fut_at_prior_close": 31494.25,
+    "fut_pt_chg": 11.5,
     "method": "point_anchor",
     "note": "方案A：NQ=F點數錨定，基差已抵銷"
   },
-  "es_change_pct": 0.8,
+  "es_change_pct": 0.62,
   "soxx_semis": {
-    "last": 589.51,
-    "change_pct": -0.02
+    "last": 589.45,
+    "change_pct": -0.25
   },
   "semi_vs_ndx": {
-    "divergence_pp": -0.89,
+    "divergence_pp": -0.75,
     "read": "同步"
   },
-  "vxn": 21.7,
+  "vxn": 21.15,
   "us10y": {
-    "yield_pct": 5.311,
-    "prev_pct": 5.277,
-    "change_bps": 3.4,
-    "signal": "UP_RISK_OFF"
-  },
-  "dxy": {
-    "last": 102.09,
-    "prev_close": 102.5,
-    "change_pct": -0.4,
+    "yield_pct": 5.269,
+    "prev_pct": 5.311,
+    "change_bps": -4.2,
     "signal": "DOWN_RISK_ON"
   },
+  "dxy": {
+    "last": 101.95,
+    "prev_close": 102.13,
+    "change_pct": -0.18,
+    "signal": "FLAT"
+  },
   "macro_backdrop": {
-    "score": 2,
+    "score": 3,
     "read": "RISK_ON 偏多",
     "note": "NQ+ES+10Y+DXY+VXN 合成；±2 以上才定調"
   },
