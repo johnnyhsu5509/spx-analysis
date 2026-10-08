@@ -1,0 +1,103 @@
+import json
+f = "../docs/ndx_last_analysis.json"
+old = json.load(open(f, encoding="utf-8"))
+assert old["trade_date"] == "2026-10-07"
+rules = old["system_rules"]
+d = {
+ "index": "^NDX", "symbol": "NDX", "trade_date": "2026-10-08", "data_basis": "2026-10-07 US close",
+ "close": 31160.08, "change_pct": -0.21, "vxn": 21.0, "pullback_prob": 55,
+ "headline_status": "mean brier 0.2444（n=15）。55 為中性偏空：盤中回補缺口後收在區間 96% 是真的強，但靠的是少數權值——SOXX -1.12%、QQQE -0.89%、廣度 5 日跌破 -0.5% 門檻，MACD 柱首度收斂、FOMC 紀要偏鷹。偏空理由略多，但信心不高。",
+ "rating": "中性偏空（**跳空低開後收回，但半導體與等權股沒跟**）：\n\n**10/7**：開 30,976.25（跳空 -0.80%）／低 30,904.46（09:30 棒）／高 31,170.12（15:30 棒）／收 31,160.08（-0.21%）——回補 31,117–31,208 缺口並下探，未觸 30,798 第三類買點低點；收在區間 96%、實體 +184 的長紅 K。\n\n**偏多三項**：①低開後一路收回、收在當日高點附近；②30,798 第三類買點守住、均線完整多頭；③NDX -0.21% 優於 beta 預期 -0.31%，VXN 21.15 → 21.0。\n\n**偏空六項**：①**SOXX -1.12%**，對 NDX 落後 0.91pp，逼近 rule15 -1.0pp 警報（連三日沒跟）；②**廣度 5 日 -0.92%**，跌破 -0.5% 窄化門檻、QQQE -0.89%；③MACD 柱 99 → 94 首度收斂；④FOMC 紀要偏鷹、10Y 盤中約 5.31%（收 5.277%）、DXY +0.4%；⑤QQQ 量 75.9%＝無量收回；⑥RSI 78.3、距 MA200 +13.0%。\n\nheadline 55% 由 rule16 推導（跌 35 ＋ 整理 40×0.5 ＝ 55）。**rule53：bias 中性偏空、headline 55 不在 46–54、情景離散度 15pp → 可掛順 lean 空單**。",
+ "volatility_scale": {"atr14_pct": 1.199, "range5_pct": 0.88, "expected_move_pct": 1.039, "rule27_threshold_pct": 0.624,
+   "executable_band": "30,966 – 31,354", "atr14_pts": 374, "half_atr_pts": 187, "spx_atr14_pct": 0.856, "vs_spx_atr_ratio": 1.401,
+   "note": "10/7 實際振幅 0.85%（266 點），與預期振幅相當。"},
+ "data_quality": {
+   "volume": "^NDX 9.8 億 ≪ 20 日均，屬未結算失真（rule36），改用 QQQ：25,365,300 ＝ 20 日均的 75.9%（偏輕），未達 rule43 帶量 1.155。",
+   "tnx": "yfinance ^TNX 收 5.277%（+0.8bps）；新聞稱盤中約 5.31%，以收盤值為準。",
+   "rsi_window": "RSI 82.9 → 78.3：移出 9/17 +501.9 點（大漲日）、新增 -64.4 點；下降主要是窗口效應，不是動能明顯轉弱。",
+   "close_revision": "10/6 收盤由 31,224.69 修正為 31,224.47（-0.22 點，可忽略）。",
+   "trade_date": "fetch_today trade_date 2026-10-07，與預期交易日一致（rule37）。"},
+ "breadth": {"qqqe_qqq_ratio": 0.1609, "chg_1d_pct": -0.64, "chg_5d_pct": -0.92, "vs_ma20_pct": -1.52,
+   "read": "5 日 -0.92% 跌破 -0.5% 窄化門檻；本日 QQQE -0.89% 對 QQQ -0.25%，少數權值撐盤。"},
+ "sector": {"soxx_close": 582.82, "soxx_chg_pct": -1.12, "soxx_chg5_pct": 2.49, "soxx_chg10_pct": 3.02,
+   "read": "SOXX -1.12% vs NDX -0.21%：落後 0.91pp，連三日未跟，逼近 rule15 的 -1.0pp 警報。"},
+ "macro": {"tnx": 5.277, "vix": 15.08, "vxn": 21.0, "dxy": 102.25, "brent": 101.51, "wti": 89.31,
+   "read": "FOMC 9 月紀要偏鷹，10Y 盤中回到約 5.31%、收 5.277%；DXY +0.4%、Brent 約 101。病因層仍是利率高檔＋油價，未出現新的突發衝擊。"},
+ "catalysts": [
+   "FOMC 9 月會議紀要偏鷹；10Y 盤中約 5.31%、30Y 約 5.68%",
+   "S&P 500 -0.22%、Nasdaq 綜合 -0.22%、Dow -0.66%（Caterpillar -5.7% 貢獻約 295 點）",
+   "SOXX -1.12%、等權 QQQE -0.89%：半導體與中小權值弱於指數",
+   "10/13 JPMorgan 開啟 Q3 財報季；10/28 FOMC"],
+ "news_check_rule49": "已執行。10/7 行情為 FOMC 紀要偏鷹＋全球債券殖利率回升＋油價回到約 100 美元；Dow 跌幅主要來自 Caterpillar 個股。無新的地緣／政策突發衝擊，不套用 rule2 下限，事件因子給 65（紀要偏鷹、10Y 盤中重回 5.31%）。病因＝利率；SOXX 弱為症狀之一。",
+ "regime_check": {"subjective": 55, "objective_avg": 58.6, "vs_base": 1.5,
+   "dims": {"vxn": "18-28 中波動 → 61.47%（+4.3pp）", "trend": "MA200 之上 → 53.46%（-3.7pp）", "ma20": "距 MA20 +3.33% 過度延伸 → 60.74%（+3.6pp）"},
+   "alignment": "主觀 55（中性偏空）vs 客觀 +1.5pp → 方向同向（皆略偏空），但 regime 三維內部分歧（2 偏空 1 偏多）且連四日 +1.5pp 未變、解析度低。單位不同，禁比絕對值。"},
+ "spx_cross_check": {
+   "ndx": {"pullback_prob": 55, "chg_pct": -0.21, "vxn": 21.0, "vs_base": 1.5},
+   "spx": {"pullback_prob": 47, "chg_pct": -0.22, "vix": 15.08, "vs_base": -6.2},
+   "verdict": "【分歧減半】NDX 55 中性偏空可掛空單、SPX 47 中性全日不掛。成因：①波動檔不同（VIX 15.1 低波動 -6.2pp vs VXN 21.0 中波動 +1.5pp）→ 風險集中在科技側；②NDX 引擎 SOXX -1.12% 連三日未跟，SPX 沒有這個因子。NDX 空單倉位依合併規則已減半。",
+   "beta_check": "SPX -0.22% × ATR 比 1.401 ＝ beta 預期 -0.31%，實際 -0.21% → NDX 優於 beta 0.10pp；但 SOXX、QQQE 都弱，是少數超大型權值撐住。"},
+ "predictions": {
+   "short_bias": "中性偏空",
+   "key_resistance": [31225, 31361, 31410, 31679],
+   "key_resistance_note": "31,208–31,225＝缺口上緣／歷史收盤高｜**31,361＝歷史盤中高**｜31,410＝反彈空停損｜31,679＝布林上軌",
+   "key_support": [31035, 30904, 30798, 30746],
+   "key_support_note": "31,035＝情景 C 邊界（-0.4%）｜**30,904＝10/7 低**｜**30,798＝第三類買點低點**｜30,746＝0.236 回撤（下方 30,737 舊缺口上緣）",
+   "fib_targets": {"swing": "9/16 低 28,753 → 10/6 高 31,361（2,608 點）", "r236": 30746, "r382": 30365, "r500": 30057,
+     "w5_ext_0618": 31328, "w5_ext_1000": 32099, "ma5": 30954, "ma20": 30157, "ma50": 29649, "ma200": 27572, "bb_upper": 31679},
+   "zhongshu": "舊中樞 30,236–30,630。10/5 第三類買點（低 30,798）成立；10/6 新缺口 31,117–31,208 已在 10/7 回補（低 30,904）但收回缺口內。第三類買點仍有效，失效條件：收盤跌破 30,737。若 10/7 低 30,904 被收盤跌破，10/6 高點即成為向下筆起點。",
+   "elliott": {"main": "第 5 浪可能已在 31,361（0.618 延伸 31,328 附近）見頂，10/7 為第一段下跌後的反抽；SOXX 與廣度走弱支持此看法，但尚無收盤確認",
+     "alt": "10/7 只是第 5 浪內的小 4 浪，回到 31,361 之上看 1.0 延伸 32,099；收盤跌破 30,798 則第 5 浪結束確認，看 30,746 → 30,365"},
+   "scenarios": {
+     "A_rebound": {"prob": 25, "trigger": "收盤 ≥ 31,285（+0.4%）", "target": "31,361 → 31,679"},
+     "B_range": {"prob": 40, "trigger": "收盤 31,035–31,285", "target": "缺口內整理"},
+     "C_pullback": {"prob": 35, "trigger": "收盤 ≤ 31,035（-0.4%）", "target": "30,904 → 30,798／30,746"}},
+   "weight_adjustments": [
+     {"factor": "基準", "effect": "A30 / B40 / C30"},
+     {"factor": "低開後收回、收在區間 96%、30,798 守住", "effect": "A +3、C -3"},
+     {"factor": "MACD 柱首度收斂、RSI 自 82.9 回落", "effect": "A -1、C +1"},
+     {"factor": "SOXX -1.12% 落後 0.91pp（rule15 半導體優先）", "effect": "A -3、C +3"},
+     {"factor": "廣度 5 日 -0.92% 跌破門檻、QQQE -0.89%", "effect": "A -2、C +2"},
+     {"factor": "QQQ 量 75.9% 無量收回", "effect": "A -1、C +1"},
+     {"factor": "FOMC 紀要偏鷹、10Y 盤中 5.31%、DXY +0.4%", "effect": "A -1、C +1"},
+     {"factor": "最終", "effect": "A25 / B40 / C35 → 35 + 20 ＝ **55**"}],
+   "strategies": {
+     "rebound_short": {"name": "反彈空（缺口上緣／歷史收盤高）", "order": "limit_sell", "entry": 31220, "dist_pct": 0.19,
+       "stop": 31410, "t1": 30980, "t2": 30800, "rr_t1": 1.26, "rr_t2": 2.21, "weight": 4,
+       "note": "rule52：停損 max(0.5×ATR 187, 31,361 之上) → 31,410；RR 1.26 → 倉位減半；與 SPX 分歧 → 已計入減半。"},
+     "breakdown_short": {"name": "破位空（收盤 < 31,035）", "order": "sell_stop_close_confirm", "entry": 31035, "dist_pct": -0.40,
+       "t1_reference": 30663, "t2_reference": 30291, "stop_reference": 31407, "rr_t1": 1.0, "rr_t2": 2.0, "weight": 5,
+       "note": "prc-003 浮動：T1／T2／停損＝成交價 −0.8／−1.6／+0.8 ATR（ATR14 1.199%）。"}},
+   "rejected": [
+     {"name": "回踩多（30,910）", "order": "limit_buy", "entry": 30910, "dist_pct": -0.80, "reason": "rule53 逆 lean；rule27 距離 0.80% > 0.624%"},
+     {"name": "突破多（31,370）", "order": "buy_stop", "entry": 31370, "dist_pct": 0.67, "reason": "rule53 逆 lean；rule27 超門檻；未帶量"},
+     {"name": "破位空（收盤 < 30,904）", "order": "sell_stop_close_confirm", "entry": 30900, "dist_pct": -0.83, "reason": "rule27 距離 0.83% > 0.624%"}],
+   "position_note": "bias 中性偏空（40–60 帶）→ 任一方向 ≤15%；兩張空單合計 9%。rule52／53 生效後首度放行（10/5–10/7 皆中性不掛）。",
+   "watch_points": [
+     "**31,208–31,225**：缺口上緣＋歷史收盤高＝反彈空掛單區；收盤站回 31,285 之上＝情景 A，空單邏輯失效",
+     "**31,035／30,904**：收盤跌破 31,035 觸發破位空；跌破 10/7 低 30,904 確認向下筆",
+     "**30,798／30,737**：第三類買點低點與舊缺口上緣；收盤跌破 30,737 = 第三類買點失效",
+     "**SOXX**：落後擴大到 -1.0pp 觸發 rule15 輪動警報；反之 SOXX 領漲則偏空論點作廢",
+     "**10Y 5.28%**：盤中 5.31% 是壓力線，站上去 NDX 壓力加重；跌破 5.20% 才算轉機",
+     "10/13 JPMorgan 開啟財報季；10/28 FOMC（排程事件，不預先調整機率）"]},
+ "six_factor_reference": {"weighted": 70.0, "detail": "過熱 80×25% + 乖離 80×20% + 利率事件 65×30% + 量能 60×15% + 結構 55×10%",
+   "note": "與 headline 55 相差 15pp，不平均（rule16）。"},
+ "system_rules": rules,
+ "system_rules_notes": [
+   "rule36：^NDX 量失真，改用 QQQ 75.9%（未帶量）",
+   "rule16：35 + 40×0.5 = 55",
+   "rule53：bias 中性偏空、headline 55、離散度 15pp → 只掛空單（逆 lean 多單 weight 0）",
+   "rule52：反彈空停損 31,410（190 點 ≥ 0.5 ATR 187，且在歷史高 31,361 之外）；RR 1.26 → 倉位減半",
+   "rule27：門檻 0.624%，可執行帶 30,966–31,354；30,904 破位空與 30,910 回踩多超門檻",
+   "rule49：新聞已查（FOMC 紀要偏鷹、殖利率回升、油價），無突發衝擊，不套 rule2 下限",
+   "rule15：SOXX -1.12% vs NDX -0.21%（落後 0.91pp，未達 -1.0pp 但連三日）"],
+ "candidate_updates": {"cand-003": "regime 連四日 +1.5pp 未變。",
+   "note": "未新增候補；候補上限 15。觀察：rule53 影子帳 10/7 擋下的回踩多跳空成交後同棒掃停損（約 -0.18%），四日影子淨效果仍接近 0。"},
+ "backtest_prev": {"report_date": "2026-10-07", "predicted": "中性 54%，預期 flat", "actual": "10/7 收 31,160.08，-0.21% → flat",
+   "grade": "hit", "brier": None,
+   "pnl": "rule53 全日不掛，當日 0bp，累積 -3.95bp。影子帳：回踩多 31,120 跳空成交於 30,976，同棒低 30,906.6 掃停損 30,920（約 -0.18%）。",
+   "scenario": "情景 B（39%）實現：收盤 31,160 在 31,100–31,350；盤中回補 31,117 缺口。"},
+ "dashboard_url": "https://johnnyhsu5509.github.io/spx-analysis/ndx/",
+ "dated_report_url": "https://johnnyhsu5509.github.io/spx-analysis/ndx-analysis-20261008.html"}
+json.dump(d, open(f, "w", encoding="utf-8"), ensure_ascii=False, indent=1)
+open("ndx_last_1008.txt", "w", encoding="utf-8").write("OK\n")
