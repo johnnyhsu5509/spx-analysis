@@ -339,6 +339,18 @@
    "basis_date": "2026-10-07",
    "pullback_prob": 55,
    "bias": "中性偏空",
+   "actual_date": "2026-10-08",
+   "actual_pct": -1.39,
+   "actual_dir": "down",
+   "grade": "hit",
+   "note": "10/8 開 30,985.23 → 高 31,125.13（10:00 棒）→ 午後急殺低 30,556.40（13:00 棒）→ 收 30,725.81（-1.39%）→ **down**。預測中性偏空 55% 遇 down → **hit**。Brier (0.55-1)² = 0.2025。\n\n【情景 C（35%）實現且超標】收盤 ≤ 31,035 成立，並跌破 30,904／30,798／30,746，收盤 30,725.81 < 30,737 → 第三類買點失效。\n\n【病因】FT 報導 OpenAI 營收不如預期 → AI 交易受挫，SOXX -3.35%；Brent +3.5% 至 103.7（伊朗戰事、荷莫茲油輪遇襲）。10Y 反落 5.231%，非利率驅動。"
+  },
+  {
+   "report_date": "2026-10-09",
+   "basis_close": 30725.81,
+   "basis_date": "2026-10-08",
+   "pullback_prob": 56,
+   "bias": "中性偏空",
    "actual_date": null,
    "actual_pct": null,
    "actual_dir": null,
@@ -346,12 +358,12 @@
   }
  ],
  "summary": {
-  "as_of": "2026-10-08",
-  "graded": 26,
-  "hits": 11,
+  "as_of": "2026-10-09",
+  "graded": 27,
+  "hits": 12,
   "half": 12,
   "miss": 3,
-  "rolling_direction_score_pct": 65.4,
+  "rolling_direction_score_pct": 66.7,
   "gap_days": [
    "2026-08-27",
    "2026-08-31",
@@ -363,10 +375,10 @@
    "2026-09-25",
    "2026-09-28"
   ],
-  "sample_caveat": "n=26。65.4% ＝ (11 hit + 12 half×0.5 + 3 miss) / 26。always-neutral 基準 71.2%（依 audit_20261002 須並列）。",
+  "sample_caveat": "n=27。66.7% ＝ (12 hit + 12 half×0.5 + 3 miss) / 27。always-neutral 基準 70.4%（依 audit_20261002 須並列）。",
   "brier": {
-   "as_of": "2026-10-08",
-   "included": 15,
+   "as_of": "2026-10-09",
+   "included": 16,
    "excluded_flat": 11,
    "per_entry": [
     {
@@ -524,18 +536,24 @@
      "p": 0.54,
      "outcome": "flat_excluded",
      "brier": null
+    },
+    {
+     "report_date": "2026-10-08",
+     "p": 0.55,
+     "outcome": 1,
+     "brier": 0.2025
     }
    ],
-   "mean_brier": 0.2444,
+   "mean_brier": 0.2417,
    "benchmark_50pct": 0.25,
    "prob_range_observed": "43-63（n=16，範圍 20pp）",
-   "honest_read": "mean brier **0.2444**（n=15），與 0.25 基準相當。10/7 報 54 遇平 -0.21%，flat 排除不計。"
+   "honest_read": "mean brier 0.2444 → **0.2417**（n=16），略優於 0.25 基準。10/8 報 55 中性偏空遇 -1.39%，方向對但機率仍在窄帶。"
   },
   "gap_days_note": "2026-08-27 與 2026-08-31 兩個美股交易日未產出報告，無預測可回測，不計入任何統計。兩次都是「前一日已產報告、隔天沒跑」造成的斷點。連續八個交易日中斷兩次＝覆蓋率 75%，這個比率本身值得注意：帳本的統計效力會被斷點稀釋。",
   "coverage_note": "**9/21 為 gap day**（NDX +2.83%，本波最大漲幅日未被覆蓋）。累積覆蓋率 17/24 = **70.8%**，續創新低。",
   "data_correction_note": "【2026-08-28 收盤價修正】Yahoo 已恢復該日日線，官方收盤 **29,433.43**，先前使用的 30 分 K 回補值為 29,430.20（差 3.23 點）。影響核對：8/28 的 actual_pct 由 -0.71% 修為 **-0.70%**，仍 ≤ -0.4%、仍判 down、仍為 miss，grade 與 brier 皆不變。P&L 帳本的 8/28 兩筆單以 High/Low 判定，不涉及 Close，亦不變。**當時的揭露（記錄兩個數字並標明差異）現已證實為正確做法。**",
   "audit_20261002": "**基準線對照（2026-10-02 稽核）**：依本帳計分規則，「每天都報中性」的基準分數為 **72.7%**（22 筆：flat 10／up 4／down 8），系統 **65.9%**，**低於無腦基準 6.8pp**。改看「方向判斷遇方向日」：9 筆對 6 筆＝66.7%（樣本太小）；Brier 0.2395 vs 基準 0.25。**往後引用滾動分數時須並列 always-neutral 基準**。",
   "gap_codex_coverage": "gap day 中 9/11、9/14、9/17、9/21、9/25、9/28 六日，Codex 第二意見系統有前瞻預測，存於 Codex 自己的追蹤帳；依「不同系統不合併計分」原則**不併入本帳**。8/27、8/31、9/8 兩套系統皆無預測。",
-  "always_neutral_baseline_pct": 71.2
+  "always_neutral_baseline_pct": 70.4
  }
 }

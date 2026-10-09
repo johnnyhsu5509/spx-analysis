@@ -1475,24 +1475,94 @@
    "day_weighted_bp": 0.0,
    "shadow_rejected": "【僅揭露、不計帳】被 rule53 擋下的單：回踩多 limit_buy 31,120 跳空開在 30,976 成交（優於掛單價），同一根 09:30 棒低 30,906.6 跌破停損 30,920 → 停損出場約 -0.18%（之後收回 31,160，被洗出場）；反彈空 31,400、突破多 31,370 未觸發；破位空收盤 31,160 > 31,100 未觸發。",
    "day_note": "rule53 全日不掛 → 當日 **0bp**。累積維持 **-3.95bp**。"
+  },
+  {
+   "report_date": "2026-10-08",
+   "basis_close": 31160.08,
+   "eval_date": "2026-10-08",
+   "eval_ohlc": {
+    "open": 30985.23,
+    "high": 31125.13,
+    "low": 30556.4,
+    "close": 30725.81
+   },
+   "rule50_check": "反彈空 limit_sell 開盤 30,985.23 < 停損 31,410 → 未跳空穿越；破位空為收盤確認單不適用。",
+   "rule51_check": "無限價單成交，不需判序。",
+   "trades": [
+    {
+     "name": "反彈空（缺口上緣／前收盤高 31,208–31,225）",
+     "order": "limit_sell",
+     "entry_signal": 31220,
+     "dir": "short",
+     "weight": 4,
+     "signal_triggered": false,
+     "filled": false,
+     "status": "NOT_TRIGGERED — 全日高 31,125.13 未及 31,220",
+     "pts": null,
+     "ret_pct": null,
+     "weighted_bp": 0.0
+    },
+    {
+     "name": "破位空（收盤 < 31,035）",
+     "order": "sell_stop_close_confirm",
+     "entry_signal": 31035,
+     "dir": "short",
+     "weight": 5,
+     "signal_triggered": true,
+     "filled": true,
+     "status": "FILLED → OPEN_POSITION（prc-001 留倉至次一交易日）",
+     "fill_price": 30725.81,
+     "fill_note": "收盤 30,725.81 < 31,035，rule12 收盤確認成立；同時跌破 30,737 第三類買點失效位。",
+     "slippage_pts": 309.19,
+     "floating_targets": {
+      "atr_source": "訊號日 2026-10-07 的 ATR14 = 1.199%",
+      "atr_pts": 368.4,
+      "t1": 30431.09,
+      "t2": 30136.37,
+      "stop": 31020.53,
+      "note": "T1 = 成交價 − 0.8 ATR、T2 = 成交價 − 1.6 ATR、停損 = 成交價 + 0.8 ATR。RR 恆為 1.00／2.00。"
+     },
+     "gap_check": "通過（浮動 T1 恆距成交價 0.8 ATR）。",
+     "pts": null,
+     "ret_pct": null,
+     "weighted_bp": null
+    }
+   ],
+   "day_weighted_bp": 0.0,
+   "day_note": "反彈空未觸發、破位空成交留倉 → 當日 **0bp**（留倉待 10/9 判定）。累積維持 **-3.95bp**。"
   }
  ],
- "open_positions": [],
+ "open_positions": [
+  {
+   "opened_report": "2026-10-08",
+   "name": "破位空",
+   "order": "sell_stop_close_confirm",
+   "dir": "short",
+   "weight": 5,
+   "fill_date": "2026-10-08",
+   "fill_price": 30725.81,
+   "t1": 30431.09,
+   "t2": 30136.37,
+   "stop": 31020.53,
+   "eval_on": "2026-10-09",
+   "exit_rule": "次一交易日依浮動 T1／T2／停損判定；同日停損與目標皆觸及保守視為停損先到；皆未觸及則收盤平倉。"
+  }
+ ],
  "summary": {
-  "as_of": "2026-10-08",
-  "days_evaluated": 26,
-  "trades_total": 46,
-  "signals_triggered": 24,
-  "trades_filled": 21,
+  "as_of": "2026-10-09",
+  "days_evaluated": 27,
+  "trades_total": 48,
+  "signals_triggered": 25,
+  "trades_filled": 22,
   "trades_gap_invalidated": 3,
-  "trades_not_triggered": 22,
+  "trades_not_triggered": 23,
   "filled_win": 7,
   "filled_loss": 14,
   "filled_flat": 0,
-  "fill_rate_pct": 45.7,
-  "gap_invalidation_rate_pct": 12.5,
+  "fill_rate_pct": 45.8,
+  "gap_invalidation_rate_pct": 12.0,
   "cumulative_weighted_bp": -3.95,
-  "open_positions": 0,
+  "open_positions": 1,
   "gap_days": [
    "2026-08-18",
    "2026-08-27",
@@ -1505,68 +1575,57 @@
    "2026-09-25",
    "2026-09-28"
   ],
-  "honest_read": "累積維持 **-3.95bp**（30 分 K 揭露口徑 -6.24bp）。rule52／53 生效後連四日（10/5–10/8 報告前）中性全日不掛；影子帳 10/5 擋下約 -0.74bp、10/6 擋下兩張小賺單、10/7 擋下回踩多（跳空成交後同棒掃停損約 -0.18%）→ 新制影子淨效果接近 0。10/8 報告首度有順 lean 空單可掛。成交 21 筆 7 勝 14 敗。",
+  "honest_read": "累積維持 **-3.95bp**（30 分 K 揭露口徑 -6.24bp）。rule52／53 生效後首張放行單：10/8 破位空收盤 30,725.81 成交留倉（滑價 309 點，浮動目標不受影響），反彈空未觸發。已結算成交 21 筆 7 勝 14 敗，另 1 筆留倉。",
   "cumulative_if_intraday_checked": -6.24
  },
  "trades_pending": {
-  "report_date": "2026-10-08",
-  "basis_close": 31160.08,
-  "eval_rule": "用 2026-10-08 美股 NDX OHLC 判定。limit_sell 開盤 ≥ 停損 → GAP_INVALIDATED（prc-004）；同日成交與觸價以 30 分 K 判序（rule51）。close-confirm 以收盤 < 31,035 成交，T1／T2／停損依 prc-003 浮動（ATR14 1.199%）。",
-  "signal_atr14_pct": 1.199,
-  "divergence_check": "NDX 55 中性偏空 vs SPX 47 中性（全日不掛）→ 分歧，NDX 側倉位已減半。regime：VXN 中波動 +1.5pp vs SPX VIX<16 -6.2pp → 波動檔分歧持續。",
+  "report_date": "2026-10-09",
+  "basis_close": 30725.81,
+  "eval_rule": "用 2026-10-09 美股 NDX OHLC 判定；limit_sell 開盤 ≥ 停損 → GAP_INVALIDATED（prc-004）；同日成交與觸價以 30 分 K 判序（rule51）。另判 open_positions 的 10/8 破位空（浮動 T1 30431.09／T2 30136.37／停損 31020.53）。",
+  "signal_atr14_pct": 1.292,
+  "divergence_check": "NDX 56 中性偏空 vs SPX 52 中性（rule62 全日不掛）→ 分歧，NDX 側倉位已減半。成因：VXN 21.98 中波動 vs VIX 15.41 低波動；AI／晶片衝擊集中在 NDX（SOXX -3.35%），SPX 等權撐住。",
   "trades": [
    {
-    "name": "反彈空（缺口上緣／前收盤高 31,208–31,225）",
+    "name": "反彈空（10/7 低 30,904 轉壓力）",
     "order": "limit_sell",
-    "entry_signal": 31220,
+    "entry": 30900,
     "dir": "short",
-    "stop": 31410,
-    "t1": 30980,
-    "t2": 30800,
-    "dist_pct": 0.19,
-    "rr_t1": 1.26,
-    "rr_t2": 2.21,
+    "stop": 31135,
+    "t1": 30560,
+    "t2": 30365,
+    "dist_pct": 0.57,
+    "rr_t1": 1.45,
+    "rr_t2": 2.28,
     "weight": 4,
-    "note": "rule52：停損 max(0.5×ATR 187 點, 31,361 歷史高之上) → 31,410（190 點）。RR 1.26 → 倉位減半。"
-   },
-   {
-    "name": "破位空（收盤 < 31,035）",
-    "order": "sell_stop_close_confirm",
-    "entry_signal": 31035,
-    "dir": "short",
-    "t1_reference": 30663,
-    "t2_reference": 30291,
-    "stop_reference": 31407,
-    "dist_pct": -0.4,
-    "weight": 5,
-    "note": "prc-003 浮動：T1＝成交價−0.8×ATR、T2＝−1.6×ATR、停損＝+0.8×ATR（ATR14 1.199%）。參考價以 31,035 試算。"
+    "note": "rule52：停損 max(0.5×ATR 199 點, 10/8 高 31,125 之上) → 31,135（235 點）。RR 1.45 → 倉位減半；與 SPX 分歧 → 已計入減半。"
    }
   ],
   "rejected_by_rule53": [
    {
-    "name": "回踩多（30,910 當日低）",
+    "name": "回踩多（10/8 低 30,556）",
     "order": "limit_buy",
-    "entry": 30910,
-    "dist_pct": -0.8,
-    "reason": "逆 lean（bias 中性偏空）weight 0；且距離 0.80% 超 rule27 門檻 0.624%。"
+    "entry": 30560,
+    "dist_pct": -0.54,
+    "reason": "逆 lean（bias 中性偏空）weight 0。"
    },
    {
-    "name": "突破多（31,370 歷史高之上）",
+    "name": "突破多（10/8 高 31,125 之上）",
     "order": "buy_stop",
-    "entry": 31370,
-    "dist_pct": 0.67,
-    "reason": "逆 lean weight 0；超 rule27 門檻；QQQ 量 75.9% 未帶量。"
+    "entry": 31130,
+    "dist_pct": 1.32,
+    "reason": "逆 lean weight 0；且超 rule27 門檻 0.695%。"
    }
   ],
   "rejected_by_rule27": [
    {
-    "name": "破位空（收盤 < 30,904 當日低）",
-    "order": "sell_stop_close_confirm",
-    "entry": 30900,
-    "dist_pct": -0.83,
-    "reason": "距離 0.83% 超 rule27 門檻 0.624%。"
+    "name": "反彈空（MA5 30,999／10/8 開盤 30,985）",
+    "order": "limit_sell",
+    "entry": 30995,
+    "dist_pct": 0.88,
+    "reason": "距離 0.88% 超 rule27 門檻 0.695%。"
    }
-  ]
+  ],
+  "not_added": "不再加掛收盤確認空：10/8 破位空已留倉 5%，不疊加同型態部位（比照 9/24 先例）。"
  },
  "gap_note_2026_08_27": {
   "date": "2026-08-27",
