@@ -1581,12 +1581,29 @@
    ],
    "day_weighted_bp": -2.34,
    "day_note": "留倉破位空收盤平倉 -2.56bp、反彈空收盤平倉 +0.22bp → 當日 **-2.34bp**。累積 -3.95 → **-6.29bp**。"
+  },
+  {
+   "report_date": "2026-10-12",
+   "basis_close": 30883.15,
+   "eval_date": "2026-10-12",
+   "eval_ohlc": {
+    "open": 30796.04,
+    "high": 30813.96,
+    "low": 30618.64,
+    "close": 30664.7
+   },
+   "rule50_check": "rule53 全日不掛，無單可判。",
+   "rule51_check": "無成交單，不需判序。",
+   "trades": [],
+   "day_weighted_bp": 0.0,
+   "shadow_rejected": "【僅揭露、不計帳】被 rule53 擋下的單：回踩多 limit_buy 30,770 於 09:30 棒成交（開 30,792、低 30,719），停損 30,546 未觸（全日低 30,619）、T1 30,947 未觸 → 收盤 30,664.70 約 -0.34%；反彈空 30,945 未觸發（高 30,814）；破位空收盤 30,665 > 30,556 未觸發；突破多 31,130 未觸發。",
+   "day_note": "rule53 全日不掛 → 當日 **0bp**。累積維持 **-6.29bp**。"
   }
  ],
  "open_positions": [],
  "summary": {
-  "as_of": "2026-10-12",
-  "days_evaluated": 28,
+  "as_of": "2026-10-13",
+  "days_evaluated": 29,
   "trades_total": 49,
   "signals_triggered": 26,
   "trades_filled": 23,
@@ -1611,52 +1628,52 @@
    "2026-09-25",
    "2026-09-28"
   ],
-  "honest_read": "累積 -3.95 → **-6.29bp**（30 分 K 揭露口徑 -8.58bp）。rule53 首次放行的兩張空單結算：10/8 破位空（收盤成交、滑價 309 點）隔日反彈收盤平倉 -2.56bp；10/9 反彈空開盤成交、收盤平倉 +0.22bp。已結算成交 23 筆 8 勝 15 敗，無留倉。",
+  "honest_read": "累積維持 **-6.29bp**（30 分 K 揭露口徑 -8.58bp）。10/12 rule53 全日不掛，記 0bp；被擋下的回踩多若掛出會以約 -0.34% 收盤（僅揭露）。已結算成交 23 筆 8 勝 15 敗，無留倉。",
   "cumulative_if_intraday_checked": -8.58
  },
  "trades_pending": {
-  "report_date": "2026-10-12",
-  "basis_close": 30883.15,
-  "eval_rule": "用 2026-10-12 美股 NDX OHLC 判定。**本日 rule53 全日不掛**（bias 中性、headline 53 落在 46–54），無單可評估、無留倉；明日記 0bp 並更新 days_evaluated。",
-  "signal_atr14_pct": 1.125,
-  "divergence_check": "NDX 53 vs SPX 47 同為中性、同為全日不掛，但偏向相反（NDX 略偏空、SPX 略偏多）。成因：SPX 已站回 10/7 高、離 ATH 收盤 7 點，NDX 仍在 MA5 與 10/8 高之下的 inside day；SOXX 連兩日不跟；VXN 20.55 中波動 vs VIX 14.84 低波動。",
+  "report_date": "2026-10-13",
+  "basis_close": 30664.7,
+  "eval_rule": "用 2026-10-13 美股 NDX OHLC 判定。**本日 rule53 全日不掛**（bias 中性、headline 52 落在 46–54），無單可評估、無留倉；明日記 0bp 並更新 days_evaluated。",
+  "signal_atr14_pct": 1.128,
+  "divergence_check": "NDX 52 vs SPX 53 同為中性、同為全日不掛。數字接近但成因不同：SPX 10/12 只跌 0.06%、振幅 0.32% 貼著高點壓縮；NDX 跌 0.71%、跌破 10/9 inside day 下緣與 0.236 回撤，SOXX 連三日落後。VXN 20.84 中波動 vs VIX 15.21 低波動。",
   "trades": [],
   "rejected_by_rule53": [
    {
-    "name": "反彈空（10/9 高 30,947）",
+    "name": "反彈空（10/9 低 30,770 轉壓力）",
     "order": "limit_sell",
-    "entry": 30945,
-    "stop": 31135,
-    "t1": 30770,
-    "dist_pct": 0.2,
-    "rr_t1": 0.92,
-    "reason": "rule53 中性全日不掛；即使可掛，rule52 停損 31,135（190 點）下 RR 0.92 <1.0 亦不掛。"
+    "entry": 30770,
+    "stop": 30957,
+    "t1": 30619,
+    "dist_pct": 0.34,
+    "rr_t1": 0.81,
+    "reason": "rule53 中性全日不掛；rule52 停損須在 MA5 30,932／10/9 高 30,947 之外（187 點）→ RR 0.81 <1.0。"
    },
    {
-    "name": "回踩多（10/9 低 30,770）",
+    "name": "回踩多（10/8 低 30,556）",
     "order": "limit_buy",
-    "entry": 30770,
-    "stop": 30546,
-    "t1": 30947,
-    "dist_pct": -0.37,
-    "rr_t1": 0.79,
-    "reason": "rule53 中性全日不掛；rule52 停損須在 10/8 低 30,556 之外（224 點）→ RR 0.79 <1.0。"
-   }
-  ],
-  "rejected_by_rule27": [
+    "entry": 30560,
+    "stop": 30380,
+    "t1": 30770,
+    "dist_pct": -0.34,
+    "rr_t1": 1.17,
+    "reason": "rule53 中性全日不掛；rule8 不掛限價單在支撐等接。rule52 停損 30,380（MA20 之外，180 點）下 RR 1.17，即使可掛亦須減半。"
+   },
    {
     "name": "破位空（收盤 < 30,556）",
     "order": "sell_stop_close_confirm",
     "entry": 30556,
-    "dist_pct": -1.06,
-    "reason": "rule53 中性全日不掛；距離 1.06% 亦超 rule27 門檻 0.625%。"
-   },
+    "dist_pct": -0.35,
+    "reason": "rule53 中性全日不掛（距離 0.35% 在 rule27 門檻內，純因中性被擋）。"
+   }
+  ],
+  "rejected_by_rule27": [
    {
-    "name": "突破多（10/8 高 31,125 之上）",
+    "name": "突破多（10/9 高 30,947 之上）",
     "order": "buy_stop",
-    "entry": 31130,
-    "dist_pct": 0.8,
-    "reason": "rule53 中性全日不掛；距離 0.80% 亦超 rule27 門檻 0.625%。"
+    "entry": 30950,
+    "dist_pct": 0.93,
+    "reason": "rule53 中性全日不掛；距離 0.93% 亦超 rule27 門檻 0.603%。"
    }
   ]
  },
