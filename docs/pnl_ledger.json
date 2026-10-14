@@ -4122,7 +4122,7 @@
   },
   {
    "report_date": "2026-10-13",
-   "eval_date": "pending(2026-10-13 US close)",
+   "eval_date": "2026-10-13",
    "basis_close": 7807.24,
    "thresholds": {
     "rule27_pct": 0.41,
@@ -4181,12 +4181,84 @@
      "reason": "rule27 超標（0.50% > 0.410%）；rule3：MACD 柱轉縮（11.13→10.66）不成立、量能為初值不可判定；rule62"
     }
    ],
-   "structure_note": "**今日無 edge，不掛（rule62）**：bias 中性、headline 53 落在 46–54、情景離散度 6pp <10pp，三條全中（連 7 日）。四種策略照列供對照，weight 皆 0；窄幅盤下兩張限價單的 T1 風報比皆 <1.0，依 rule61 也不成立"
+   "structure_note": "**今日無 edge，不掛（rule62）**：bias 中性、headline 53 落在 46–54、情景離散度 6pp <10pp，三條全中（連 7 日）。四種策略照列供對照，weight 皆 0；窄幅盤下兩張限價單的 T1 風報比皆 <1.0，依 rule61 也不成立",
+   "ohlc": {
+    "o": 7795.27,
+    "h": 7814.15,
+    "l": 7786.11,
+    "c": 7805.45
+   },
+   "results": [],
+   "day_weighted_bp": 0.0,
+   "day_note": "**0bp（rule62 全日不掛），累積維持 -1.88bp。**對照（不入帳）：long_pullback 7,797——開盤 7,795.27 已在掛價之下，依 rule50 以開盤價成交；全日低 7,786.11 未觸停損 7,760、高 7,814.15 未達 T1 7,821，收盤強平 7,805.45＝**+10.2 點**；short_resist 7,821 未成交（高 7,814.15）；short_breakdown 收破 7,779 未觸發；breakout_long 7,846 未觸價。對照組 +10.2 點——今日 rule62 少賺一筆（該單 RR 0.65，依 rule61 本來也不掛）。discretionary_log 不新增"
+  },
+  {
+   "report_date": "2026-10-14",
+   "eval_date": "pending(2026-10-14 US close)",
+   "basis_close": 7805.45,
+   "thresholds": {
+    "rule27_pct": 0.392,
+    "rule31_up_pct": 0.145,
+    "rule31_down_pct": 0.378,
+    "exec_band": "7,775–7,836 (rule27)｜上行掛單<=7,817｜下行掛單>=7,776 (rule31)",
+    "note": "ATR14（Wilder）61.04（0.782%）、近5日均振幅 0.524% → 預期振幅 0.653%，rule27 門檻 0.392%；rule61 停損下限 0.5×ATR＝30.5 點"
+   },
+   "trades_pending": [],
+   "rule27_rejected": [
+    {
+     "name": "short_resist",
+     "order": "limit_sell",
+     "entry": 7821,
+     "stop": 7853,
+     "t1": 7786,
+     "t2": 7779,
+     "dist_pct": 0.2,
+     "threshold_pct": 0.392,
+     "rr_t1": 1.09,
+     "weight": 0,
+     "reason": "rule23（開盤前 CPI，不預掛限價單）；rule62 全日不掛。錨 10/9、10/12 雙高 7,821，停損放 ATH 盤中高 7,844.52 之外並滿足 0.5×ATR（32 點）；T1 取 10/13 低 7,786，RR 1.09（rule61 屬減半區）；另超出 rule31 上行門檻 0.145%（≤7,817）"
+    },
+    {
+     "name": "short_breakdown",
+     "order": "sell_stop_close_confirm",
+     "entry": 7779,
+     "stop": 7815,
+     "t1": 7731,
+     "t2": 7700,
+     "dist_pct": -0.34,
+     "threshold_pct": 0.392,
+     "weight": 0,
+     "reason": "rule62 全日不掛；收破 7,779（10/9 低）＝10/9 站上 7,807 為假突破、回測 7,731"
+    },
+    {
+     "name": "long_pullback",
+     "order": "limit_buy",
+     "entry": 7786,
+     "stop": 7755,
+     "t1": 7814,
+     "t2": 7821,
+     "dist_pct": -0.25,
+     "threshold_pct": 0.392,
+     "rr_t1": 0.9,
+     "weight": 0,
+     "reason": "rule23；rule62 全日不掛。錨 10/13 低 7,786（rule8 首觸即掛），停損放 10/7 低 7,763 之下並滿足 0.5×ATR（31 點）；T1 取 10/13 高 7,814，RR 0.90 <1.0 → rule61 本就不掛"
+    },
+    {
+     "name": "breakout_long",
+     "order": "buy_stop",
+     "entry": 7846,
+     "dist_pct": 0.52,
+     "threshold_pct": 0.392,
+     "weight": 0,
+     "reason": "rule27 超標（0.52% > 0.392%）；rule3：MACD 柱連兩日收縮（10.66→9.45）不成立、量能為初值不可判定；rule23；rule62"
+    }
+   ],
+   "structure_note": "**今日無 edge，不掛（rule23＋rule62）**：10/14 開盤前公布 9 月 CPI，依 rule23 不預掛限價單；且 bias 中性、headline 50 落在 46–54、情景離散度 0pp <10pp，rule62 三條全中（連 8 日）。四種策略照列供對照，weight 皆 0"
   }
  ],
  "summary": {
-  "as_of": "2026-10-13",
-  "days_evaluated": 60,
+  "as_of": "2026-10-14",
+  "days_evaluated": 61,
   "trades_total": 141,
   "trades_filled": 47,
   "filled_win": 17,
@@ -4205,7 +4277,7 @@
    "2026-09-25",
    "2026-09-28"
   ],
-  "honest_read": "10/12 rule62 全日不掛，**0bp，累積維持 -1.88bp**（60 日）。對照：long_pullback 7,807 會成交、收盤強平 +0.2 點，其餘三張未觸發——當日 rule62 無得無失（前五個掛單對照日皆為擋掉虧損）。10/13 第七度三條全中、不掛。",
+  "honest_read": "10/13 rule62 全日不掛，**0bp，累積維持 -1.88bp**（61 日）。對照：long_pullback 7,797 依 rule50 以開盤 7,795.27 成交、收盤強平 +10.2 點，其餘三張未觸發——當日 rule62 少賺（該單 RR 0.65，rule61 本來也不掛）。10/14 開盤前有 CPI（rule23），且 rule62 第八度三條全中、不掛。",
   "fill_rate_pct": 33.3,
   "filled_flat": 5,
   "count_note": "win10+loss12+flat2=24 與 filled=25 差1筆,為2026-08-18之前既有的分類遺漏(彼時已存在,非本次新增);entries陣列僅保留部分明細故無法回溯重算,照實標記不平帳,不以調整數字掩蓋",
