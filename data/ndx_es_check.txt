@@ -1,48 +1,48 @@
 {
-  "checked_at": "2026-10-13 02:35",
+  "checked_at": "2026-10-14 00:19",
   "session": {
     "label": "US_REGULAR",
     "note": "美股盤中：即時讀數"
   },
   "nq": {
-    "last": 30653.0,
-    "prev_close": 31236.25,
-    "change_pct": -1.87,
-    "signal": "BEARISH"
+    "last": 30790.0,
+    "prev_close": 30672.5,
+    "change_pct": 0.38,
+    "signal": "BULLISH"
   },
   "implied_ndx_open": {
-    "approx": 30438.0,
-    "index_prev_close": 30664.7,
-    "fut_at_prior_close": 30879.75,
-    "fut_pt_chg": -226.75,
+    "approx": 30561.5,
+    "index_prev_close": 30569.48,
+    "fut_at_prior_close": 30798.0,
+    "fut_pt_chg": -8.0,
     "method": "point_anchor",
     "note": "方案A：NQ=F點數錨定，基差已抵銷"
   },
-  "es_change_pct": -0.56,
+  "es_change_pct": 0.12,
   "soxx_semis": {
-    "last": 544.85,
-    "change_pct": -2.6
+    "last": 543.9,
+    "change_pct": -0.17
   },
   "semi_vs_ndx": {
-    "divergence_pp": -0.73,
+    "divergence_pp": -0.55,
     "read": "同步"
   },
   "vxn": 20.84,
   "us10y": {
-    "yield_pct": 5.24,
-    "prev_pct": 5.244,
-    "change_bps": -0.4,
+    "yield_pct": 5.217,
+    "prev_pct": 5.24,
+    "change_bps": -2.3,
     "signal": "FLAT"
   },
   "dxy": {
-    "last": 102.4,
-    "prev_close": 102.17,
-    "change_pct": 0.23,
+    "last": 102.17,
+    "prev_close": 102.41,
+    "change_pct": -0.24,
     "signal": "FLAT"
   },
   "macro_backdrop": {
-    "score": -2,
-    "read": "RISK_OFF 偏空",
+    "score": 1,
+    "read": "MIXED 中性",
     "note": "NQ+ES+10Y+DXY+VXN 合成；±2 以上才定調"
   },
   "data_status": "OK"
