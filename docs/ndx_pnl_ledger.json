@@ -1629,12 +1629,29 @@
    "day_weighted_bp": 0.0,
    "shadow_rejected": "【僅揭露、不計帳】被 rule53 擋下的單：回踩多 limit_buy 30,560——開盤 30,404 已跳空越過進場位（不可執行；若以開盤價成交，09:30 棒低 30,377 即觸及停損 30,380）；反彈空 30,770 未觸發（高 30,596）；破位空收盤 30,569 > 30,556 未觸發；突破多 30,950 未觸發。",
    "day_note": "rule53 全日不掛 → 當日 **0bp**。累積維持 **-6.29bp**。"
+  },
+  {
+   "report_date": "2026-10-14",
+   "basis_close": 30569.48,
+   "eval_date": "2026-10-14",
+   "eval_ohlc": {
+    "open": 30316.03,
+    "high": 30436.6,
+    "low": 29861.06,
+    "close": 29950.82
+   },
+   "rule50_check": "rule53 全日不掛，無單可判。",
+   "rule51_check": "無成交單，不需判序。",
+   "trades": [],
+   "day_weighted_bp": 0.0,
+   "shadow_rejected": "【僅揭露、不計帳】被擋下的單：反彈空 limit_sell 30,619 未觸發（高 30,437）；回踩多 limit_buy 30,472——開盤 30,316 已跳空越過進場位（不可執行；若以開盤價成交，收盤 29,951 已穿停損 30,300）；破位空 sell_stop_close_confirm 30,372——收盤 29,951 成立（距離超 rule27 已擋）；突破多 30,820 未觸發。",
+   "day_note": "rule53 全日不掛 → 當日 **0bp**。累積維持 **-6.29bp**。"
   }
  ],
  "open_positions": [],
  "summary": {
-  "as_of": "2026-10-14",
-  "days_evaluated": 30,
+  "as_of": "2026-10-15",
+  "days_evaluated": 31,
   "trades_total": 49,
   "signals_triggered": 26,
   "trades_filled": 23,
@@ -1659,52 +1676,52 @@
    "2026-09-25",
    "2026-09-28"
   ],
-  "honest_read": "累積維持 **-6.29bp**（30 分 K 揭露口徑 -8.58bp）。10/13 rule53 全日不掛，記 0bp；被擋下的回踩多遇開盤跳空越過進場位（僅揭露）。已結算成交 23 筆 8 勝 15 敗，無留倉。",
+  "honest_read": "累積維持 **-6.29bp**（30 分 K 揭露口徑 -8.58bp）。10/14 rule53 全日不掛，記 0bp；被擋下的破位空收盤確認成立（因 rule27 距離超標而未掛，僅揭露）。已結算成交 23 筆 8 勝 15 敗，無留倉。",
   "cumulative_if_intraday_checked": -8.58
  },
  "trades_pending": {
-  "report_date": "2026-10-14",
-  "basis_close": 30569.48,
-  "eval_rule": "用 2026-10-14 美股 NDX OHLC 判定。**本日 rule53 全日不掛**（bias 中性、headline 50 落在 46–54），無單可評估、無留倉；明日記 0bp 並更新 days_evaluated。",
-  "signal_atr14_pct": 1.111,
-  "divergence_check": "NDX 50 vs SPX 50 同為中性、同為全日不掛。成因不同：SPX 連三日收在 7,805–7,812、振幅 0.36%，貼著高點壓縮；NDX 跳空 -0.85% 測到 MA20／0.382 回撤後收回，連四日落後 beta。VIX 15.27 低波動檔；VXN 10/13 值未發布（最近一筆 10/12 20.84，中波動檔）。",
+  "report_date": "2026-10-15",
+  "basis_close": 29950.82,
+  "eval_rule": "用 2026-10-15 美股 NDX OHLC 判定。**本日 rule53 全日不掛**（bias 中性、headline 53 落在 46–54），無單可評估、無留倉；明日記 0bp 並更新 days_evaluated。",
+  "signal_atr14_pct": 1.225,
+  "divergence_check": "NDX 53 中性（全日不掛）vs SPX 57 中性偏空（收破 7,693 收盤確認空 3%）。SPX 為擴張首日、剛跌出 7,805–7,812 壓縮區；NDX 已自高點回落 4.8%、低點測到 MA50，收在 0.5 回撤之下。VIX 16.87（16–20 檔）、VXN 22.70（中波動檔）。",
   "trades": [],
   "rejected_by_rule53": [
    {
-    "name": "反彈空（10/12 低 30,619＝缺口上緣）",
+    "name": "反彈空（0.5 回撤 30,057）",
     "order": "limit_sell",
-    "entry": 30619,
-    "stop": 30830,
-    "t1": 30472,
-    "dist_pct": 0.16,
-    "rr_t1": 0.7,
-    "reason": "rule53 中性全日不掛；rule52 停損須在 30,770／10/12 高 30,814 之外（211 點）→ RR 0.70 <1.0。"
+    "entry": 30057,
+    "stop": 30250,
+    "t1": 29863,
+    "dist_pct": 0.36,
+    "rr_t1": 1.01,
+    "reason": "rule53 中性全日不掛；rule52 停損須在中樞下沿 30,236 之外（193 點 ≥ 0.5 ATR 183）→ RR 1.0，若可掛也須減半。"
    },
    {
-    "name": "回踩多（MA20 30,472）",
+    "name": "回踩多（MA50 29,863）",
     "order": "limit_buy",
-    "entry": 30472,
-    "stop": 30300,
-    "t1": 30619,
-    "dist_pct": -0.32,
-    "rr_t1": 0.85,
-    "reason": "rule53 中性全日不掛；rule8 不掛限價單在支撐等接；rule52 停損 30,300（10/13 低／0.382 回撤之外，172 點）下 RR 0.85 <1.0。"
+    "entry": 29863,
+    "stop": 29680,
+    "t1": 30057,
+    "dist_pct": -0.29,
+    "rr_t1": 1.06,
+    "reason": "rule53 中性全日不掛；rule8 不在支撐掛限價等接；rule52 停損 29,680（0.618 回撤 29,749 之外，183 點）下 RR 1.06。"
+   },
+   {
+    "name": "破位空（收盤 < 29,749＝0.618 回撤）",
+    "order": "sell_stop_close_confirm",
+    "entry": 29749,
+    "dist_pct": -0.67,
+    "reason": "rule53 中性全日不掛（距離 0.67% 在 rule27 門檻 0.71% 內）。"
    }
   ],
   "rejected_by_rule27": [
    {
-    "name": "破位空（收盤 < 30,372）",
-    "order": "sell_stop_close_confirm",
-    "entry": 30372,
-    "dist_pct": -0.65,
-    "reason": "rule53 中性全日不掛；距離 0.65% 亦超 rule27 門檻 0.612%。"
-   },
-   {
-    "name": "突破多（10/12 高 30,814 之上）",
+    "name": "突破多（10/14 高 30,437 之上）",
     "order": "buy_stop",
-    "entry": 30820,
-    "dist_pct": 0.82,
-    "reason": "rule53 中性全日不掛；距離 0.82% 亦超 rule27 門檻 0.612%。"
+    "entry": 30440,
+    "dist_pct": 1.63,
+    "reason": "rule53 中性全日不掛；距離 1.63% 超 rule27 門檻 0.71%。"
    }
   ]
  },
