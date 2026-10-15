@@ -1,10 +1,12 @@
 import yfinance as yf
 import json
 import os
+import sys
 from datetime import datetime
 
 OUT_DIR = os.path.dirname(os.path.abspath(__file__))
 REPO = os.path.dirname(OUT_DIR)
+DRY_RUN = "--dry-run" in sys.argv  # 只寫 scripts/backtest_result_dryrun.txt，不動 docs/
 
 # 拉回定義（與 Codex 對齊，供雙系統可比）：未來 N 日盤中低點 <= 訊號日收盤 -0.75%
 PULLBACK = 0.0075
@@ -104,17 +106,13 @@ def auc(scores, labels):
     return (sum(pos) - npos * (npos + 1) / 2) / (npos * nneg)
 
 
-# 用 5D 各 bucket 拉回率，組出每日「regime 平均機率」當預測分數
-rates_5d = {
-    "vix": bucket_rates("vix", "hit_5"),
-    "trend": bucket_rates("trend", "hit_5"),
-    "ext": bucket_rates("ext", "hit_5"),
-}
+# 每個 horizon 用自己的 bucket 拉回率，組出每日「regime 平均機率」當預測分數
+# （2026-10-15 修正：舊版拿 5D 拉回率去評 1D/3D 結果，單位錯配，1D Brier 0.289 是假象）
+rates = {h: {d: bucket_rates(d, f"hit_{h}") for d in ("vix", "trend", "ext")} for h in HORIZONS}
 for c in cases:
-    p = (rates_5d["vix"][c["vix"]]["rate"]
-         + rates_5d["trend"][c["trend"]]["rate"]
-         + rates_5d["ext"][c["ext"]]["rate"]) / 3
-    c["pred"] = p
+    for h in HORIZONS:
+        c[f"pred_{h}"] = sum(rates[h][d][c[d]]["rate"] for d in ("vix", "trend", "ext")) / 3
+rates_5d = rates[5]
 
 report = {
     "generated_at": datetime.now().strftime("%Y-%m-%d %H:%M"),
@@ -123,17 +121,19 @@ report = {
     "pullback_def": "未來N日盤中低點 <= 訊號日收盤 -0.75%",
     "base_rate": {f"{h}d": round(rate(cases, f"hit_{h}"), 2) for h in HORIZONS},
     "model_metrics_vs_horizon": {},
+    "metrics_note": "各 horizon 用自己的 bucket 拉回率評分（樣本內）；Brier 對照『報基準率』的 base_brier",
     "regime_5d_rates": rates_5d,
+    "regime_1d_rates": rates[1],
 }
 
-preds = [c["pred"] for c in cases]
 for h in HORIZONS:
     labels = [c[f"hit_{h}"] for c in cases]
-    a = auc(preds, labels)
-    brier = sum((c["pred"] / 100 - c[f"hit_{h}"]) ** 2 for c in cases) / N
+    preds = [c[f"pred_{h}"] for c in cases]
+    base = sum(labels) / N
     report["model_metrics_vs_horizon"][f"{h}d"] = {
-        "auc": round(a, 3),
-        "brier": round(brier, 4),
+        "auc": round(auc(preds, labels), 3),
+        "brier": round(sum((p / 100 - y) ** 2 for p, y in zip(preds, labels)) / N, 4),
+        "base_brier": round(base * (1 - base), 4),
     }
 
 # 更新給 fetch_today.py 用的常數（5D，附超額）
@@ -144,6 +144,17 @@ report["fetch_today_constants"] = {
     "trend": {k: v["rate"] for k, v in rates_5d["trend"].items()},
     "ext": {k: v["rate"] for k, v in rates_5d["ext"].items()},
 }
+report["fetch_today_constants_1d"] = {
+    "BASE_1D": report["base_rate"]["1d"],
+    "vix": {k: v["rate"] for k, v in rates[1]["vix"].items()},
+    "trend": {k: v["rate"] for k, v in rates[1]["trend"].items()},
+    "ext": {k: v["rate"] for k, v in rates[1]["ext"].items()},
+}
+
+if DRY_RUN:
+    with open(os.path.join(OUT_DIR, "backtest_result_dryrun.txt"), "w", encoding="utf-8") as f:
+        json.dump(report, f, ensure_ascii=False, indent=2)
+    sys.exit(0)
 
 # 可讀報告（gitignore，供 Read 檢視）
 with open(os.path.join(OUT_DIR, "backtest_result.txt"), "w", encoding="utf-8") as f:

@@ -20,12 +20,14 @@ ASCII-only stdout. Writes docs/ndx_regime_baseline.json + backtest_ndx_result.tx
 """
 import json
 import os
+import sys
 from datetime import datetime
 
 import yf_compat
 
 OUT_DIR = os.path.dirname(os.path.abspath(__file__))
 REPO = os.path.dirname(OUT_DIR)
+DRY_RUN = "--dry-run" in sys.argv  # write scripts/backtest_ndx_result_dryrun.txt only, leave docs/ untouched
 
 PULLBACK = 0.0100
 HORIZONS = [1, 3, 5]
@@ -112,19 +114,20 @@ def run(start):
                     "rate": round(rate([c for c in cases if c[dim] == b], key), 2)}
                 for b in sorted(set(c[dim] for c in cases))}
 
-    rates_5d = {d: bucket_rates(d, "hit_5") for d in ("vxn", "trend", "ext")}
-    for c in cases:
-        c["pred"] = (rates_5d["vxn"][c["vxn"]]["rate"]
-                     + rates_5d["trend"][c["trend"]]["rate"]
-                     + rates_5d["ext"][c["ext"]]["rate"]) / 3
+    # each horizon is scored with its own bucket rates (2026-10-15 fix: the old version
+    # scored 1D/3D outcomes with 5D rates, a unit mismatch that inflated 1D Brier)
+    rates = {h: {d: bucket_rates(d, "hit_%d" % h) for d in ("vxn", "trend", "ext")} for h in HORIZONS}
+    rates_5d = rates[5]
 
-    preds = [c["pred"] for c in cases]
     metrics = {}
     for h in HORIZONS:
         labels = [c["hit_%d" % h] for c in cases]
+        preds = [sum(rates[h][d][c[d]]["rate"] for d in ("vxn", "trend", "ext")) / 3 for c in cases]
+        base = sum(labels) / N
         metrics["%dd" % h] = {
             "auc": round(auc(preds, labels), 3),
-            "brier": round(sum((c["pred"] / 100 - c["hit_%d" % h]) ** 2 for c in cases) / N, 4),
+            "brier": round(sum((p / 100 - y) ** 2 for p, y in zip(preds, labels)) / N, 4),
+            "base_brier": round(base * (1 - base), 4),
         }
 
     # per-year low-bucket counts: exposes whether a bucket has gone extinct
@@ -140,6 +143,7 @@ def run(start):
         "base_rate": {"%dd" % h: round(rate(cases, "hit_%d" % h), 2) for h in HORIZONS},
         "model_metrics_vs_horizon": metrics,
         "regime_5d_rates": rates_5d,
+        "regime_1d_rates": rates[1],
         "vxn_bucket_by_year": yearly_vxn,
     }
 
@@ -163,10 +167,22 @@ report = {
         "trend": {k: v["rate"] for k, v in prim["regime_5d_rates"]["trend"].items()},
         "ext": {k: v["rate"] for k, v in prim["regime_5d_rates"]["ext"].items()},
     },
+    "fetch_today_constants_1d": {
+        "BASE_1D": prim["base_rate"]["1d"],
+        "vxn": {k: v["rate"] for k, v in prim["regime_1d_rates"]["vxn"].items()},
+        "trend": {k: v["rate"] for k, v in prim["regime_1d_rates"]["trend"].items()},
+        "ext": {k: v["rate"] for k, v in prim["regime_1d_rates"]["ext"].items()},
+    },
     "known_limitation": "VXN rarely drops below 18 in the current regime "
                         "(2025 n=16, 2026 n=0). The risk-on bucket is近乎 dormant; "
                         "treat mid-bucket as the practical baseline until VXN mean-reverts.",
 }
+
+if DRY_RUN:
+    with open(os.path.join(OUT_DIR, "backtest_ndx_result_dryrun.txt"), "w", encoding="utf-8") as f:
+        json.dump(report, f, ensure_ascii=False, indent=2)
+    print("OK: dry run, docs/ untouched")
+    sys.exit(0)
 
 with open(os.path.join(OUT_DIR, "backtest_ndx_result.txt"), "w", encoding="utf-8") as f:
     json.dump(report, f, ensure_ascii=False, indent=2)
