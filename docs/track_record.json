@@ -1163,5 +1163,22 @@
   "always_neutral_baseline_20261014": "依 rule17 並列：每天報中性基準 69.2%（73 筆，flat 28）vs 系統 63.7%；Brier 0.2482 vs 0.25",
   "always_neutral_baseline_20261015": "依 rule17 並列：每天報中性基準 68.9%（74 筆，flat 28）vs 系統 63.5%；Brier 0.2483 vs 0.25",
   "always_neutral_baseline_20261016": "依 rule17 並列：每天報中性基準 68.7%（75 筆，flat 28）vs 系統 62.7%；Brier 0.2499 vs 0.25"
+ },
+ "amp_track": {
+  "purpose": "Phase 3（2026-10-16 起）：每日判定前一份報告的隔日振幅預報。這是第一本「預期會贏基準」的帳；方向帳照舊並列",
+  "rules": {
+   "actual_range_pct": "(評價日高−評價日低)/前收×100",
+   "log_err": "|ln(actual/A)|；r0_log_err 為舊 rule27 算法（5 日均振幅與 ATR14 平均）的同一指標，當基準",
+   "in_band": "actual 落在 [band_lo, band_hi]（50% 區間，目標覆蓋 45–55%）",
+   "alert": "累積 60 筆後 mean_log_err 不小於 mean_r0_log_err，或覆蓋率長期 <40%／>60% → 回報 Johnny"
+  },
+  "entries": [],
+  "summary": {
+   "graded": 0,
+   "mean_log_err": null,
+   "mean_r0_log_err": null,
+   "band_coverage_pct": null,
+   "as_of": null
+  }
  }
 }

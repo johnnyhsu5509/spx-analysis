@@ -645,5 +645,22 @@
   "audit_20261002": "**基準線對照（2026-10-02 稽核）**：依本帳計分規則，「每天都報中性」的基準分數為 **72.7%**（22 筆：flat 10／up 4／down 8），系統 **65.9%**，**低於無腦基準 6.8pp**。改看「方向判斷遇方向日」：9 筆對 6 筆＝66.7%（樣本太小）；Brier 0.2395 vs 基準 0.25。**往後引用滾動分數時須並列 always-neutral 基準**。",
   "gap_codex_coverage": "gap day 中 9/11、9/14、9/17、9/21、9/25、9/28 六日，Codex 第二意見系統有前瞻預測，存於 Codex 自己的追蹤帳；依「不同系統不合併計分」原則**不併入本帳**。8/27、8/31、9/8 兩套系統皆無預測。",
   "always_neutral_baseline_pct": 70.3
+ },
+ "amp_track": {
+  "purpose": "Phase 3（2026-10-16 起）：每日判定前一份報告的隔日振幅預報。這是第一本「預期會贏基準」的帳；方向帳照舊並列",
+  "rules": {
+   "actual_range_pct": "(評價日高−評價日低)/前收×100",
+   "log_err": "|ln(actual/A)|；r0_log_err 為舊 rule27 算法（5 日均振幅與 ATR14 平均）的同一指標，當基準",
+   "in_band": "actual 落在 [band_lo, band_hi]（50% 區間，目標覆蓋 45–55%）",
+   "alert": "累積 60 筆後 mean_log_err 不小於 mean_r0_log_err，或覆蓋率長期 <40%／>60% → 回報 Johnny"
+  },
+  "entries": [],
+  "summary": {
+   "graded": 0,
+   "mean_log_err": null,
+   "mean_r0_log_err": null,
+   "band_coverage_pct": null,
+   "as_of": null
+  }
  }
 }

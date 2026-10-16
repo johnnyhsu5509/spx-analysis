@@ -4465,5 +4465,52 @@
    "cumulative_saved_bp": 0.57,
    "note": "樣本 1 筆，**不足以判斷裁量是否長期加分**。需累積 10 筆以上再評估"
   }
+ },
+ "shadow_ledger": {
+  "purpose": "Phase 3（2026-10-16 起）：預設休眠下每日固定記兩張影子單，當未來任何方向規則的基準；不計入 P&L 主帳",
+  "sim_rules": {
+   "long": "limit_buy＝收盤 −0.4A；停損＝成交價 −0.5A；隔日收盤平倉",
+   "short": "limit_sell＝收盤 +0.4A；停損＝成交價 +0.5A；隔日收盤平倉",
+   "fill": "多：成交價＝min(掛單價, 開盤價)，條件 低≤掛單價；空：max(掛單價, 開盤價)，條件 高≥掛單價",
+   "stop_priority": "同日觸及停損以停損計（保守）",
+   "unit": "損益以 A（報告日的 A_pts）為單位記錄 pnl_A",
+   "A_source": "報告日 amplitude.amp_forecast_pct × 收盤"
+  },
+  "historical_reference_2014_2026": "多單成交 51%、每筆 −0.046 A（t −3.5）；空單成交 58%、每筆 −0.054 A（t −4.0）",
+  "verdict_rule": "累積 6 個月後判定：t>2、扣成本後仍為正、並排除漂移",
+  "pending": [
+   {
+    "report_date": "2026-10-16",
+    "basis_close": 7744.06,
+    "side": "long",
+    "order": "limit_buy",
+    "limit": 7719.16,
+    "k": 0.4,
+    "s": 0.5,
+    "A_pts": 62.26,
+    "stop_rule": "成交價 − s×A",
+    "exit": "隔日收盤"
+   },
+   {
+    "report_date": "2026-10-16",
+    "basis_close": 7744.06,
+    "side": "short",
+    "order": "limit_sell",
+    "limit": 7768.96,
+    "k": 0.4,
+    "s": 0.5,
+    "A_pts": 62.26,
+    "stop_rule": "成交價 + s×A",
+    "exit": "隔日收盤"
+   }
+  ],
+  "entries": [],
+  "summary": {
+   "filled_long": 0,
+   "filled_short": 0,
+   "mean_pnl_A_long": null,
+   "mean_pnl_A_short": null,
+   "as_of": null
+  }
  }
 }

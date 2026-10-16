@@ -240,15 +240,19 @@
   "rule36 ^NDX 成交量低於 20 日均 30% 視為失真，改用 QQQ",
   "rule37 未結算列與 NaN 必擋",
   "rule38 跨系統污染守衛",
-  "rule39 收盤確認單浮動目標（prc-003）",
+  "rule39 收盤確認單浮動目標（prc-003）；Phase 3（prc-012，2026-10-16）起單位改為 A：T1／停損＝成交價 ∓0.8A、T2＝1.6A，乘數不變",
   "rule40 政策變更回溯原則",
   "rule43 帶量＝QQQ 相對量 ≥ 75 百分位門檻（1.155）",
   "rule49 新聞檢索必做，在評分前完成",
   "rule51 限價單同日成交＋觸價改以 30 分 K 判序（prc-006，2026-09-23 核准）",
-  "rule16 禁止折中；rule27 超過預期振幅×0.6 不掛；rule12 破底空收盤確認；rule15 SOXX 優先；rule32 分析潔淨；rule8 回踩錨定支撐本身",
-  "rule52 限價／突破單停損 ≥ max(0.5×ATR14, 結構位外)；放寬後 T1 RR <1.0 不掛、1.0–1.5 倉位減半；close-confirm 維持 prc-003 浮動值（prc-007，2026-10-02 核准）",
-  "rule53 只掛順 lean 單，逆 lean weight 0；bias 中性、headline 46–54（含）或情景離散度 <10pp 時全日不掛（prc-008，2026-10-02 核准）",
-  "rule54 多頭排列時過熱因子不計偏空：MA5>MA20>MA50>MA200 成立時，RSI>70、%B>100、距 MA200>10% 不得作為上調跌情景（C）的理由，視為中性；非多頭排列時照舊（prc-009，2026-10-13 核准）"
+  "rule16 禁止折中——Phase 3（prc-010）起推導式停用、headline 恆 50（rule55）；rule27 距離門檻由 rule56（A 單位）取代；rule12 破底空收盤確認；rule15 SOXX 優先；rule32 分析潔淨；rule8 回踩錨定支撐本身",
+  "rule52【Phase 3 改制，prc-012】停損一律以 s×A 表示，由放行實單的方向規則核准案指定（rule56）；原 max(0.5×ATR14, 結構位外) 只適用 2026-10-16 前已掛之單",
+  "rule53【Phase 3 反轉，prc-013】預設不掛實單（rule57）；只有引用已核准方向規則時才可掛，且只掛該規則指定的方向與幾何（原「bias 中性／46–54／離散度 <10pp 全日不掛」為 prc-008）",
+  "rule54 多頭排列時過熱因子不計偏空：MA5>MA20>MA50>MA200 成立時，RSI>70、%B>100、距 MA200>10% 不得作為上調跌情景（C）的理由，視為中性；非多頭排列時照舊（prc-009，2026-10-13 核准）｜Phase 3（prc-010）起方向恆 50、本條無作用對象；證據改列環境水位，方向效力待依 rule55 門檻重驗",
+  "rule55【硬・Phase 3 prc-010，2026-10-16】每日主輸出＝隔日振幅預報 A（讀 ndx_today_data.amplitude，不得手動調整）＋方向（恆 50）。方向規則核准門檻：長歷史（2000 年起）walk-forward 樣本外；列出試驗次數並通過 BH（q=5%）；扣成本後以 A 為單位期望值 >0 且 95% 區間不含 0；換定義不翻轉；目前無方向規則達標",
+  "rule56【硬・Phase 3 prc-012】掛單幾何一律以 A 為單位：進場 k×A、停損 s×A、目標 t×A，並列事前成交率（2014–2026：k0.2 多 65%／空 73%，四到五成為開盤跳空成交）；放行實單的方向規則須在核准案指定 k、s、t",
+  "rule57【硬・Phase 3 prc-013】預設休眠＋影子帳：每日記影子多單（收盤 −0.2A、停損成交價 −0.5A）與影子空單（收盤 +0.2A、停損 +0.5A），隔日收盤平倉、停損優先（同日依 rule51 判序），pnl 以 A 記錄，寫 ndx_pnl_ledger.shadow_ledger，不進主帳",
+  "rule58【硬・Phase 3】振幅帳 amp_track 每日判定前一份預報（log_err 與 r0 基準、50% 區間覆蓋）；累積 60 筆後 log_err 不比 r0 小或覆蓋率長期 <40%／>60% 須回報 Johnny"
  ],
  "system_rules_notes": [
   "rule36：^NDX 量 15.4 億為未結算殘值（失真），量能判讀改用 QQQ 144.1%（帶量）",
@@ -276,5 +280,23 @@
   "scenario": "情景 B（40%）在收盤口徑實現；盤中先跌穿情景 C 全部目標至 29,408，再帶量收回。"
  },
  "dashboard_url": "https://johnnyhsu5509.github.io/spx-analysis/ndx/",
- "dated_report_url": "https://johnnyhsu5509.github.io/spx-analysis/ndx-analysis-20261016.html"
+ "dated_report_url": "https://johnnyhsu5509.github.io/spx-analysis/ndx-analysis-20261016.html",
+ "amplitude": {
+  "basis_date": "2026-10-15",
+  "target_session": "2026-10-16",
+  "A_pct": 1.208,
+  "A_pts": 361.5,
+  "band_lo": 0.927,
+  "band_hi": 1.552,
+  "r0_ref_pct": 1.244,
+  "c": 0.837,
+  "vol_pct_1y": 45.2,
+  "seeded": "Phase 3 第 4 步於 2026-10-16 10:58（台北，美股 10/16 開盤前）寫入，作為振幅帳與影子帳第一筆"
+ },
+ "direction": {
+  "prob": 50,
+  "bias": "中性",
+  "rule": null,
+  "note": "Phase 3 起恆 50；10/16 報告本身仍為舊制（pullback_prob 49），自 10/17 報告起適用"
+ }
 }

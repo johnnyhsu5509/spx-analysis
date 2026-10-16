@@ -137,6 +137,54 @@
    "retroactive_policy": "依 rule40 只前瞻套用；2026-10-13 報告已產出，不重算。",
    "expected_effect": "多頭排列期間 headline 約下移 3–5pp。**不會讓系統變成常報強方向**：同一回測顯示各情境下『次日跌% + 0.5×平盤%』都落在 44–47，次日方向本身幾乎不可預測。",
    "spx_note": "僅套用 NDX；SPX 未測，不可直接套用。"
+  },
+  {
+   "raised_on": "2026-10-15",
+   "approved_on": "2026-10-15",
+   "approved_by": "Johnny",
+   "retroactive_policy": "依 rule40 前瞻套用，自 2026-10-17 報告起；10/16 報告不重算",
+   "evidence_dir": "D:\\LICHUNG_Agent\\100_Todo\\projects\\dr_sister_quant_digest\\（Phase1 稽核、Phase2 B6／B9、Phase3 提案、上線前驗證、V2b）",
+   "id": "prc-010",
+   "status": "APPROVED — 2026-10-16 寫入 system_rules rule55（rule16 推導式停用、rule54 證據移至環境水位）；V2b 通過後實作",
+   "issue": "方向層三本帳在噪音內（方向分數 64.5% vs 永遠中性 69.4%、Brier 0.2449、打亂測試 p=0.33），headline 只能在 46–56 窄帶擺動；系統真正可預測的是振幅",
+   "evidence": "VXN/√252 振幅預報同年內 Spearman 0.523（23/23 年為正）；V2 選 IVc（覆蓋 47.0%）；V2b 滾動 c 年度覆蓋標準差 5.0→3.0pp、log MAE 0.3348→0.3299",
+   "fix_applied": "每日主輸出改為隔日振幅預報 A（c×VXN/√252，c 取近 252 日）＋方向恆 50；方向規則需過長歷史 walk-forward＋BH 門檻"
+  },
+  {
+   "raised_on": "2026-10-15",
+   "approved_on": "2026-10-15",
+   "approved_by": "Johnny",
+   "retroactive_policy": "依 rule40 前瞻套用，自 2026-10-17 報告起；10/16 報告不重算",
+   "evidence_dir": "D:\\LICHUNG_Agent\\100_Todo\\projects\\dr_sister_quant_digest\\（Phase1 稽核、Phase2 B6／B9、Phase3 提案、上線前驗證、V2b）",
+   "id": "prc-011",
+   "status": "APPROVED（部分）— 1D regime 輸出與修正 1D 評分錯配已實作（commit ed3da8f／3fc0962）；長歷史常數撤回（V3 未通過）；VXN 一年分位維度撤回（V1 未通過）；乖離降權暫緩",
+   "issue": "backtest_ndx 以 5D 拉回率評 1D 結果，1D Brier 0.273 是假象；fetch_today 只輸出 5D",
+   "evidence": "修正後 1D Brier 0.194 優於基準 0.206；B6 長歷史 1D 技巧約為 5D 兩倍",
+   "fix_applied": "backtest_ndx 各 horizon 用自己的拉回率評分並輸出 fetch_today_constants_1d；fetch_today 新增 regime.horizon_1d"
+  },
+  {
+   "raised_on": "2026-10-15",
+   "approved_on": "2026-10-15",
+   "approved_by": "Johnny",
+   "retroactive_policy": "依 rule40 前瞻套用，自 2026-10-17 報告起；10/16 報告不重算",
+   "evidence_dir": "D:\\LICHUNG_Agent\\100_Todo\\projects\\dr_sister_quant_digest\\（Phase1 稽核、Phase2 B6／B9、Phase3 提案、上線前驗證、V2b）",
+   "id": "prc-012",
+   "status": "APPROVED — 2026-10-16 寫入 rule56；rule52 幾何停用、rule39（prc-003）單位改為 A",
+   "issue": "rule27／rule52 以 ATR 與點數設計距離，與振幅預報不一致；成交率無法事前得知",
+   "evidence": "2014–2026 以 IVc 為 A 的事前成交率 k0.2 多 65%／空 73%，四到五成為開盤跳空成交（V6 以 QQQ 交叉核對，差 2.4pp）",
+   "fix_applied": "掛單幾何一律以 A 為單位並列事前成交率；放行實單的方向規則須指定 k、s、t"
+  },
+  {
+   "raised_on": "2026-10-15",
+   "approved_on": "2026-10-15",
+   "approved_by": "Johnny",
+   "retroactive_policy": "依 rule40 前瞻套用，自 2026-10-17 報告起；10/16 報告不重算",
+   "evidence_dir": "D:\\LICHUNG_Agent\\100_Todo\\projects\\dr_sister_quant_digest\\（Phase1 稽核、Phase2 B6／B9、Phase3 提案、上線前驗證、V2b）",
+   "id": "prc-013",
+   "status": "APPROVED — 2026-10-16 寫入 rule57；rule53 反轉為「符合已核准方向規則才掛」",
+   "issue": "rule53 擋單已近乎每日觸發（10/5–10/14 擋 6/8 天），且不帶方向的限價單並無正期望",
+   "evidence": "2014–2026 不帶方向的空單全面負期望；貼近收盤多單小幅正值（最好一格 t=2.4）未過 30 格多重檢驗且疑為上漲漂移（同期 NDX 漲 8.4 倍）",
+   "fix_applied": "預設不掛實單；每日記影子多空單（k=0.2、s=0.5，隔日收盤平倉），只寫 shadow_ledger"
   }
  ],
  "entries": [
@@ -1818,5 +1866,52 @@
   "status": "GAP DAY",
   "actual": "NDX 收 30,276.81（-1.08%），低 30,081.06",
   "note": "不計入統計。"
+ },
+ "shadow_ledger": {
+  "purpose": "Phase 3（2026-10-16 起）：預設休眠下每日固定記兩張影子單，當未來任何方向規則的基準；不計入 P&L 主帳",
+  "sim_rules": {
+   "long": "limit_buy＝收盤 −0.2A；停損＝成交價 −0.5A；隔日收盤平倉",
+   "short": "limit_sell＝收盤 +0.2A；停損＝成交價 +0.5A；隔日收盤平倉",
+   "fill": "多：成交價＝min(掛單價, 開盤價)，條件 低≤掛單價；空：max(掛單價, 開盤價)，條件 高≥掛單價",
+   "stop_priority": "同日觸及停損以停損計（保守）；同日判序依 rule51（30 分 K）",
+   "unit": "損益以 A（報告日的 A_pts）為單位記錄 pnl_A",
+   "A_source": "報告日 amplitude.amp_forecast_pct × 收盤"
+  },
+  "historical_reference_2014_2026": "多單成交 65%、每筆 +0.039 A（t 3.0）；空單成交 73%、每筆 +0.016 A（t 1.3）——多單正值須對照上漲漂移",
+  "verdict_rule": "累積 6 個月後判定：t>2、扣成本後仍為正、且超過同期『收盤買、隔日收盤賣』的漂移",
+  "pending": [
+   {
+    "report_date": "2026-10-16",
+    "basis_close": 29935.59,
+    "side": "long",
+    "order": "limit_buy",
+    "limit": 29863.27,
+    "k": 0.2,
+    "s": 0.5,
+    "A_pts": 361.62,
+    "stop_rule": "成交價 − s×A",
+    "exit": "隔日收盤"
+   },
+   {
+    "report_date": "2026-10-16",
+    "basis_close": 29935.59,
+    "side": "short",
+    "order": "limit_sell",
+    "limit": 30007.91,
+    "k": 0.2,
+    "s": 0.5,
+    "A_pts": 361.62,
+    "stop_rule": "成交價 + s×A",
+    "exit": "隔日收盤"
+   }
+  ],
+  "entries": [],
+  "summary": {
+   "filled_long": 0,
+   "filled_short": 0,
+   "mean_pnl_A_long": null,
+   "mean_pnl_A_short": null,
+   "as_of": null
+  }
  }
 }
