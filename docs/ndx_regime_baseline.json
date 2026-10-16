@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-08-18 11:07",
+  "generated_at": "2026-10-16 10:25",
   "index": "^NDX",
   "vol_index": "^VXN",
   "futures": "NQ=F",
@@ -12,33 +12,36 @@
   },
   "windows": {
     "primary_2015": {
-      "date_range": "2015-10-16 ~ 2026-08-10",
-      "samples": 2718,
-      "vol_ratio_ndx_over_spx": 1.251,
+      "date_range": "2015-10-16 ~ 2026-10-08",
+      "samples": 2760,
+      "vol_ratio_ndx_over_spx": 1.252,
       "base_rate": {
-        "1d": 29.1,
-        "3d": 48.97,
-        "5d": 57.14
+        "1d": 29.02,
+        "3d": 49.06,
+        "5d": 57.25
       },
       "model_metrics_vs_horizon": {
         "1d": {
-          "auc": 0.668,
-          "brier": 0.2729
+          "auc": 0.666,
+          "brier": 0.1937,
+          "base_brier": 0.206
         },
         "3d": {
-          "auc": 0.647,
-          "brier": 0.2436
+          "auc": 0.646,
+          "brier": 0.2365,
+          "base_brier": 0.2499
         },
         "5d": {
           "auc": 0.641,
-          "brier": 0.2332
+          "brier": 0.2332,
+          "base_brier": 0.2447
         }
       },
       "regime_5d_rates": {
         "vxn": {
           "vxn_18_28": {
-            "n": 1360,
-            "rate": 61.47
+            "n": 1402,
+            "rate": 61.55
           },
           "vxn_ge28": {
             "n": 528,
@@ -51,8 +54,8 @@
         },
         "trend": {
           "above_ma200": {
-            "n": 2224,
-            "rate": 53.46
+            "n": 2266,
+            "rate": 53.66
           },
           "below_ma200": {
             "n": 494,
@@ -61,16 +64,56 @@
         },
         "ext": {
           "ma20_normal": {
-            "n": 1895,
-            "rate": 53.51
+            "n": 1924,
+            "rate": 53.48
           },
           "ma20_over3": {
-            "n": 512,
-            "rate": 60.74
+            "n": 525,
+            "rate": 61.52
           },
           "ma20_under3": {
             "n": 311,
             "rate": 73.31
+          }
+        }
+      },
+      "regime_1d_rates": {
+        "vxn": {
+          "vxn_18_28": {
+            "n": 1402,
+            "rate": 32.03
+          },
+          "vxn_ge28": {
+            "n": 528,
+            "rate": 45.83
+          },
+          "vxn_lt18": {
+            "n": 830,
+            "rate": 13.25
+          }
+        },
+        "trend": {
+          "above_ma200": {
+            "n": 2266,
+            "rate": 24.85
+          },
+          "below_ma200": {
+            "n": 494,
+            "rate": 48.18
+          }
+        },
+        "ext": {
+          "ma20_normal": {
+            "n": 1924,
+            "rate": 26.2
+          },
+          "ma20_over3": {
+            "n": 525,
+            "rate": 28.38
+          },
+          "ma20_under3": {
+            "n": 311,
+            "rate": 47.59
           }
         }
       },
@@ -127,39 +170,42 @@
           "vxn_lt18": 16
         },
         "2026": {
-          "vxn_18_28": 123,
+          "vxn_18_28": 165,
           "vxn_ge28": 28
         }
       }
     },
     "spx_matched_2021": {
-      "date_range": "2021-10-18 ~ 2026-08-10",
-      "samples": 1207,
-      "vol_ratio_ndx_over_spx": 1.368,
+      "date_range": "2021-10-18 ~ 2026-10-08",
+      "samples": 1249,
+      "vol_ratio_ndx_over_spx": 1.37,
       "base_rate": {
-        "1d": 35.05,
-        "3d": 55.92,
+        "1d": 34.67,
+        "3d": 55.88,
         "5d": 64.37
       },
       "model_metrics_vs_horizon": {
         "1d": {
-          "auc": 0.645,
-          "brier": 0.3027
+          "auc": 0.643,
+          "brier": 0.2143,
+          "base_brier": 0.2265
         },
         "3d": {
-          "auc": 0.628,
-          "brier": 0.2434
+          "auc": 0.623,
+          "brier": 0.2356,
+          "base_brier": 0.2465
         },
         "5d": {
-          "auc": 0.617,
-          "brier": 0.2211
+          "auc": 0.611,
+          "brier": 0.2215,
+          "base_brier": 0.2293
         }
       },
       "regime_5d_rates": {
         "vxn": {
           "vxn_18_28": {
-            "n": 787,
-            "rate": 63.28
+            "n": 829,
+            "rate": 63.33
           },
           "vxn_ge28": {
             "n": 262,
@@ -172,8 +218,8 @@
         },
         "trend": {
           "above_ma200": {
-            "n": 896,
-            "rate": 58.93
+            "n": 938,
+            "rate": 59.17
           },
           "below_ma200": {
             "n": 311,
@@ -182,16 +228,56 @@
         },
         "ext": {
           "ma20_normal": {
-            "n": 766,
-            "rate": 62.92
+            "n": 795,
+            "rate": 62.52
           },
           "ma20_over3": {
-            "n": 270,
-            "rate": 61.11
+            "n": 283,
+            "rate": 62.54
           },
           "ma20_under3": {
             "n": 171,
             "rate": 76.02
+          }
+        }
+      },
+      "regime_1d_rates": {
+        "vxn": {
+          "vxn_18_28": {
+            "n": 829,
+            "rate": 33.53
+          },
+          "vxn_ge28": {
+            "n": 262,
+            "rate": 50.38
+          },
+          "vxn_lt18": {
+            "n": 158,
+            "rate": 14.56
+          }
+        },
+        "trend": {
+          "above_ma200": {
+            "n": 938,
+            "rate": 28.36
+          },
+          "below_ma200": {
+            "n": 311,
+            "rate": 53.7
+          }
+        },
+        "ext": {
+          "ma20_normal": {
+            "n": 795,
+            "rate": 32.96
+          },
+          "ma20_over3": {
+            "n": 283,
+            "rate": 29.33
+          },
+          "ma20_under3": {
+            "n": 171,
+            "rate": 51.46
           }
         }
       },
@@ -220,27 +306,44 @@
           "vxn_lt18": 16
         },
         "2026": {
-          "vxn_18_28": 123,
+          "vxn_18_28": 165,
           "vxn_ge28": 28
         }
       }
     }
   },
   "fetch_today_constants": {
-    "BASE_5D": 57.14,
+    "BASE_5D": 57.25,
     "vxn": {
-      "vxn_18_28": 61.47,
+      "vxn_18_28": 61.55,
       "vxn_ge28": 72.35,
       "vxn_lt18": 40.36
     },
     "trend": {
-      "above_ma200": 53.46,
+      "above_ma200": 53.66,
       "below_ma200": 73.68
     },
     "ext": {
-      "ma20_normal": 53.51,
-      "ma20_over3": 60.74,
+      "ma20_normal": 53.48,
+      "ma20_over3": 61.52,
       "ma20_under3": 73.31
+    }
+  },
+  "fetch_today_constants_1d": {
+    "BASE_1D": 29.02,
+    "vxn": {
+      "vxn_18_28": 32.03,
+      "vxn_ge28": 45.83,
+      "vxn_lt18": 13.25
+    },
+    "trend": {
+      "above_ma200": 24.85,
+      "below_ma200": 48.18
+    },
+    "ext": {
+      "ma20_normal": 26.2,
+      "ma20_over3": 28.38,
+      "ma20_under3": 47.59
     }
   },
   "known_limitation": "VXN rarely drops below 18 in the current regime (2025 n=16, 2026 n=0). The risk-on bucket is近乎 dormant; treat mid-bucket as the practical baseline until VXN mean-reverts."

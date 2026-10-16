@@ -201,6 +201,62 @@ def _breadth(index_day=None):
         return None
 
 
+def _amplitude(index_day, close):
+    """隔日振幅預報（Phase 3 V2b，2026-10-15 Johnny 核准）。
+    A = c × 波動指數/√252；c 與 50% 區間 = 近 252 個「已知結果」交易日的
+    (隔日振幅 ÷ 隱含日波動) 中位數與 25/75 分位。訊號日只用到當日為止已知的比值，不偷看。
+    另開一次較長的下載（約 1.2 年），不動主流程的指標序列。抓不到不阻斷主流程，回傳 None。"""
+    try:
+        a_end = datetime.today() + timedelta(days=1)
+        a_start = a_end - timedelta(days=450)
+        idx = yf_compat.download(CFG["index"], start=a_start.strftime("%Y-%m-%d"), end=a_end.strftime("%Y-%m-%d"), progress=False)
+        vol = yf_compat.download(CFG["vol"], start=a_start.strftime("%Y-%m-%d"), end=a_end.strftime("%Y-%m-%d"), progress=False)
+        for df in (idx, vol):
+            if hasattr(df.columns, "levels"):
+                df.columns = [c[0] if isinstance(c, tuple) else c for c in df.columns]
+        idx, _ = gap_fix.patch_missing_days(idx, CFG["index"], log=print)
+        vol, _ = gap_fix.patch_missing_days(vol, CFG["vol"], log=print)
+        idx = idx.dropna(subset=["Close"])
+        c_, h_, l_ = idx["Close"].squeeze(), idx["High"].squeeze(), idx["Low"].squeeze()
+        v_raw = vol["Close"].squeeze().dropna()
+        v_ = v_raw.reindex(c_.index).ffill()
+        iv = v_ / (252 ** 0.5)
+        ratio = ((h_.shift(-1) - l_.shift(-1)) / c_ * 100 / iv).dropna()
+        known = ratio.iloc[-252:]
+        cc, lo, hi = float(known.median()), float(known.quantile(0.25)), float(known.quantile(0.75))
+        iv_now = float(iv.iloc[-1])
+        A = cc * iv_now
+        rng_pct = (h_ - l_) / c_.shift() * 100
+        tr = pd.concat([h_ - l_, (h_ - c_.shift()).abs(), (l_ - c_.shift()).abs()], axis=1).max(axis=1)
+        atr_pct = float(tr.ewm(alpha=1 / 14, adjust=False).mean().iloc[-1] / c_.iloc[-1] * 100)
+        v_tail = v_.iloc[-252:]
+        out = {
+            "as_of": str(c_.index[-1].date()),
+            "amp_forecast_pct": round(A, 3),
+            "amp_forecast_pts": round(A / 100 * close, 1),
+            "band_50_pct": [round(lo * iv_now, 3), round(hi * iv_now, 3)],
+            "implied_daily_pct": round(iv_now, 3),
+            "c": round(cc, 3),
+            "c_window": int(len(known)),
+            "realized_vs_implied_63d": round(float(ratio.iloc[-63:].median()), 2),
+            "vol_pct_1y": round(float((v_tail <= v_tail.iloc[-1]).mean() * 100), 1),
+            "r0_rule27_ref_pct": round((float(rng_pct.iloc[-5:].mean()) + atr_pct) / 2, 3),
+            "atr14_pct": round(atr_pct, 3),
+            "method": "A = c × %s/√252；c 與 50%% 區間 = 近 252 個已知交易日（隔日振幅÷隱含日波動）的中位數與 25/75 分位（Phase 3 V2b 核准）" % CFG["vol"],
+        }
+        vol_day = str(v_raw.index[-1].date())
+        if out["as_of"] != index_day or vol_day != index_day:
+            out["stale"] = True
+            out["caveat"] = ("⚠振幅序列末日 %s／%s 末日 %s 與指數 %s 不一致，本區塊不得當成當日引用"
+                             % (out["as_of"], CFG["vol"], vol_day, index_day))
+        elif len(known) < 252:
+            out["caveat"] = "c 只用到 %d 個已知交易日（不足 252），可信度較低" % len(known)
+        return out
+    except Exception as exc:
+        print("[amplitude] WARNING computation failed: %r" % (exc,))
+        return None
+
+
 end = datetime.today() + timedelta(days=1)
 start = end - timedelta(days=300)
 
@@ -353,6 +409,31 @@ if not spx_close.empty:
         "regime_avg_vs_base": round(regime_avg - BASE_5D, 1)
     }
 
+    # === 1D regime（Phase 3 核准，2026-10-15）===
+    # 拉回定義同 5D，視野改為「隔日」。常數由 backtest*.py 的 fetch_today_constants_1d 提供；
+    # baseline 尚未重算（無 1D 常數）時輸出 None，不用內建值，避免與 5D 混用。
+    try:
+        with open(os.path.join(REPO, "docs", CFG["baseline"]), encoding="utf-8") as bf:
+            C1 = json.load(bf).get("fetch_today_constants_1d")
+    except Exception:
+        C1 = None
+    if C1:
+        vb = B_LO if vix_val < LO_CUT else (B_MID if vix_val < HI_CUT else B_HI)
+        tb = "above_ma200" if close >= ma200_v else "below_ma200"
+        eb = "ma20_over3" if ma20_ext >= 3 else ("ma20_under3" if ma20_ext <= -3 else "ma20_normal")
+        r1 = {VOL_KEY: C1[VOL_KEY][vb], "trend": C1["trend"][tb], "ext": C1["ext"][eb]}
+        avg1 = round(sum(r1.values()) / 3, 1)
+        regime["horizon_1d"] = {
+            "base_1d_pullback": C1["BASE_1D"],
+            VOL_KEY: {"pullback_1d": r1[VOL_KEY], "vs_base": round(r1[VOL_KEY] - C1["BASE_1D"], 1)},
+            "trend": {"pullback_1d": r1["trend"], "vs_base": round(r1["trend"] - C1["BASE_1D"], 1)},
+            "ma20_ext": {"pullback_1d": r1["ext"], "vs_base": round(r1["ext"] - C1["BASE_1D"], 1)},
+            "regime_avg_1d": avg1,
+            "regime_avg_vs_base": round(avg1 - C1["BASE_1D"], 1),
+        }
+    else:
+        regime["horizon_1d"] = None
+
     result = {
         "trade_date": str(raw_spx.index[-1].date()),
         "close": round(close, 2),
@@ -378,6 +459,7 @@ if not spx_close.empty:
         "kd_d": round(float(d.iloc[-1]), 2),
         "breadth": _breadth(str(raw_spx.index[-1].date())),
         "regime": regime,
+        "amplitude": _amplitude(str(raw_spx.index[-1].date()), close),
         "recent_5": recent
     }
     # 缺日回補紀錄。有值 = 本份資料含人工回補的交易日，分析時必須在報告標明。

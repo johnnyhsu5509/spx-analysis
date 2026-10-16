@@ -1,46 +1,50 @@
 {
-  "generated_at": "2026-06-15 11:14",
-  "date_range": "2021-10-18 ~ 2026-06-05",
-  "samples": 1163,
+  "generated_at": "2026-10-16 10:25",
+  "date_range": "2021-10-18 ~ 2026-10-08",
+  "samples": 1249,
   "pullback_def": "未來N日盤中低點 <= 訊號日收盤 -0.75%",
   "base_rate": {
-    "1d": 33.53,
-    "3d": 53.57,
-    "5d": 61.65
+    "1d": 32.75,
+    "3d": 53.32,
+    "5d": 61.81
   },
   "model_metrics_vs_horizon": {
     "1d": {
-      "auc": 0.663,
-      "brier": 0.2894
+      "auc": 0.659,
+      "brier": 0.2051,
+      "base_brier": 0.2202
     },
     "3d": {
-      "auc": 0.618,
-      "brier": 0.2462
+      "auc": 0.613,
+      "brier": 0.2399,
+      "base_brier": 0.2489
     },
     "5d": {
-      "auc": 0.611,
-      "brier": 0.2286
+      "auc": 0.608,
+      "brier": 0.2291,
+      "base_brier": 0.2361
     }
   },
+  "metrics_note": "各 horizon 用自己的 bucket 拉回率評分（樣本內）；Brier 對照『報基準率』的 base_brier",
   "regime_5d_rates": {
     "vix": {
       "vix_16_20": {
-        "n": 390,
-        "rate": 63.08
+        "n": 433,
+        "rate": 63.74
       },
       "vix_ge20": {
-        "n": 409,
-        "rate": 71.15
+        "n": 411,
+        "rate": 70.8
       },
       "vix_lt16": {
-        "n": 364,
-        "rate": 49.45
+        "n": 405,
+        "rate": 50.62
       }
     },
     "trend": {
       "above_ma200": {
-        "n": 871,
-        "rate": 56.95
+        "n": 957,
+        "rate": 57.58
       },
       "below_ma200": {
         "n": 292,
@@ -49,12 +53,12 @@
     },
     "ext": {
       "ma20_normal": {
-        "n": 915,
-        "rate": 59.89
+        "n": 998,
+        "rate": 60.32
       },
       "ma20_over3": {
-        "n": 137,
-        "rate": 60.58
+        "n": 140,
+        "rate": 60.0
       },
       "ma20_under3": {
         "n": 111,
@@ -62,21 +66,78 @@
       }
     }
   },
-  "fetch_today_constants": {
-    "BASE_5D": 61.65,
+  "regime_1d_rates": {
     "vix": {
-      "vix_16_20": 63.08,
-      "vix_ge20": 71.15,
-      "vix_lt16": 49.45
+      "vix_16_20": {
+        "n": 433,
+        "rate": 30.48
+      },
+      "vix_ge20": {
+        "n": 411,
+        "rate": 48.18
+      },
+      "vix_lt16": {
+        "n": 405,
+        "rate": 19.51
+      }
     },
     "trend": {
-      "above_ma200": 56.95,
+      "above_ma200": {
+        "n": 957,
+        "rate": 26.12
+      },
+      "below_ma200": {
+        "n": 292,
+        "rate": 54.45
+      }
+    },
+    "ext": {
+      "ma20_normal": {
+        "n": 998,
+        "rate": 29.96
+      },
+      "ma20_over3": {
+        "n": 140,
+        "rate": 32.86
+      },
+      "ma20_under3": {
+        "n": 111,
+        "rate": 57.66
+      }
+    }
+  },
+  "fetch_today_constants": {
+    "BASE_5D": 61.81,
+    "vix": {
+      "vix_16_20": 63.74,
+      "vix_ge20": 70.8,
+      "vix_lt16": 50.62
+    },
+    "trend": {
+      "above_ma200": 57.58,
       "below_ma200": 75.68
     },
     "ext": {
-      "ma20_normal": 59.89,
-      "ma20_over3": 60.58,
+      "ma20_normal": 60.32,
+      "ma20_over3": 60.0,
       "ma20_under3": 77.48
+    }
+  },
+  "fetch_today_constants_1d": {
+    "BASE_1D": 32.75,
+    "vix": {
+      "vix_16_20": 30.48,
+      "vix_ge20": 48.18,
+      "vix_lt16": 19.51
+    },
+    "trend": {
+      "above_ma200": 26.12,
+      "below_ma200": 54.45
+    },
+    "ext": {
+      "ma20_normal": 29.96,
+      "ma20_over3": 32.86,
+      "ma20_under3": 57.66
     }
   }
 }
