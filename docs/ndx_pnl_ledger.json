@@ -185,6 +185,20 @@
    "issue": "rule53 擋單已近乎每日觸發（10/5–10/14 擋 6/8 天），且不帶方向的限價單並無正期望",
    "evidence": "2014–2026 不帶方向的空單全面負期望；貼近收盤多單小幅正值（最好一格 t=2.4）未過 30 格多重檢驗且疑為上漲漂移（同期 NDX 漲 8.4 倍）",
    "fix_applied": "預設不掛實單；每日記影子多空單（k=0.2、s=0.5，隔日收盤平倉），只寫 shadow_ledger"
+  },
+  {
+   "raised_on": "2026-10-18",
+   "approved_on": "2026-10-19",
+   "approved_by": "Johnny",
+   "retroactive_policy": "依 rule40 前瞻套用，自 2026-10-20 報告起；不回溯既有報告",
+   "evidence_dir": "D:\\LICHUNG_Agent\\100_Todo\\projects\\dr_sister_quant_digest\\phase4\\（Phase 4 長歷史、預先登記樣本外驗證、S1 提案）",
+   "id": "prc-014",
+   "status": "APPROVED — 2026-10-19 寫入 rule59（部位層）；SPX 對應選項 P4-SPX-1 暫不做",
+   "issue": "交易層休眠後，系統沒有任何經驗證的部位規模工具；方向不可測，但長期趨勢狀態可用來控回撤",
+   "evidence": "NDX 2001–2026 減半倉 MA200：MDD −70.5%→−46.7%、ΔCAGR +0.3pp；預先登記樣本外（SPX 1928–89、台股加權、日經225、DAX）ΔMDD +18～26pp、BH 4/4 通過、19 個年代 18 個較淺；MA150／250 平原；對同曝險靜態持股僅 SPX 1928–89 顯著（其餘 p 0.07–0.20）",
+   "cost": "平均每年切換 6.7 次（最多 19 次／2008），六成狀態 ≤5 日；短急殺（如 2024-07）不觸發",
+   "fix_applied": "每日報告最後新增「部位水位」段（Step 5.5）；ndx_last_analysis.position_level 每日更新；切換日寫 ndx_track_record.position_gate.events",
+   "scope_limit": "只輸出指數層級訊號；不改分析層任何輸出；緩衝帶、全出場版、其他均線、振幅部位 S2 皆未核准"
   }
  ],
  "entries": [

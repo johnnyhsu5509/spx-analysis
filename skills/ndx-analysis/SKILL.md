@@ -326,6 +326,43 @@ T2   = 成交價 − 1.6 × A
 
 prc-001／prc-002 修的是記帳錯誤（數學上必為 0 的損益、把不可執行的單計入績效），回溯無爭議；prc-003 改的是**目標與停損，會改變結果**，故必須套用此原則。8/24 開倉的破位空因尚未評估而完整回溯。
 
+### Step 5.5 — 部位水位（報告最後一區）（rule59／prc-014，2026-10-20 報告起）
+
+**這一區屬於部位層，不是分析。** 本系統只有這一個每天固定輸出的部位層內容；它不是方向預測，也不得影響 Step 4 的振幅與方向、Step 4.5 的 regime、Step 5 的影子帳。
+
+**判定**（不得手動推翻）：
+```
+讀 ndx_today_data.txt 的 close 與 ma200（rule33：不得臨場改算）
+close > ma200 → 水位「正常」（基準部位 100%）
+否則          → 水位「半倉」（基準部位 50%）
+```
+- 訊號用 t 日收盤；**t+1 日美股收盤執行**（09:41 報告 → 當晚收盤）。這和驗證設定一致，不得盤中提前。
+- 不加緩衝帶、不分批、不因新聞或振幅大小改判。任何修改都需要新的核准案，而且要先預先登記、再驗證。
+- `close` 或 `ma200` 缺漏、或 `trade_date` 不是預期交易日時：**沿用前一日水位**，並標註「水位資料缺」，不得自行估算。
+
+**報告格式**（固定放在報告最後；只寫指數數字，**禁止**寫基準部位金額、持股、槓桿、融資或帳戶規模）：
+```
+## 部位水位（部位層，不是分析）
+- 訊號：NDX 收盤 {close} vs MA200 {ma200}（{(close/ma200−1)×100:+.1f}%）→ 在 MA200 之上／之下
+- 水位：**正常**（基準部位 100%）｜**半倉**（基準部位 50%）
+- 狀態：自 {since} 起維持；今日未切換｜⚠️ 今日切換：正常 → 半倉（今晚美股收盤執行）
+- 距切換線：收盤需再跌 X.X% 才轉為半倉｜收盤需漲 X.X% 站回 MA200 才恢復正常
+- 依據：prc-014（預先登記、樣本外 4/4 通過）。本段不改變上方的振幅與方向輸出。
+```
+「距切換線」以今日的 ma200 計算：正常時為 1 − ma200/close，半倉時為 ma200/close − 1（MA200 隔日會移動，只是近似值）。
+
+**記帳**：
+- `ndx_last_analysis.json` 的 `position_level`：`{state: "正常"|"半倉", close, ma200, pct, since, switched_today: bool, data_missing: bool}`
+- 切換日（`switched_today` 為 true）才在 `ndx_track_record.json` 的 `position_gate.events` 加一筆 `{date, from, to, close, ma200}`；`date` 為訊號日（t）
+
+**檢查**：
+- 每月用收盤價重算一次切換日，與 `position_gate.events` 比對，不一致必須回報 Johnny。
+- 任意 12 個月內切換超過 19 次（歷史最大值），或連續 3 個交易日「水位資料缺」，都要回報。
+- 不做短期績效判定（平均每年約 3 個來回，幾個月的資料無法判斷好壞）。
+
+> **證據**：NDX 2001–2026：持有 MDD −70.5% → 減半倉 −46.7%，ΔCAGR +0.3pp。預先登記的樣本外驗證（SPX 1928–89、台股、日經、DAX）4/4 通過，BH 全過，19 個年代中 18 個回撤變淺。代價：平均每年切換 6.7 次，六成的狀態只維持 5 天以內；短急殺（例如 2024-07）不會觸發。
+> 「基準部位」是什麼、水位套用到哪些實際部位，**只由使用者自己決定，不寫入 repo**。
+
 ### Step 6 — 產出 HTML 報告 + 推 GitHub
 
 ```
@@ -364,19 +401,19 @@ git add + commit + push（PowerShell 用分號串接，不能用 &&）
 >
 > **正確做法**：
 > 1. **分析層**：只用價格、量、指標、廣度、類股、宏觀、regime 統計
-> 2. **部位層**：用戶主動問「我該怎麼做」才另開一段、**明確標註「這段是部位建議，不是分析」**
+> 2. **部位層**：用戶主動問「我該怎麼做」才另開一段、**明確標註「這段是部位建議，不是分析」**。唯一例外是 Step 5.5 的「部位水位」（rule59）：每天固定輸出，但只含指數訊號，不含任何個人財務資訊
 >
 > 兩層若指向相反方向，**照實並列呈現**，不得為了一致而修改分析層。
 >
 > 注意：本系統存在的理由本身就是「用戶部位貼近 NDX」，但這只影響**選哪個指數分析**，不影響**分析怎麼做**。
 
-`ndx_last_analysis.json` 必含欄位：trade_date / close / change_pct / vxn / pullback_prob（Phase 3 起恆為 50）/ rating / **amplitude**（Phase 3：A_pct、band_lo、band_hi、r0_ref_pct、c、vol_pct_1y，供振幅帳判定）/ **direction**（{prob: 50, bias: "中性", rule: null}）/ predictions（short_bias、key_resistance、key_support、fib_targets、zhongshu、elliott、strategies、watch_points）/ catalysts / **system_rules** / backtest_prev / spx_cross_check / dashboard_url
+`ndx_last_analysis.json` 必含欄位：trade_date / close / change_pct / vxn / pullback_prob（Phase 3 起恆為 50）/ rating / **amplitude**（Phase 3：A_pct、band_lo、band_hi、r0_ref_pct、c、vol_pct_1y，供振幅帳判定）/ **direction**（{prob: 50, bias: "中性", rule: null}）/ predictions（short_bias、key_resistance、key_support、fib_targets、zhongshu、elliott、strategies、watch_points）/ catalysts / **system_rules** / backtest_prev / spx_cross_check / dashboard_url / **position_level**（rule59：state、close、ma200、pct、since、switched_today、data_missing）
 
 ---
 
 ## 三層決策矩陣（Phase 3，2026-10-16 起改為「振幅檢查」；兩個確認模式回覆時套用）
 
-核心原則：**本系統目前不產生方向部位指令**。確認模式只回答「今晚波動會不會比預報大」，供用戶管理既有部位的風險；任何留倉／減碼建議屬部位層，依 rule32 另段標示「這段是部位建議，不是分析」。
+核心原則：**本系統目前不產生方向部位指令**（Step 5.5 的部位水位是長期趨勢下的部位規模，不是方向預測；確認模式不得因盤中波動改判水位）。確認模式只回答「今晚波動會不會比預報大」，供用戶管理既有部位的風險；任何留倉／減碼建議屬部位層，依 rule32 另段標示「這段是部位建議，不是分析」。
 
 ### 第一層：白天報告 → 今晚的波動環境
 | `amplitude.vol_pct_1y` | 環境 | 提示 |
@@ -423,6 +460,7 @@ git add + commit + push（PowerShell 用分號串接，不能用 &&）
 14. rule8【硬】回踩做多錨定支撐位本身、站穩即進、禁掛深；不掛限價單在支撐等接
 15. 突破做多必要條件（缺一不可）：突破均線 + **帶量**（rule43：QQQ 相對量 ≥ 75 百分位門檻，數值以 JSON 為準）+ MACD柱收窄
 16. **rule51【硬・prc-006，2026-09-23 核准】限價單同日成交＋觸價以 30 分 K 判序**——limit_buy／limit_sell／buy_stop 成交當日，若目標或停損亦在日線範圍內，只計成交那根 K 棒之後的價格行為；同根無法判序時保守視為未觸及目標。30 分 K 取不到時退回日線並標註。8/28、9/18 已結算不重判（rule40）
+17. **rule59【硬・部位層・prc-014，2026-10-19 核准】部位水位**——報告最後固定加一段「部位水位（部位層，不是分析）」：NDX 收盤 > MA200 時為「正常」，否則為「半倉」；t+1 收盤執行；不加緩衝、不得推翻；不影響分析層；公開 repo 不寫個人部位。詳見 Step 5.5
 
 > **Phase 3 規則狀態（2026-10-16 起；`ndx_last_analysis.json` 的 system_rules 已同步，核准案見 `ndx_pnl_ledger.json` 的 prc-010～013）**：
 > rule16 推導式停用（headline 恆 50）｜rule27、rule52 的幾何部分由 Step 5b 取代｜rule53 反轉為「符合已核准方向規則才掛」｜rule54 證據移到環境水位、方向效力待重驗｜rule39／prc-003 浮動目標單位改為 A｜rule12、rule51 保留（實單放行後生效）

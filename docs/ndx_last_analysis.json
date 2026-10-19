@@ -213,7 +213,8 @@
   "rule55【硬・Phase 3 prc-010，2026-10-16】每日主輸出＝隔日振幅預報 A（讀 ndx_today_data.amplitude，不得手動調整）＋方向（恆 50）。方向規則核准門檻：長歷史（2000 年起）walk-forward 樣本外；列出試驗次數並通過 BH（q=5%）；扣成本後以 A 為單位期望值 >0 且 95% 區間不含 0；換定義不翻轉；目前無方向規則達標",
   "rule56【硬・Phase 3 prc-012】掛單幾何一律以 A 為單位：進場 k×A、停損 s×A、目標 t×A，並列事前成交率（2014–2026：k0.2 多 65%／空 73%，四到五成為開盤跳空成交）；放行實單的方向規則須在核准案指定 k、s、t",
   "rule57【硬・Phase 3 prc-013】預設休眠＋影子帳：每日記影子多單（收盤 −0.2A、停損成交價 −0.5A）與影子空單（收盤 +0.2A、停損 +0.5A），隔日收盤平倉、停損優先（同日依 rule51 判序），pnl 以 A 記錄，寫 ndx_pnl_ledger.shadow_ledger，不進主帳",
-  "rule58【硬・Phase 3】振幅帳 amp_track 每日判定前一份預報（log_err 與 r0 基準、50% 區間覆蓋）；累積 60 筆後 log_err 不比 r0 小或覆蓋率長期 <40%／>60% 須回報 Johnny"
+  "rule58【硬・Phase 3】振幅帳 amp_track 每日判定前一份預報（log_err 與 r0 基準、50% 區間覆蓋）；累積 60 筆後 log_err 不比 r0 小或覆蓋率長期 <40%／>60% 須回報 Johnny",
+  "rule59【硬・部位層・prc-014，2026-10-19 核准】報告最後固定一段「部位水位（部位層，不是分析）」：讀 ndx_today_data 的 close 與 ma200，close > ma200 → 正常（基準部位 100%），否則 → 半倉（基準部位 50%）；t 日收盤訊號、t+1 日美股收盤執行；不加緩衝、不分批、不得手動推翻；資料缺沿用前一日並標註；不影響振幅／方向／regime／影子帳；公開 repo 不寫任何個人部位（基準部位對應由使用者自行決定）"
  ],
  "system_rules_notes": [
   "rule55：主輸出 A 1.431%（直接讀 ndx_today_data.amplitude，未調整）；方向恆 50、bias 中性",
@@ -240,5 +241,16 @@
   "pnl": "rule53 全日不掛 → 0bp，累積 -6.29bp"
  },
  "dashboard_url": "https://johnnyhsu5509.github.io/spx-analysis/ndx/",
- "dated_report_url": "https://johnnyhsu5509.github.io/spx-analysis/ndx-analysis-20261019.html"
+ "dated_report_url": "https://johnnyhsu5509.github.io/spx-analysis/ndx-analysis-20261019.html",
+ "position_level": {
+  "state": "正常",
+  "close": 29187.55,
+  "ma200": 27737.98,
+  "pct": 5.23,
+  "since": "2026-04-08",
+  "switched_today": false,
+  "data_missing": false,
+  "basis_date": "2026-10-16",
+  "note": "種子（2026-10-19 prc-014 核准時依 10/16 收盤補登）；自 2026-10-20 報告起由 Step 5.5 每日更新"
+ }
 }
