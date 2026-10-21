@@ -1758,12 +1758,28 @@
    "trades": [],
    "day_weighted_bp": 0.0,
    "day_note": "Phase 3 預設不掛實單 → 當日 **0bp**。累積維持 **-6.29bp**。"
+  },
+  {
+   "report_date": "2026-10-20",
+   "basis_close": 29529.35,
+   "eval_date": "2026-10-20",
+   "eval_ohlc": {
+    "open": 29393.96,
+    "high": 29711.53,
+    "low": 29208.83,
+    "close": 29490.28
+   },
+   "rule50_check": "Phase 3 預設休眠（rule57），無實單可判。",
+   "rule51_check": "無成交單，不需判序。",
+   "trades": [],
+   "day_weighted_bp": 0.0,
+   "day_note": "Phase 3 預設不掛實單 → 當日 **0bp**。累積維持 **-6.29bp**。"
   }
  ],
  "open_positions": [],
  "summary": {
-  "as_of": "2026-10-20",
-  "days_evaluated": 34,
+  "as_of": "2026-10-21",
+  "days_evaluated": 35,
   "trades_total": 49,
   "signals_triggered": 26,
   "trades_filled": 23,
@@ -1788,15 +1804,15 @@
    "2026-09-25",
    "2026-09-28"
   ],
-  "honest_read": "累積維持 **-6.29bp**（30 分 K 揭露口徑 -8.58bp）。10/19 Phase 3 預設不掛實單，記 0bp。已結算成交 23 筆 8 勝 15 敗，無留倉。影子單另記 shadow_ledger。",
+  "honest_read": "累積維持 **-6.29bp**（30 分 K 揭露口徑 -8.58bp）。10/19、10/20 Phase 3 預設不掛實單，記 0bp。已結算成交 23 筆 8 勝 15 敗，無留倉。影子單另記 shadow_ledger。",
   "cumulative_if_intraday_checked": -8.58
  },
  "trades_pending": {
-  "report_date": "2026-10-20",
-  "basis_close": 29529.34,
-  "eval_rule": "用 2026-10-20 美股 NDX OHLC 判定。**Phase 3 預設休眠（rule57）**：無已核准方向規則 → 不掛實單；明日記 0bp 並更新 days_evaluated。",
-  "signal_A_pct": 1.346,
-  "signal_A_pts": 397.5,
+  "report_date": "2026-10-21",
+  "basis_close": 29490.28,
+  "eval_rule": "用 2026-10-21 美股 NDX OHLC 判定。**Phase 3 預設休眠（rule57）**：無已核准方向規則 → 不掛實單；明日記 0bp 並更新 days_evaluated。",
+  "signal_A_pct": 1.328,
+  "signal_A_pts": 391.7,
   "trades": []
  },
  "gap_note_2026_08_27": {
@@ -1890,26 +1906,26 @@
   "verdict_rule": "累積 6 個月後判定：t>2、扣成本後仍為正、且超過同期『收盤買、隔日收盤賣』的漂移",
   "pending": [
    {
-    "report_date": "2026-10-20",
-    "basis_close": 29529.34,
+    "report_date": "2026-10-21",
+    "basis_close": 29490.28,
     "side": "long",
     "order": "limit_buy",
-    "limit": 29449.84,
+    "limit": 29411.94,
     "k": 0.2,
     "s": 0.5,
-    "A_pts": 397.5,
+    "A_pts": 391.7,
     "stop_rule": "成交價 − s×A",
     "exit": "隔日收盤"
    },
    {
-    "report_date": "2026-10-20",
-    "basis_close": 29529.34,
+    "report_date": "2026-10-21",
+    "basis_close": 29490.28,
     "side": "short",
     "order": "limit_sell",
-    "limit": 29608.84,
+    "limit": 29568.62,
     "k": 0.2,
     "s": 0.5,
-    "A_pts": 397.5,
+    "A_pts": 391.7,
     "stop_rule": "成交價 + s×A",
     "exit": "隔日收盤"
    }
@@ -1964,19 +1980,49 @@
     "pnl_pts": -208.85,
     "pnl_A": -0.5,
     "A_pts": 417.7
+   },
+   {
+    "report_date": "2026-10-20",
+    "eval_date": "2026-10-20",
+    "side": "long",
+    "limit": 29449.84,
+    "filled": true,
+    "fill": 29393.96,
+    "fill_type": "開盤跳空成交（開 29393.96 < 掛單 29449.84）",
+    "stop": 29195.21,
+    "exit": 29490.28,
+    "exit_type": "隔日收盤平倉（低 29208.83 未觸停損 29195.21，差 13.6 點）",
+    "pnl_pts": 96.32,
+    "pnl_A": 0.242,
+    "A_pts": 397.5
+   },
+   {
+    "report_date": "2026-10-20",
+    "eval_date": "2026-10-20",
+    "side": "short",
+    "limit": 29608.84,
+    "filled": true,
+    "fill": 29608.84,
+    "fill_type": "盤中成交（10:00 棒高 29,688.6 越過掛單）",
+    "stop": 29807.59,
+    "exit": 29490.28,
+    "exit_type": "隔日收盤平倉（高 29711.53 未觸停損 29807.59）",
+    "pnl_pts": 118.56,
+    "pnl_A": 0.298,
+    "A_pts": 397.5
    }
   ],
   "summary": {
-   "days": 2,
-   "filled_long": 1,
-   "filled_short": 1,
-   "mean_pnl_A_long": -0.5,
-   "mean_pnl_A_short": -0.5,
-   "fill_rate_long_pct": 50.0,
-   "fill_rate_short_pct": 50.0,
-   "drift_bench_mean_A": -0.625,
-   "drift_bench_note": "同期『收盤買、隔日收盤賣』每天平均報酬（以 A 計）：10/16 -2.069 A、10/19 +0.818 A，平均 -0.625 A",
-   "as_of": "2026-10-20"
+   "days": 3,
+   "filled_long": 2,
+   "filled_short": 2,
+   "mean_pnl_A_long": -0.129,
+   "mean_pnl_A_short": -0.101,
+   "fill_rate_long_pct": 66.7,
+   "fill_rate_short_pct": 66.7,
+   "drift_bench_mean_A": -0.45,
+   "drift_bench_note": "同期『收盤買、隔日收盤賣』每天平均報酬（以 A 計）：10/16 -2.069 A、10/19 +0.818 A、10/20 -0.098 A，平均 -0.450 A",
+   "as_of": "2026-10-21"
   }
  }
 }

@@ -436,6 +436,19 @@
    "basis_date": "2026-10-19",
    "pullback_prob": 50,
    "bias": "中性",
+   "actual_date": "2026-10-20",
+   "actual_pct": -0.13,
+   "actual_dir": "flat",
+   "grade": "hit",
+   "phase": "Phase 3（方向恆 50）",
+   "note": "10/20 開 29,393.96（-0.46% 跳空）＝早盤即近全日低 29,208.83（09:30 棒）→ 10:30 棒高 29,711.53（未達 0.618 回撤 29,749）→ 午後一路回落 → 收 29,490.28（**-0.13%**）→ **flat**。Phase 3 方向恆 50 中性遇 flat → **hit**；Brier 排除（平盤）。\n\n【病因】輪動日：Dow +1.0%、Russell +1.65%、醫療領漲，資金由科技權值轉向中小型與防禦；NDX 平、費半 -0.4%。QQQE +0.73% vs QQQ -0.10%＝等權強於權值（與 10/19 晶片獨撐相反）。油價盤中回落（WTI -4.7%）、10Y 5.12（-1.9bps）。"
+  },
+  {
+   "report_date": "2026-10-21",
+   "basis_close": 29490.28,
+   "basis_date": "2026-10-20",
+   "pullback_prob": 50,
+   "bias": "中性",
    "actual_date": null,
    "actual_pct": null,
    "actual_dir": null,
@@ -444,12 +457,12 @@
   }
  ],
  "summary": {
-  "as_of": "2026-10-20",
-  "graded": 34,
-  "hits": 14,
+  "as_of": "2026-10-21",
+  "graded": 35,
+  "hits": 15,
   "half": 16,
   "miss": 4,
-  "rolling_direction_score_pct": 64.7,
+  "rolling_direction_score_pct": 65.7,
   "gap_days": [
    "2026-08-27",
    "2026-08-31",
@@ -461,11 +474,11 @@
    "2026-09-25",
    "2026-09-28"
   ],
-  "sample_caveat": "n=34。64.7% ＝ (14 hit + 16 half×0.5 + 4 miss) / 34。always-neutral 基準 69.1%（依 audit_20261002 須並列）。Phase 3 起方向恆 50＝報法等同 always-neutral。",
+  "sample_caveat": "n=35。65.7% ＝ (15 hit + 16 half×0.5 + 4 miss) / 35。always-neutral 基準 70.0%（依 audit_20261002 須並列）。Phase 3 起方向恆 50＝報法等同 always-neutral。",
   "brier": {
-   "as_of": "2026-10-20",
+   "as_of": "2026-10-21",
    "included": 21,
-   "excluded_flat": 13,
+   "excluded_flat": 14,
    "per_entry": [
     {
      "report_date": "2026-08-18",
@@ -670,19 +683,25 @@
      "p": 0.5,
      "outcome": 0,
      "brier": 0.25
+    },
+    {
+     "report_date": "2026-10-20",
+     "p": 0.5,
+     "outcome": null,
+     "brier": null
     }
    ],
    "mean_brier": 0.2458,
    "benchmark_50pct": 0.25,
    "prob_range_observed": "43-63（n=16，範圍 20pp）",
-   "honest_read": "mean brier **0.2458**（n=21），貼近 0.25 基準、幾乎沒有資訊量。10/19 起恆報 50，Brier 恆 0.25（預期）。"
+   "honest_read": "mean brier **0.2458**（n=21），貼近 0.25 基準、幾乎沒有資訊量。10/19 起恆報 50，Brier 恆 0.25（預期）；10/20 平盤排除。"
   },
   "gap_days_note": "2026-08-27 與 2026-08-31 兩個美股交易日未產出報告，無預測可回測，不計入任何統計。兩次都是「前一日已產報告、隔天沒跑」造成的斷點。連續八個交易日中斷兩次＝覆蓋率 75%，這個比率本身值得注意：帳本的統計效力會被斷點稀釋。",
   "coverage_note": "**9/21 為 gap day**（NDX +2.83%，本波最大漲幅日未被覆蓋）。累積覆蓋率 17/24 = **70.8%**，續創新低。",
   "data_correction_note": "【2026-08-28 收盤價修正】Yahoo 已恢復該日日線，官方收盤 **29,433.43**，先前使用的 30 分 K 回補值為 29,430.20（差 3.23 點）。影響核對：8/28 的 actual_pct 由 -0.71% 修為 **-0.70%**，仍 ≤ -0.4%、仍判 down、仍為 miss，grade 與 brier 皆不變。P&L 帳本的 8/28 兩筆單以 High/Low 判定，不涉及 Close，亦不變。**當時的揭露（記錄兩個數字並標明差異）現已證實為正確做法。**",
   "audit_20261002": "**基準線對照（2026-10-02 稽核）**：依本帳計分規則，「每天都報中性」的基準分數為 **72.7%**（22 筆：flat 10／up 4／down 8），系統 **65.9%**，**低於無腦基準 6.8pp**。改看「方向判斷遇方向日」：9 筆對 6 筆＝66.7%（樣本太小）；Brier 0.2395 vs 基準 0.25。**往後引用滾動分數時須並列 always-neutral 基準**。",
   "gap_codex_coverage": "gap day 中 9/11、9/14、9/17、9/21、9/25、9/28 六日，Codex 第二意見系統有前瞻預測，存於 Codex 自己的追蹤帳；依「不同系統不合併計分」原則**不併入本帳**。8/27、8/31、9/8 兩套系統皆無預測。",
-  "always_neutral_baseline_pct": 69.1
+  "always_neutral_baseline_pct": 70.0
  },
  "amp_track": {
   "purpose": "Phase 3（2026-10-16 起）：每日判定前一份報告的隔日振幅預報。這是第一本「預期會贏基準」的帳；方向帳照舊並列",
@@ -718,16 +737,29 @@
     "r0_log_err": 0.297,
     "in_band": true,
     "note": "實際 1.122%（327.4 點）＝A 的 0.78 倍，落在 50% 區間內（貼近下緣 1.098%）；本日 A 優於 r0。另有 +1.20% 開盤跳空不在高低區間內"
+   },
+   {
+    "report_date": "2026-10-20",
+    "eval_date": "2026-10-20",
+    "A_pct": 1.346,
+    "band_lo": 1.035,
+    "band_hi": 1.717,
+    "r0_ref_pct": 1.571,
+    "actual_range_pct": 1.702,
+    "log_err": 0.2347,
+    "r0_log_err": 0.0801,
+    "in_band": true,
+    "note": "實際 1.702%（502.7 點）＝A 的 1.26 倍，落在 50% 區間內（貼近上緣 1.717%）；本日 r0 優於 A。另有 -0.46% 開盤跳空"
    }
   ],
   "summary": {
-   "graded": 2,
-   "mean_log_err": 0.4861,
-   "mean_r0_log_err": 0.4983,
-   "band_coverage_pct": 50.0,
+   "graded": 3,
+   "mean_log_err": 0.4023,
+   "mean_r0_log_err": 0.3589,
+   "band_coverage_pct": 66.7,
    "above_band": 1,
    "below_band": 0,
-   "as_of": "2026-10-20"
+   "as_of": "2026-10-21"
   }
  },
  "position_gate": {
