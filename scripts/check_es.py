@@ -4,9 +4,10 @@ import os as _os, sys as _sys
 _sys.path.insert(0, _os.path.dirname(_os.path.abspath(__file__)))
 import yf_compat
 import guard
+import cme_session
 import json
 import os
-from datetime import datetime
+from datetime import datetime, timezone
 
 OUT_DIR = os.path.dirname(os.path.abspath(__file__))
 
@@ -64,6 +65,8 @@ elif (h >= 21) or (h < 4):
     session, s_note = "US_REGULAR", "美股盤中：即時讀數"
 else:
     session, s_note = "US_AFTERHOURS", "美股盤後：反映當日收盤後動向"
+if cme_session.weekend_closed(datetime.now(timezone.utc)):
+    session, s_note = "WEEKEND_CLOSED", "CME 週末休市（週五 17:00 至週日 18:00 ET）：此為前一交易日結算值，非即時"
 result["session"] = {"label": session, "note": s_note}
 
 
