@@ -57,6 +57,8 @@ description: |
 - 近5日 OHLCV 一併輸出，供回測比對
 - **regime 區塊**：VIX/MA200/MA20 三維分類 + 各自歷史 5D 拉回率 + 與基準率的超額；`regime.horizon_1d` 為同三維的**隔日（1D）拉回率**（Step 4.5 環境水位用）
 - **amplitude 區塊（Phase 3，2026-10-16 起）**：隔日振幅預報 A（% 與點數）、50% 區間、c、近 63 日實際÷隱含、VIX 一年分位、rule27 舊算法參考值。**Step 4 主輸出的來源**。`stale: true` 或為 `null` 時不得引用，報告寫「振幅資料缺」
+- **RSI 兩種口徑（2026-10-23 起）**：`rsi`＝Cutler（SMA 14 日），`wilder_rsi`＝Wilder。**rule5／rule14 一律讀 `wilder_rsi`，不得再自行手算或另寫腳本計算**；`wilder_rsi` 為 `null` 時在 `rule_status` 寫「Wilder RSI 資料缺」，不得改用 Cutler 代替
+- **`rsi_method_divergence`**：`flag: true`＝當日 Cutler 與 Wilder 變動方向相反，Cutler 的升降被 14 日窗口滑出的大幅變動扭曲，不得當動能訊號（rule36）；整個區塊為 `null`＝資料缺，**不是「無背離」**
 
 價格與指標一律以 Python 抓的為準，**不用 web search 抓價格**。
 
@@ -184,7 +186,7 @@ description: |
    - 黃金交叉/死亡交叉是否已形成或即將形成
 
 3. **技術指標**
-   - RSI(14)：<30 超賣，>70 超買，注意頂/底背離
+   - RSI(14)：<30 超賣，>70 超買，注意頂/底背離；報告引用 RSI 一律標明口徑（Wilder／Cutler），rule5／rule14 用 `wilder_rsi`
    - MACD：柱狀放大/縮小，多空交叉
    - 布林帶：收盤位置百分比
    - KD：高檔鈍化/超賣反彈
@@ -445,7 +447,7 @@ git add + commit + push（PowerShell 用分號串接，不能用 &&）
 2. 判斷標準：
    - ES ≥ +0.3% → 偏多開盤；ES ≤ -0.3% → 偏空開盤；之間 → 中性
    - **同時看 10Y 殖利率（±5bps）、DXY、NQ 強弱、SOXX 半導體、macro_backdrop 合成分**
-   - **先看 `session` 時段標示**：ASIA_THIN（台灣白天）＝亞洲薄盤，反轉率高、僅供參考，**不可據此執行**，21:00 後必須複查；US_PREOPEN/REGULAR 才是可執行讀數
+   - **先看 `session` 時段標示**：ASIA_THIN（台灣白天）＝亞洲薄盤，反轉率高、僅供參考，**不可據此執行**，21:00 後必須複查；US_PREOPEN/REGULAR 才是可執行讀數；**WEEKEND_CLOSED**（CME 週五 17:00 至週日 18:00 ET 休市）＝整份 es_check 都是前一交易日結算值、非即時，不得當盤前讀數，此時 `semi_vs_spx` 是週五收盤的同日比較
    - **SOXX 半導體（rule15）**：對重倉半導體者比 NQ 更準；美盤時段看 `semi_vs_spx` 背離值，≤-1.0pp＝輪動殺半導體警報（注意：亞洲時段 SOXX 為前日收盤資料）
    - `implied_spx_open` 為隱含現貨開盤近似值，直接對照關鍵價位表
 3. 依三層決策矩陣第二層（振幅檢查），輸出手機一眼看完的短結論，必含宏觀層，格式照下例：

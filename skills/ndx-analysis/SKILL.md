@@ -102,9 +102,10 @@ repo 與 SPX 系統共用：`https://github.com/johnnyhsu5509/spx-analysis`
 
 **所有指標一律以 `fetch_today.py` 的輸出為準，禁止臨場自行計算或改用其他演算法。**
 
-- RSI 使用 **SMA/Cutler 法**（`rolling(14).mean()`），與 SPX 系統相同
-- **禁止混用 Wilder 法**（`ewm(alpha=1/14)`）。兩者在同一天可以差 15 點以上
-- 跨指數比較時（NDX vs SPX）**必須兩邊都用同一支腳本的輸出**
+- RSI 使用 **SMA/Cutler 法**（`rsi` 欄位，`rolling(14).mean()`）。⚠**SPX 系統的 rule5／rule14 是用 Wilder 判定**，兩套的 RSI 規則口徑不同（2026-10-23 釐清；舊版此處誤寫「與 SPX 系統相同」）
+- **本系統的判斷禁止改用 Wilder 法**。腳本自 2026-10-23 起同時輸出 `wilder_rsi`，只供跨指數比較；兩者在同一天可以差 15 點以上
+- 跨指數比較時（NDX vs SPX）**必須兩邊都用同一支腳本的同一個欄位**（都用 `rsi`，或都用 `wilder_rsi`），並在報告標明口徑
+- `rsi_method_divergence.flag: true`＝當日 Cutler 與 Wilder 變動方向相反，報告須註明「Cutler RSI 的升降受 14 日窗口滑出扭曲」（只是揭露，不改變本條口徑）；整個區塊為 `null`＝資料缺，**不是「無背離」**
 
 > **反例（2026-08-18 實際犯過）**：一份臨時 NDX 分析報「NDX RSI **58.91** 完全沒超買 vs SPX **70.77** 超買」，並把它當成 NDX 抗跌的最大亮點、據此把拉回機率壓到 43%（SPX 為 58%）。
 > 實際上 58.91 是 **Wilder 法的 NDX**，70.77 是 **SMA 法的 SPX**——兩種演算法混用。
@@ -444,7 +445,7 @@ git add + commit + push（PowerShell 用分號串接，不能用 &&）
 **權威來源＝`{repo}\docs\ndx_last_analysis.json` 的 `system_rules` 欄位**，本節只列核心硬規則摘要，不一致時以 JSON 為準。
 
 核心硬規則：
-1. **rule33【硬・NDX 首要】指標口徑一致性**——所有指標以 `fetch_today.py --symbol ndx` 輸出為準；RSI 用 SMA/Cutler 法；跨指數比較必須兩邊同一支腳本。詳見 Step 1.4 的反例
+1. **rule33【硬・NDX 首要】指標口徑一致性**——所有指標以 `fetch_today.py --symbol ndx` 輸出為準；RSI 用 SMA/Cutler 法（`rsi` 欄位）；跨指數比較必須兩邊同一支腳本的同一個欄位（SPX 的 rule5／rule14 用 Wilder）。詳見 Step 1.4 的反例
 2. **rule34【硬・NDX】波動尺度不可跨系統挪用**——停損寬度、掛單距離、目標距離一律用 NDX 自身 ATR/振幅計算
 3. **rule35【硬・NDX】波動大不可重複計價**——不得因「NDX 高 beta」而額外上下調拉回機率，波動已反映在拉回定義與基準率中
 4. **rule37【硬・兩套共用】未結算列與 NaN 必擋**——Yahoo 常在最新一列給「未結算」資料：先是只有 Volume 而量能殘缺，接著連 OHLC 都變 NaN。`fetch_today.py` 已加兩道防線（dropna + 寫檔前 NaN 檢查），但**判讀時仍須核對 `trade_date` 是否為預期交易日**——若腳本回報的日期比預期早一天，代表最新一列被丟棄，不是資料正常。復原來源為 `data/` 的 Actions 快照（2026-08-18 實際發生：8/17 列被 Yahoo 撤回，快照仍保有完整 OHLC）
@@ -477,7 +478,7 @@ git add + commit + push（PowerShell 用分號串接，不能用 &&）
 2. 判斷標準：
    - NQ ≥ +0.3% → 偏多開盤；≤ −0.3% → 偏空；之間 → 中性
    - 同時看 10Y（±5bps）、DXY、**ES 強弱（大盤對照）**、SOXX、macro_backdrop
-   - **先看 `session` 時段標示**：ASIA_THIN＝亞洲薄盤，反轉率高、**不可據此執行**，21:00 後必須複查
+   - **先看 `session` 時段標示**：ASIA_THIN＝亞洲薄盤，反轉率高、**不可據此執行**，21:00 後必須複查；**WEEKEND_CLOSED**（CME 週五 17:00 至週日 18:00 ET 休市）＝整份 ndx_es_check 都是前一交易日結算值、非即時，不得當盤前讀數，此時 `semi_vs_ndx` 是週五收盤的同日比較
    - **SOXX 半導體（rule15）**：對 NDX 是引擎指標；美盤時段看 `semi_vs_ndx` 背離值，≤−1.0pp＝輪動殺半導體警報
    - `implied_ndx_open` 為隱含現貨開盤近似值，直接對照關鍵價位表
 3. 輸出手機一眼看完的短結論，格式照下例：
