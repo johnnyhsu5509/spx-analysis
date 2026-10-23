@@ -1,13 +1,13 @@
 {
  "purpose": "由候補清單分離出來的『待實作』項目。它們不是待驗證的假設，是卡在沒人動手的工程項目，故不佔 rule_candidates 名額、也不進每日讀寫。完成後在此標記並刪除。",
- "as_of": "2026-10-02",
+ "as_of": "2026-10-23",
  "items": {
   "todo1_close_confirm_carry": {
    "來源": "原 rule33_candidate",
    "問題": "sell_stop_close_confirm 單在 1 日模擬視野下結構性恆為 0bp（以收盤價進場＋當日收盤強平＝進場價=出場價），破位空這條策略線至今從未被評分",
    "修正": "允許 close_confirm 單持倉至次一交易日評價（carry over），或改以次日開盤價計入",
    "檔案": "docs/pnl_ledger.json → sim_rules",
-   "狀態": "✅**已完成 2026-09-03（SPX rule48）**：close-confirm 單改為隔日評價（觸發日以收盤價建倉、記 0bp 並寫入 carried_positions，損益歸屬次一交易日）。不回溯。⚠**NDX 早在 2026-08-19 就以 prc-001 修好了同一件事**，SPX 晚了 15 天——**這是跨系統改良沒有互相同步的第一個實例**",
+   "狀態": "【2026-10-23 核對：已完成】證據：docs/pnl_ledger.json:12（sim_rules.rule48_close_confirm_horizon）、changelog 2026-09-03 rule48（retroactive=false）；docs/lessons.md:154。Phase 3（2026-10-16）起預設不掛實單（skills/spx-analysis/SKILL.md:250），此型單暫無新樣本｜原狀態：✅**已完成 2026-09-03（SPX rule48）**：close-confirm 單改為隔日評價（觸發日以收盤價建倉、記 0bp 並寫入 carried_positions，損益歸屬次一交易日）。不回溯。⚠**NDX 早在 2026-08-19 就以 prc-001 修好了同一件事**，SPX 晚了 15 天——**這是跨系統改良沒有互相同步的第一個實例**",
    "暴露次數": 2
   },
   "todo2_fetch_sector_10y": {
@@ -15,7 +15,7 @@
    "問題": "macro_layer 為 null 時，類股與 10Y 維度整段留白，但它們的**日線收盤**在分析當下即可取得、不需期貨。2026-08-18 的兩大驅動（10Y 連三日≥4.70、SOXX 崩 4.96%）因此缺席三個交易日",
    "修正": "fetch_today.py 納入 SOXX/SMH/QQQ/SPY/RSP/XLV 與 ^TNX 的日線收盤；期貨層（ES/NQ）仍歸 check_es.py",
    "檔案": "scripts/fetch_today.py",
-   "狀態": "待實作",
+   "狀態": "【2026-10-23 核對：仍待實作（部分已有）】已有：fetch_today.py 的 breadth 區塊抓 SPX 的 RSP／SPY（scripts/fetch_today.py:30）、NDX 的 QQQE／QQQ（:45）日線收盤；SOXX 與 ^TNX 只在 check_es.py（:159-177、:186-196，fast_info 即時報價，非日線收盤）與 check_open30.py（:22、:25，SOXX 30 分 K），Actions 會把 es_check.txt 快照進 data/。仍缺：fetch_today.py 沒有 SOXX、SMH、XLV、^TNX 的日線收盤（SPX 這邊也沒有 QQQ），不跑 check_es.py 時類股與 10Y 維度仍會留白。本 PR 未處理｜原狀態：待實作",
    "附帶效益": "可省下每日一趟額外 yfinance 往返"
   },
   "todo3_wilder_rsi_output": {
@@ -23,7 +23,7 @@
    "問題": "腳本輸出 Cutler RSI（簡單14日均），大幅單日變動滑出窗口時會產生**與當日方向相反的假訊號**（2026-08-18：指數 -0.69% 而 Cutler RSI 由 70.77 升至 76.75）",
    "修正": "fetch_today.py 同時輸出 wilder_rsi，並在兩者方向背離時於 txt 標記警示",
    "檔案": "scripts/fetch_today.py",
-   "狀態": "待實作",
+   "狀態": "【2026-10-23 核對：已實作，待合併（claude/lucid-bell-h7c3rv PR）】fetch_today.py 在既有欄位之後附加 wilder_rsi 與 rsi_method_divergence（flag／cutler_chg／wilder_chg，背離時加 note；缺值為 null），既有欄位名稱、數值、順序、格式不變，SPX 與 --symbol ndx 皆輸出（scripts/wilder.py、scripts/fetch_today.py:476-480）。驗證：tests/test_wilder.py、tests/test_fetch_today.py；以真實資料重算 2026-08-13～08-18，與 docs/lessons.md:85-90 的 Cutler／Wilder 表逐筆相同，08-18 flag=true。⚠兩套 SKILL.md 尚未讀取新欄位；NDX rule33 規定 RSI 用 Cutler、禁止混用 Wilder（skills/ndx-analysis/SKILL.md:105-106），NDX 是否讀 wilder_rsi 屬政策，由 Johnny 決定｜原狀態：待實作",
    "現行替代": "rule14／rule5 已規定一律以 Wilder 判定，目前由分析當下手動複核"
   },
   "todo4_gap_fill_rule": {
@@ -31,7 +31,7 @@
    "問題": "sim_rules 缺少 gap 成交定義。limit 單被跳空穿越時，現行慣例以掛單價成交，與真實世界的開盤價成交不符",
    "修正": "limit 單於跳空穿越時以**開盤價**成交；若成交價已越過停損，記為當日開盤即出場",
    "檔案": "docs/pnl_ledger.json → sim_rules",
-   "狀態": "待實作",
+   "狀態": "【2026-10-23 核對：已被取代而過時】問題（sim_rules 缺跳空成交定義）已由 rule50 解決，但採用的不是本項的修正方案：2026-09-03 先實作「開盤價成交、停損已破記 0 pts」，同日經 Johnny 核准修訂為雙側 GAP_INVALIDATED（跳過目標或停損 → 不進場、不計損益、不計入成交）。證據：docs/pnl_ledger.json:4（version 2026-09-03b）、:44（changelog 同日修訂，approved_by Johnny）、:57-70（rule50_gap_invalidation）；docs/lessons.md:159、:220-226。⚠skills/spx-analysis/SKILL.md:136-137 仍寫修訂前的「成交價記開盤價／gap_through_flat 記 0 pts」，與 sim_rules 不一致（本 PR 不改 SKILL.md）｜原狀態：待實作",
    "現行做法": "一律採保守（對自己不利）的掛單價記法並加註，已於 8/18、8/19 兩次執行"
   },
   "todo5_threshold_in_script": {
@@ -39,7 +39,7 @@
    "問題": "兩道門檻（預期振幅×0.6、單邊移動均值）沒有任何腳本計算，每天必須手動額外抓一次日線資料才能算出",
    "修正": "fetch_today.py 直接輸出 rule27_threshold_pct、rule31_up_pct、rule31_down_pct 與可執行區間",
    "檔案": "scripts/fetch_today.py",
-   "狀態": "待實作",
+   "狀態": "【2026-10-23 核對：已被取代而過時】Phase 3（2026-10-16）起 rule27 的 0.6×預期振幅門檻與 rule31 單邊門檻停用於掛單判斷，幾何改由 Step 5b 以 A 為單位（skills/spx-analysis/SKILL.md:252、:390；skills/ndx-analysis/SKILL.md:282、:456；docs/last_analysis.json:235、:238；docs/lessons.md 第十節）。rule27 舊算法的預期振幅已由腳本輸出為 amplitude.r0_rule27_ref_pct 與 atr14_pct（scripts/fetch_today.py:244-245，commit 3fc0962），供振幅帳當基準；×0.6 門檻與 rule31_up/down 已無決策用途。改制前的手算做法見 scripts/spx_aux_1009.py:13-16。rule31 若仍要作描述用途而腳本化，屬新需求｜原狀態：待實作",
    "附帶效益": "可省下每日一趟額外 yfinance 往返"
   },
   "todo6_weekend_session_label": {
@@ -47,7 +47,7 @@
    "問題": "check_es.py 的 session 標籤不辨識週末。2026-08-22(週六)08:17 執行時仍標 ASIA_THIN,但 CME 於週五收盤至週日 18:00 ET 為休市,讀到的是週五結算值而非即時報價。誤把休市值當亞洲薄盤讀數,會高估其時效性",
    "修正": "check_es.py 依 UTC 時間判定 CME 休市窗口,標籤加入 WEEKEND_CLOSED,並在 note 標明『此為前一交易日結算值,非即時』",
    "檔案": "scripts/check_es.py",
-   "狀態": "待實作",
+   "狀態": "【2026-10-23 核對：已實作，待合併（claude/lucid-bell-h7c3rv PR）】check_es.py 新增 WEEKEND_CLOSED（scripts/check_es.py:68-69；判定在 scripts/cme_session.py，以 America/New_York 當地時間判週五 17:00 至週日 18:00 ET，夏令時間由 zoneinfo 處理），note 標明「此為前一交易日結算值，非即時」；其他標籤判定不變。國定假日不處理。驗證：tests/test_check_es.py（16:59／17:00、17:59／18:00、2026-03 與 2026-11 夏令切換週末、平日新舊版輸出逐字相同）。⚠兩套 SKILL.md 尚未說明 WEEKEND_CLOSED｜原狀態：待實作",
    "現行做法": "分析當下人工判斷並在 macro_layer 標註"
   },
   "todo_rule47_fill_sequence": {
@@ -55,7 +55,7 @@
    "問題": "limit 單的目標／停損判定用全日 OHLC，未考慮「成交時點 vs 日高／日低時點」的先後。偏誤方向固定：**只會高估「早盤衝高、午後回落接到多單」的日子**。2026-08-28 實測：全日 OHLC 判 T1 達標 +2.41bp，30 分 K 證明日高早於成交、正確為收盤平倉 +0.14bp，**相差 2.27bp**",
    "修正": "成交時點可由 30 分 K 確定時，目標／停損一律以**成交之後**的價格序列判定；無 intraday 資料時沿用全日 OHLC 並在 note 標明",
    "檔案": "docs/pnl_ledger.json → sim_rules；判定流程",
-   "狀態": "✅ 已實作 2026-10-02：sim_rules.intraday_sequencing（比照 NDX prc-006），自 2026-10-05 起適用、不回溯",
+   "狀態": "【2026-10-23 核對：已完成】證據：docs/pnl_ledger.json:72（sim_rules.intraday_sequencing，自 2026-10-05 起、不回溯）與 changelog 2026-10-02 rule47；commit 7d452fd。⚠skills/spx-analysis/SKILL.md:140 仍寫「rule47（成交時序）仍未實作」，與 sim_rules 不一致（本 PR 不改 SKILL.md）。Phase 3 起預設不掛實單，待實單放行後才有作用｜原狀態：✅ 已實作 2026-10-02：sim_rules.intraday_sequencing（比照 NDX prc-006），自 2026-10-05 起適用、不回溯",
    "累積樣本": 1,
    "結案門檻": 3,
    "standing_authorization": {
@@ -71,7 +71,7 @@
    "問題": "**SPX 與 NDX 兩套系統的改良沒有互相同步的機制。**實例：①NDX 的 prc-001（close-confirm 留倉）2026-08-19 生效，SPX 同一件事拖到 09-03 才修（rule48，晚 15 天）；②NDX 有 prc-002（gap_invalidation）與 prc-003（浮動目標），SPX 兩者皆無；③2026-09-02 的尾端 NaN 兩套**各自獨立發現、各自獨立修**，重複投入",
    "修正": "建立跨系統同步檢查：任一套的 sim_rules／system_rules 有變動時，在該日報告列出「另一套是否適用」的判斷（適用就開單、不適用就寫理由）",
    "檔案": "兩套 SKILL.md 的 Step 6，或另立週回顧檢查項",
-   "狀態": "待實作（同步『機制』本身）。**單一分歧已解決，但兩套仍沒有自動互相通報的流程**——本次是靠人工逐字對照條文才發現各做一半，下次不見得會這麼幸運",
+   "狀態": "【2026-10-23 核對：屬政策／流程，須 Johnny 核准】兩套 SKILL.md 的 Step 6 仍沒有「另一套是否適用」的同步檢查。新增實例：本 PR 的 wilder_rsi 是共用腳本的新欄位，兩套同時輸出，但 SPX rule5／rule14 規定以 Wilder 判定（docs/last_analysis.json:223、:231），NDX rule33 規定用 Cutler、禁止混用 Wilder（skills/ndx-analysis/SKILL.md:105-106），兩套要不要讀、怎麼讀需一併決定。本 PR 不實作｜原狀態：待實作（同步『機制』本身）。**單一分歧已解決，但兩套仍沒有自動互相通報的流程**——本次是靠人工逐字對照條文才發現各做一半，下次不見得會這麼幸運",
    "已知待決的政策分歧": "✅**已於 2026-09-03 由 Johnny 決議**：跳空穿越統一採「**雙側 GAP_INVALIDATED、不算成交**」。SPX 已實作（rule50 修訂版）；NDX 的 prc-004 已標記 APPROVED，**待 NDX session 套用**。此決議同時修正了一個誤判——我原本描述為「兩種做法二選一」，實際是**兩套各做一半**（SPX 缺目標側會高估、NDX 缺停損側會低估）。**剩餘已知差異**：close-confirm 單的處理，SPX 走「結算日出場滑價」、NDX 走 prc-003「浮動目標」，兩者皆合理，**不需統一**"
   },
   "todo_floating_targets": {
@@ -79,7 +79,7 @@
    "問題": "破位／突破型單的觸發位距現價過近時，停損須放結構外側、目標卻只有十幾點 → RR 結構性不成立，只能放棄掛單。2026-09-08 實例：破位空觸發 7,706（距現價 -0.163%），risk 24 點而 T1 僅 19 點 → RR 0.79",
    "修正": "比照 NDX prc-003 引入浮動目標：T1/T2/停損改為相對「實際成交價」±ATR 倍數，而非固定價位",
    "檔案": "docs/pnl_ledger.json → sim_rules；策略表產出流程",
-   "狀態": "待評估（**非單純工程項目，屬政策變更，須 Johnny 核准**）",
+   "狀態": "【2026-10-23 核對：屬政策，須 Johnny 核准（維持待評估）】Phase 3 後背景已變：SPX 預設不掛實單（skills/spx-analysis/SKILL.md:250），Step 5b 規定未來放行實單時停損與目標以 A 為單位、相對成交價表示（:254、:263-264）；NDX prc-003 浮動目標也已改以 A 為單位（skills/ndx-analysis/SKILL.md:297-303）。本項是否因此結案或併入 5b，由 Johnny 決定。本 PR 不實作｜原狀態：待評估（**非單純工程項目，屬政策變更，須 Johnny 核准**）",
    "參考": "NDX 已於 2026-08-25 以 prc-003 實施，公式為 T1=fill−0.8ATR、T2=fill−1.6ATR、stop=fill+0.8ATR（空單）",
    "注意": "引入後 SPX 與 NDX 的 close-confirm 處理會統一，但也會讓策略表上的固定 t1/t2 變成僅供參考，報告呈現方式需一併調整"
   },
@@ -87,7 +87,7 @@
    "來源": "SPX rule46 候補（2026-08-28）",
    "問題": "rule31 下行門檻 (前收−Low)/前收 在強勢日為負值，把 5 日均值壓到近乎 0（8/28 實例 0.065%）",
    "修正": "單日值取 max(0, …)，或改以 ATR 下行分量計算",
-   "狀態": "待實作（2026-10-02 由候補移入）",
+   "狀態": "【2026-10-23 核對：已被取代而過時】rule31 單邊門檻 Phase 3 起停用於掛單判斷（docs/last_analysis.json:238；skills/spx-analysis/SKILL.md:252、:390），此缺陷已不影響任何決策。共用腳本不計算 rule31，只有改制前的一次性手算腳本（scripts/spx_aux_1009.py:15-16，未取 max(0, …)）。日後若恢復 rule31 當門檻，須連同本修正一起處理｜原狀態：待實作（2026-10-02 由候補移入）",
    "原文": "**rule31 下行門檻計算缺陷**：(前收−Low)/前收 在強勢日產生負值，會把 5 日均值壓到近乎 0｜建議改用 max(0, ...) 或改以 ATR 下行分量計算｜結案:3次觸發｜**已1（8/31、9/1 兩日均未發作，門檻回到 0.192%／0.219% 正常範圍）**——**證實為間歇性缺陷：只在連續強勢日之後發作，平時看不出來**，因此更需要修而非觀察"
   }
  }
