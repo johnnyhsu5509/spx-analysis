@@ -4,6 +4,7 @@ _sys.path.insert(0, _os.path.dirname(_os.path.abspath(__file__)))
 import yf_compat
 import guard
 import gap_fix
+import wilder
 import json
 import pandas as pd
 import os
@@ -472,6 +473,11 @@ if not spx_close.empty:
         }
     # 每份輸出都蓋上 symbol，供下游 guard.require_symbol 驗證來源（兩套皆蓋）
     guard.stamp(result, CFG["label"])
+    # todo3：Wilder RSI 與 Cutler（rsi 欄位）背離旗標，一律附加在既有欄位之後
+    wilder_s = wilder.rsi(spx_close)
+    w_last = float(wilder_s.iloc[-1])
+    result["wilder_rsi"] = round(w_last, 2) if w_last == w_last else None
+    result["rsi_method_divergence"] = wilder.divergence(100 - 100 / (1 + gain / loss), wilder_s)
 
 if not result or not result.get("trade_date"):
     print("FETCH FAILED: no trade_date computed; %s left UNCHANGED" % OUTFILE)
