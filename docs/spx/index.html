@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>SPX 日線分析 2026-10-23</title>
+<title>SPX 日線分析 2026-10-27</title>
 <style>
 :root{--bg:#0a0a0a;--panel:#121417;--panel2:#171a1f;--line:#23272e;--txt:#d8dee6;--dim:#8b95a3;
 --cyan:#22d3ee;--green:#22c55e;--red:#ef4444;--gold:#f59e0b;--purple:#a78bfa}
@@ -49,189 +49,189 @@ footer{margin-top:44px;padding-top:16px;border-top:1px solid var(--line);color:v
 <div class="wrap">
 
 <header>
-  <h1>S&amp;P 500 <span>日線分析</span> — 2026-10-23</h1>
-  <div class="sub">資料基準：2026-10-22 美股收盤　｜　7,663.43（-1.21%）　｜　隔日振幅 A 0.93%（±71 點）・方向 50 無 edge・不掛實單　｜　SPX 系統・Phase 3</div>
+  <h1>S&amp;P 500 <span>日線分析</span> — 2026-10-27</h1>
+  <div class="sub">資料基準：2026-10-26 美股收盤　｜　7,676.77（+0.70%）　｜　隔日振幅 A 0.90%（±69 點）・方向 50 無 edge・不掛實單　｜　SPX 系統・Phase 3</div>
 </header>
 
-<div class="warn"><b>資料完整性：本次使用回補資料。</b>Yahoo 日線缺 10/21 的 ^GSPC／^VIX／RSP，已由 gap_fix 以 30 分 K 聚合回補（^GSPC 10/21 收 7,757.22，與前一份報告記錄的 7,757.17 差 0.05 點）。帳本判定一律以前一份報告的基準收盤 7,757.17 計算。</div>
+<div class="warn"><b>gap day：10/26 沒有可判定的預測。</b>10/23 收盤沒有做分析（10/24 排程未執行），所以三本帳沒有以 10/23 為基準的預測。本次照常用 10/23 的 OHLC 判定 10/23 報告的待判定項目；10/26 列為 gap day，不回補、不灌水。</div>
 
-<h2>第一區 · 回測驗證（10/22 預測 vs 實際）</h2>
+<h2>第一區 · 回測驗證（10/23 預測 vs 10/23 實際）</h2>
 
 <div class="grid g4">
   <div class="kpi"><div class="lb">上次預測</div><div class="vl nu">50</div><div class="nt">中性・方向無 edge・不掛實單</div></div>
-  <div class="kpi"><div class="lb">10/22 收盤</div><div class="vl dn">-1.21%</div><div class="nt">7,663.43（down）</div></div>
+  <div class="kpi"><div class="lb">10/23 收盤</div><div class="vl dn">-0.52%</div><div class="nt">7,623.68（down）</div></div>
   <div class="kpi"><div class="lb">方向判定</div><div class="vl nu">HALF</div><div class="nt">中性遇跌｜Brier 0.25</div></div>
   <div class="kpi"><div class="lb">當日 P&amp;L</div><div class="vl nu">0bp</div><div class="nt">預設不掛｜累積 <b>-1.88</b></div></div>
 </div>
 
 <div class="note">
-<b>三買失敗，收盤跌出中樞下沿。</b>開 7,694.62（-0.81%，已在 MA50 與中樞上沿之下；亞盤推算 7,724.4，差 30 點、同向但低估），10:00 K 碰到全日高 7,702.94（中樞上沿 7,699.6 一帶）後殺到 7,657.5，12:00 反彈到 7,683 沒站穩，15:00 K 全日低 7,637.36，尾盤拉回收 7,663.43（日內 40%），振幅 0.85%。<b>Meta／Tesla 財報點燃 AI 支出疑慮</b>：Nasdaq Composite 約 -2%、NDX -2.9%、費半 SOXX -5.3%（報導 ^SOX -5.6%、7/29 以來低點）；Meta 營收優於預期仍跌約 5%（規劃無表決權股集資 AI 支出），Tesla 優於預期仍下跌。Dow 約持平、Russell 小漲——資金撤出權值科技。
+<b>10/23：盤中破 ②浪低後收回，傳產領跌。</b>開 7,637.18（-0.34%；亞盤推算 7,656.7，差 19.5 點、同向但低估），10:00 K 全日低 7,612.07——盤中跌破 ②浪低 7,616.78 約 4.7 點；10:30 反彈到 11:30 全日高 7,660.15，碰不到中樞下沿 7,666.6 就回落，午後緩跌收 7,623.68（日內 24%），振幅只有 0.63%。<b>這天是 Dow 領跌（-1.23%）、Russell -0.29%，NDX 約持平、費半反而 +0.44%</b>——和 10/22 的「撤出權值科技」相反。報導稱 Brent 創 4 月以來高，市場傳出美國與以色列可能打擊伊朗（傳聞、未查證）。
 </div>
 <div class="note">
-watch point：MA20 7,735 收破 ✗｜<b>7,700–7,709 收破 ✗（三買失敗）</b>｜<b>7,668 收破 ✓＝方案③觸發</b>（收盤低於 7,668 約 5 點）｜VIX 16.68→19.03｜10Y 約 5.15→4.95（避險買債）｜Brent 約 113。
+watch point：7,621–7,637 守住 ✗（盤中失守）／收盤 7,624 仍在 BB 下軌之上｜<b>7,617 收破 ✗（方案②未觸發，收盤高 6.9 點）</b>｜7,667 收回 ✗（10/23 當天）→ 10/26 才收回 ✓｜VIX 19.03→19.45（未站上 20）。
 </div>
 
-<h3>Phase 3 帳本：第 5 筆判定</h3>
+<h3>Phase 3 帳本：第 6 筆判定</h3>
 <div class="grid g4">
-  <div class="kpi"><div class="lb">振幅帳 amp_track</div><div class="vl up">0.85%</div><div class="nt">預報 A 0.81%（區間 0.59–1.02%）→ <b>區間內（連 3 筆）</b></div></div>
-  <div class="kpi"><div class="lb">log_err vs r0</div><div class="vl up">0.038</div><div class="nt">舊算法 r0 0.136｜本筆 A 勝</div></div>
-  <div class="kpi"><div class="lb">影子多 7,731.91</div><div class="vl dn">-0.5A</div><div class="nt">開盤 7,694.62 跳空成交（rule50）→ 10:00 觸停損 7,663.05</div></div>
-  <div class="kpi"><div class="lb">影子空 7,782.43</div><div class="vl nu">未成交</div><div class="nt">高 7,702.94（差 79.5 點）</div></div>
+  <div class="kpi"><div class="lb">振幅帳 amp_track</div><div class="vl dn">0.63%</div><div class="nt">預報 A 0.93%（區間 0.68–1.16%）→ <b>低於區間</b></div></div>
+  <div class="kpi"><div class="lb">log_err vs r0</div><div class="vl nu">0.395</div><div class="nt">舊算法 r0 0.439｜本筆 A 略勝</div></div>
+  <div class="kpi"><div class="lb">影子多 7,634.89</div><div class="vl dn">-0.157A</div><div class="nt">09:30 成交、停損 7,599.22 未觸、收盤 7,623.68 平倉</div></div>
+  <div class="kpi"><div class="lb">影子空 7,691.97</div><div class="vl nu">未成交</div><div class="nt">高 7,660.15（差 31.8 點）</div></div>
 </div>
 <div class="warn">
-<b>偏差分析</b>：振幅預報 0.81%、實際 0.85%，log_err 0.038，是五筆裡最準的一筆。報告日提的兩股力量——「平靜期，預報可能偏高」與「財報事件日，可能超出區間」——這次剛好互相抵銷。累計 5 筆 mean_log_err 0.286 vs r0 0.327，覆蓋 3/5＝60%。樣本太少，不改參數，60 筆後依 rule66 判定。影子多單是典型的跳空逆向選擇：開盤直接跌穿掛價成交，30 分鐘後就觸停損；收盤 7,663.43 只比停損高 0.38 點。
+<b>偏差分析</b>：預報 0.93%、實際 0.63%，只有預報的 0.67 倍，連 3 筆命中區間後第一次掉出下緣。報告日已經註明「近 63 日實際÷隱含 0.70＜0.75＝平靜期，預報可能偏高」，這次應驗；當時擔心的「事件期可能超出區間」沒有發生。舊算法 r0（0.97%）同樣高估，A 仍略勝。累計 6 筆 mean_log_err 0.304 vs r0 0.345，覆蓋 3/6＝50%，剛好落在 45–55% 目標中間。樣本太少，不改參數，60 筆後依 rule66 判定。
 </div>
 
 <div class="grid g4">
-  <div class="kpi"><div class="lb">方向分數</div><div class="vl cy">62.5%</div><div class="nt">80 筆｜<b>每天報中性 68.1%</b></div></div>
-  <div class="kpi"><div class="lb">mean Brier</div><div class="vl nu">0.2505</div><div class="nt">基準 0.25（51 筆，flat 29 筆排除）</div></div>
-  <div class="kpi"><div class="lb">P&amp;L 累積</div><div class="vl dn">-1.88bp</div><div class="nt">68 日｜Phase 3 主帳休眠</div></div>
-  <div class="kpi"><div class="lb">影子帳累積</div><div class="vl dn">-1.039A</div><div class="nt">5 日｜多 2 筆皆 -0.5A、空 3 筆平均 -0.013A</div></div>
+  <div class="kpi"><div class="lb">方向分數</div><div class="vl cy">62.3%</div><div class="nt">81 筆｜<b>每天報中性 67.9%</b></div></div>
+  <div class="kpi"><div class="lb">mean Brier</div><div class="vl nu">0.2505</div><div class="nt">基準 0.25（52 筆，flat 29 筆排除）</div></div>
+  <div class="kpi"><div class="lb">P&amp;L 累積</div><div class="vl dn">-1.88bp</div><div class="nt">69 日｜Phase 3 主帳休眠</div></div>
+  <div class="kpi"><div class="lb">影子帳累積</div><div class="vl dn">-1.196A</div><div class="nt">6 日｜多 3 筆平均 -0.386A、空 3 筆平均 -0.013A</div></div>
 </div>
-<div class="note">依 rule17 並列：系統 62.5% 低於每天報中性 68.1%；Brier 0.2505 vs 0.25。方向恆 50 之後，方向分數只會往「永遠中性」基準靠攏，這是預期結果。</div>
+<div class="note">依 rule17 並列：系統 62.3% 低於每天報中性 67.9%；Brier 0.2505 vs 0.25。方向恆 50 之後，方向分數只會往「永遠中性」基準靠攏，這是預期結果。</div>
 
-<h2>第二區 · 今日分析（10/22 收盤）</h2>
+<h2>第二區 · 今日分析（10/26 收盤）</h2>
 
 <div class="big">
   <div class="grid g4">
-    <div class="kpi"><div class="lb">隔日振幅預報 A</div><div class="vl cy">0.93%</div><div class="nt">約 ±71 點（71.35）</div></div>
-    <div class="kpi"><div class="lb">50% 區間</div><div class="vl cy">0.68–1.16%</div><div class="nt">c 0.776｜近 63 日實際÷隱含 0.70</div></div>
+    <div class="kpi"><div class="lb">隔日振幅預報 A</div><div class="vl cy">0.90%</div><div class="nt">約 ±69 點（68.94）</div></div>
+    <div class="kpi"><div class="lb">50% 區間</div><div class="vl cy">0.65–1.12%</div><div class="nt">c 0.775｜近 63 日實際÷隱含 0.67</div></div>
     <div class="kpi"><div class="lb">方向（拉回機率）</div><div class="vl nu">50</div><div class="nt">中性・方向無 edge（rule63）</div></div>
-    <div class="kpi"><div class="lb">VIX 一年分位</div><div class="vl dn">75.8%</div><div class="nt">波動偏高（&gt;67%）</div></div>
+    <div class="kpi"><div class="lb">VIX 一年分位</div><div class="vl dn">67.1%</div><div class="nt">剛過波動偏高門檻（&gt;67%）</div></div>
   </div>
-  <div class="note" style="margin-bottom:0">隔日振幅預報：A = 0.93%（約 ±71 點）｜50% 區間 0.68–1.16%｜c = 0.776（近 63 日實際÷隱含 0.70）。<b>近 63 日實際÷隱含 0.70 低於 0.75＝平靜期，振幅預報可能偏高</b>；<b>VIX 一年分位 75.8%＝波動偏高，跳空與盤中掃停損機率上升</b>；財報季加上中東緊張＝事件期，實際振幅可能超出區間。以上都不手動調整 A。舊算法 r0 參考 0.97%。</div>
+  <div class="note" style="margin-bottom:0">隔日振幅預報：A = 0.90%（約 ±69 點）｜50% 區間 0.65–1.12%｜c = 0.775（近 63 日實際÷隱含 0.67）。<b>近 63 日實際÷隱含 0.67 低於 0.75＝平靜期，振幅預報可能偏高</b>；VIX 一年分位 67.1%＝剛過波動偏高門檻；<b>FOMC 週＋大型科技財報＝事件期，實際振幅可能超出區間</b>。以上都不手動調整 A。舊算法 r0 參考 0.89%。</div>
 </div>
 
-<h3>盤前宏觀層（check_es，台北 10/23 08:35，亞洲薄盤）</h3>
+<h3>盤前宏觀層（check_es，台北 10/27 08:35，亞洲薄盤）</h3>
 <div class="grid g4">
-  <div class="kpi"><div class="lb">ES 期貨</div><div class="vl dn">-0.66%</div><div class="nt">對前日結算；自 SPX 收盤只 -6.75 點</div></div>
-  <div class="kpi"><div class="lb">隱含開盤</div><div class="vl nu">≈7,657</div><div class="nt">-0.09A</div></div>
-  <div class="kpi"><div class="lb">NQ／SOXX</div><div class="vl dn">-1.86%</div><div class="nt">對結算；SOXX -5.31% 為 10/22 日線</div></div>
-  <div class="kpi"><div class="lb">10Y／DXY</div><div class="vl up">4.953%</div><div class="nt">-19.3bps（對 10/21）｜DXY 101.51 持平</div></div>
+  <div class="kpi"><div class="lb">ES 期貨</div><div class="vl up">+0.75%</div><div class="nt">對前日結算；自 SPX 收盤 +15.5 點</div></div>
+  <div class="kpi"><div class="lb">隱含開盤</div><div class="vl nu">≈7,692</div><div class="nt">+0.22A（中樞上沿之下）</div></div>
+  <div class="kpi"><div class="lb">NQ／SOXX</div><div class="vl up">+1.59%</div><div class="nt">對結算；SOXX 欄為前一交易日資料</div></div>
+  <div class="kpi"><div class="lb">10Y／DXY</div><div class="vl nu">4.986%</div><div class="nt">-0.2bps 持平｜DXY 102.01（+0.37%）</div></div>
 </div>
-<div class="note">盤前合成 <b>-1（MIXED 中性）</b>，data_status OK。<b>ASIA_THIN：亞洲薄盤僅供參考，21:00 後須複查</b>。ES／NQ 的跌幅大多是 10/22 正規盤已經發生的；SPX 收盤之後 ES 只再跌 6.75 點。</div>
+<div class="note">盤前合成 <b>+1（MIXED 中性）</b>，data_status OK。<b>ASIA_THIN：亞洲薄盤僅供參考，21:00 後須複查</b>。VIX 18.39。</div>
 
 <h3>環境水位（regime）</h3>
 <pre>環境水位（regime）：1D 拉回 28.9%（基準 32.75%，-3.9pp）｜5D 拉回 60.5%（基準 61.81%，-1.3pp）
-  ├ VIX：VIX 16-20（中波動，19.03） → 1D 30.5% ／ 5D 63.7%
+  ├ VIX：VIX 16-20（中波動，18.39） → 1D 30.5% ／ 5D 63.7%
   ├ 趨勢：SPX 在 MA200 之上       → 1D 26.1% ／ 5D 57.6%
-  └ MA20：距 MA20 ±3% 內（-0.91%） → 1D 30.0% ／ 5D 60.3%
+  └ MA20：距 MA20 ±3% 內（-0.65%） → 1D 30.0% ／ 5D 60.3%
 （拉回定義：盤中低點跌破訊號日收盤 −0.75%；1D＝隔日、5D＝未來 5 日）</pre>
-<div class="warn"><b>rule55：regime 連 7 日未變動 → 本期無解析度。</b>VIX 19.03 離 20 的分界只差 0.97。regime 是環境水位，不是明日計時器，不產生倉位指令。</div>
+<div class="warn"><b>rule55：regime 連 9 日未變動 → 本期無解析度。</b>10/23 VIX 19.45 接近 20 後回落至 18.39。regime 是環境水位，不是明日計時器，不產生倉位指令。</div>
 
 <h3>0. 廣度</h3>
-<div class="note">RSP/SPY 0.2856：1 日約 <span class="up">+2%</span>、5 日約 <span class="up">+2.5%</span>、距 MA20 約 +3.6%（as_of 10/22；<b>tail_source＝30m_approx，末筆為 30 分 K 近似值</b>；10/21 RSP 為回補值，不引用小數）。<b>指數 -1.21%、等權相對權值大幅走強＝背離</b>：下跌集中在權值科技與晶片，Dow 持平、Russell 小漲。輪動 10/20 中小型→10/21 晶片→10/22 撤出晶片，來回切換，依 rule29 只描述、不外推。</div>
+<div class="note">RSP/SPY 0.284：1 日約 <span class="dn">-0.3%</span>、5 日約 <span class="up">+2.0%</span>、距 MA20 約 +2.7%（as_of 10/26；<b>tail_source＝30m_approx，末筆為 30 分 K 近似值</b>；RSP／SPY 日線末筆仍停在 10/23，不引用小數）。<b>指數 +0.70%、等權相對權值小幅轉弱</b>：這次反彈由晶片與權值科技帶，Dow +0.28%、Russell +0.38% 落後。輪動 10/20 中小型→10/21 晶片→10/22 撤出晶片→10/23 傳產領跌→10/26 晶片，來回切換，依 rule29 只描述、不外推。</div>
 
 <h3>1–3. 價格行為・均線・指標</h3>
 <div class="scroll"><table>
 <tr><th>項目</th><th>數值</th><th>讀法</th></tr>
-<tr><td>K 線</td><td class="num">O 7,694.6 H 7,702.9 L 7,637.4 C 7,663.4</td><td class="dn">跳空 -0.81% 開、上影 8 點、實體 -31 點、下影 26 點，收在日內 40%——開低走低，尾盤有買盤拉回</td></tr>
-<tr><td>量能</td><td class="num">3.56B（初值）</td><td>rule40：初值系統性低估，不做無量／放量判讀</td></tr>
-<tr><td>MA5／20／50／200</td><td class="num">7,697／7,733／7,703／7,288</td><td class="dn">收在 MA5、MA20、MA50 之下；三條日移動量皆轉負（-16.1／-2.0／-1.7），rule44 三條皆反號 → 靜態值</td></tr>
-<tr><td>乖離</td><td class="num">MA20 -0.91%｜MA200 +5.15%</td><td>短線跌回 MA20 下方，長線多頭結構仍在</td></tr>
-<tr><td>Wilder RSI(14)</td><td class="num">45.2</td><td class="nu">連 4 日回升後轉折（53.6→45.2）</td></tr>
-<tr><td>MACD</td><td class="num">線 5.3／訊號 16.5／柱 -11.2</td><td class="dn">柱由收斂（-7.55）轉為重新擴大，零軸下；線仍在零軸上</td></tr>
-<tr><td>布林</td><td class="num">7,621～7,845｜位置 18.7%</td><td>逼近下軌（rule5／rule14 不觸發：未達 ≤10%）</td></tr>
-<tr><td>KD（9 日）</td><td class="num">37.5／43.7</td><td class="dn">前一日金叉失效、<b>K 跌回 D 之下</b></td></tr>
+<tr><td>K 線</td><td class="num">O 7,639.7 H 7,702.1 L 7,639.7 C 7,676.8</td><td class="up">跳空 +0.21% 開、<b>開盤即全日低（無下影）</b>、實體 +37 點、上影 25 點，收在日內 59%——一路推到 11:00 高點後回落整理</td></tr>
+<tr><td>量能</td><td class="num">2.76B（初值）</td><td>rule40：初值系統性低估，不做無量／放量判讀</td></tr>
+<tr><td>MA5／20／50／200</td><td class="num">7,687／7,727／7,697／7,295</td><td class="dn">收在 MA5、MA20、MA50 之下；三條日移動量連 3 日同號為負，rule44 外推 7,679／7,725／7,696</td></tr>
+<tr><td>乖離</td><td class="num">MA20 -0.65%｜MA200 +5.23%</td><td>短線仍在 MA20 下方，長線多頭結構仍在</td></tr>
+<tr><td>Wilder RSI(14)</td><td class="num">47.2</td><td class="nu">10/22 45.2 → 回升（Cutler 37.9；兩口徑同向，rule36 無背離）</td></tr>
+<tr><td>MACD</td><td class="num">線 -5.3／訊號 9.0／柱 -14.3</td><td class="dn">柱續擴大（-11.2→-14.3），<b>接近 rule1 的 -15</b>；MACD 線跌到零軸下</td></tr>
+<tr><td>布林</td><td class="num">7,602～7,852｜位置 29.9%</td><td>中下段（rule5／rule14 不觸發）</td></tr>
+<tr><td>KD（9 日）</td><td class="num">30.1／35.4</td><td class="nu">K 仍在 D 之下（死叉延續），低檔區未鈍化</td></tr>
 </table></div>
 
 <h3>4. 葛蘭威爾八大法則</h3>
 <div class="gr">
-  <div class="gc"><div class="h">買① 轉升首穿</div>失效：MA20 轉降、收回 MA20 之下</div>
-  <div class="gc"><div class="h">買② 回測不破</div><span class="dn">失敗</span>：跌破 MA50 7,703</div>
-  <div class="gc"><div class="h">買③ 跌破急拉</div><span class="nu">觀察</span>：MA200 仍上升，若 1–2 日內收回 MA50 才成立</div>
-  <div class="gc"><div class="h">買④ 乖離過大</div>不適用（MA20 乖離 -0.9%）</div>
-  <div class="gc"><div class="h">賣⑤ 走平頂穿</div><span class="dn">雛形</span>：MA20 走平微降，收盤跌回其下</div>
+  <div class="gc"><div class="h">買① 轉升首穿</div>不適用：MA20 仍下降</div>
+  <div class="gc"><div class="h">買② 回測不破</div>失效：已跌破 MA50</div>
+  <div class="gc"><div class="h">買③ 跌破急拉</div><span class="nu">觀察</span>：MA200 上升，10/26 已拉到 MA50 下方約 20 點收；收回 MA50 才成立</div>
+  <div class="gc"><div class="h">買④ 乖離過大</div>不適用（MA20 乖離 -0.65%）</div>
+  <div class="gc"><div class="h">賣⑤ 走平頂穿</div><span class="dn">延續</span>：MA20 微降，收盤在其下</div>
   <div class="gc"><div class="h">賣⑥ 反彈量縮</div>量為初值，無法判讀（rule40）</div>
-  <div class="gc"><div class="h">賣⑦ 死貓彈</div><span class="nu">觀察</span>：反彈不過 MA50 即成立</div>
+  <div class="gc"><div class="h">賣⑦ 死貓彈</div><span class="nu">觀察</span>：10/26 反彈碰 MA50 即回落；隔日不過 7,705 則雛形延續</div>
   <div class="gc"><div class="h">賣⑧ 乖離過大</div>不適用</div>
 </div>
 
 <h3>5–6. 纏論＋艾略特波浪（敘事，不推導 headline）</h3>
-<div class="note"><b>纏論</b>：10/21 的三買雛形在 10/22 失敗——跳空開在中樞上沿 7,699.6 之下，10:00 高 7,702.9 碰上沿就回落，收 7,663.43 跌出下沿 7,666.6（約 3 點）。收回 7,666.6 之上＝回到中樞震盪；續破 7,632／7,617、反彈又回不了中樞，才算三賣。MACD 柱重新擴大、在零軸下。收盤也落在費波 0.786（7,665.5）之下。</div>
+<div class="note"><b>纏論</b>：10/22 跌出下沿後，10/23 反彈高 7,660 沒回中樞（三賣雛形），但 10/26 收回 7,676.77＝<b>三賣不成立、回到中樞 7,666.6–7,699.6 震盪</b>。10/26 高 7,702.1 只略越上沿 2.5 點即回落。收上 7,705＝向上離開中樞；收破 7,612／7,617＝向下離開。MACD 柱 -14.3、仍在擴大。<b>波浪</b>：10/23 盤中跌破 ②浪低 4.7 點但收回，計數暫保留。</div>
 <div class="scroll"><table>
 <tr><th>方案</th><th>敘事權重</th><th>路徑</th></tr>
-<tr><td>① 回到中樞震盪</td><td class="num">40%</td><td>守 7,621–7,632（BB 下軌／10/16 低），收回 7,667 → 7,667–7,705 來回，等 FOMC</td></tr>
-<tr><td>② 修正延伸</td><td class="num">40%</td><td class="dn">收破 7,617（②浪低）→ 7,580（9/10 低），C 浪延伸</td></tr>
-<tr><td>③ 重回 5 浪</td><td class="num">20%</td><td class="up">收回 7,705（MA50／費波 0.618）之上 → 7,733、7,757</td></tr>
+<tr><td>① 中樞震盪</td><td class="num">45%</td><td>7,667–7,705 來回，等 FOMC 與財報</td></tr>
+<tr><td>② 修正延伸</td><td class="num">30%</td><td class="dn">收破 7,612（10/23 低）／7,617（②浪低）→ 7,580（9/10 低），C 浪延伸</td></tr>
+<tr><td>③ 重回 5 浪</td><td class="num">25%</td><td class="up">收上 7,705（MA50／費波 0.618）→ 7,727（MA20）、7,757</td></tr>
 </table></div>
-<div class="note">敘事偏空：跳空跌破 MA50、收破 MA20 與中樞下沿＝三買失敗；晶片 -5%、NDX -2.9%；MACD 柱重新擴大、KD 死叉。敘事偏多：尾盤自 7,640 拉回、守住 10/16 低與 BB 下軌；等權相對走強、Dow 持平＝不是全面殺盤；10Y 大降約 19bps；仍在 MA200 之上。<b>數字維持 50，偏見只寫在文字裡（rule16）。</b></div>
+<div class="note">敘事偏多：收回中樞；開盤即日低的單邊上推；晶片領漲（費半 +2.8%，報導稱 Anthropic IPO 申請帶動 AI 交易）；VIX 回落；亞盤 ES 自收盤 +15.5 點。敘事偏空：碰 MA50／費波 0.618／前高 7,702 即回落，收在三條短中期均線之下；MACD 柱續擴大、接近 -15；KD 死叉；等權相對轉弱；FOMC 與大型科技財報週。<b>數字維持 50，偏見只寫在文字裡（rule16）。</b></div>
 
 <h3>關鍵位</h3>
 <div class="scroll"><table>
 <tr><th>壓力</th><th>來源</th><th>支撐</th><th>來源</th></tr>
-<tr><td class="num dn">7,667–7,700</td><td>中樞（下沿 7,666.6／上沿 7,699.6）</td><td class="num up">7,637</td><td>10/22 低</td></tr>
-<tr><td class="num dn">7,703–7,705</td><td>MA50／費波 0.618／10/22 高</td><td class="num up">7,621–7,632</td><td>BB 下軌／10/16 低</td></tr>
-<tr><td class="num dn">7,733</td><td>MA20</td><td class="num up">7,617</td><td>②浪低</td></tr>
-<tr><td class="num dn">7,757–7,770</td><td>費波 0.382／10/21 高</td><td class="num up">7,580</td><td>9/10 低</td></tr>
+<tr><td class="num dn">7,697–7,705</td><td>MA50／中樞上沿 7,699.6／10/22 與 10/26 高／費波 0.618</td><td class="num up">7,667</td><td>中樞下沿</td></tr>
+<tr><td class="num dn">7,727</td><td>MA20</td><td class="num up">7,640</td><td>10/26 開盤＝日低</td></tr>
+<tr><td class="num dn">7,757</td><td>費波 0.382</td><td class="num up">7,612–7,617</td><td>10/23 低／②浪低</td></tr>
+<tr><td class="num dn">7,770</td><td>10/21 高</td><td class="num up">7,602／7,580</td><td>BB 下軌／9/10 低</td></tr>
 </table></div>
 
-<h2>第三區 · 明日掛單（10/23）</h2>
+<h2>第三區 · 明日掛單（10/27）</h2>
 <div class="big"><b class="nu">本日無已核准的方向 edge → 不掛實單（rule65）。</b>2014–2026 不帶方向的限價單 30 種組合全部負期望；沒有方向 edge 時，掛單本身就是負期望。</div>
 
-<h3>若要掛單：各距離與事前成交率（A＝71.35 點，自收盤 7,663.43）</h3>
+<h3>若要掛單：各距離與事前成交率（A＝68.94 點，自收盤 7,676.77）</h3>
 <div class="scroll"><table>
 <tr><th>k</th><th>多單掛價</th><th>多單成交率（跳空成交）</th><th>空單掛價</th><th>空單成交率（跳空成交）</th></tr>
-<tr><td class="num">0.2</td><td class="num">7,649</td><td class="num">65%（32%）</td><td class="num">7,678</td><td class="num">72%（41%）</td></tr>
-<tr><td class="num">0.4</td><td class="num">7,635</td><td class="num">51%（21%）</td><td class="num">7,692</td><td class="num">58%（26%）</td></tr>
-<tr><td class="num">0.6</td><td class="num">7,621</td><td class="num">39%（16%）</td><td class="num">7,706</td><td class="num">43%（16%）</td></tr>
-<tr><td class="num">0.8</td><td class="num">7,606</td><td class="num">30%（11%）</td><td class="num">7,720</td><td class="num">32%（9%）</td></tr>
+<tr><td class="num">0.2</td><td class="num">7,663</td><td class="num">65%（32%）</td><td class="num">7,691</td><td class="num">72%（41%）</td></tr>
+<tr><td class="num">0.4</td><td class="num">7,649</td><td class="num">51%（21%）</td><td class="num">7,704</td><td class="num">58%（26%）</td></tr>
+<tr><td class="num">0.6</td><td class="num">7,635</td><td class="num">39%（16%）</td><td class="num">7,718</td><td class="num">43%（16%）</td></tr>
+<tr><td class="num">0.8</td><td class="num">7,622</td><td class="num">30%（11%）</td><td class="num">7,732</td><td class="num">32%（9%）</td></tr>
 </table></div>
-<div class="note">亞盤隱含開盤約 7,657（-0.09A），在兩張影子單之間，目前沒有跳空成交的跡象。</div>
+<div class="note">亞盤隱含開盤約 7,692（+0.22A），在兩張影子單之間、離影子空 7,704 約 12 點；21:00 後須複查。</div>
 
 <h3>影子單（只記 shadow_ledger，不進 P&amp;L 主帳）</h3>
 <div class="scroll"><table>
 <tr><th>方向</th><th>掛單</th><th>停損</th><th>出場</th></tr>
-<tr><td class="up">影子多</td><td class="num">limit_buy 7,634.89（收盤 −0.4A）</td><td class="num">成交價 −0.5A（以掛價成交則 7,599.22）</td><td>隔日收盤</td></tr>
-<tr><td class="dn">影子空</td><td class="num">limit_sell 7,691.97（收盤 +0.4A）</td><td class="num">成交價 +0.5A（以掛價成交則 7,727.65）</td><td>隔日收盤</td></tr>
+<tr><td class="up">影子多</td><td class="num">limit_buy 7,649.19（收盤 −0.4A）</td><td class="num">成交價 −0.5A（以掛價成交則 7,614.72）</td><td>隔日收盤</td></tr>
+<tr><td class="dn">影子空</td><td class="num">limit_sell 7,704.35（收盤 +0.4A）</td><td class="num">成交價 +0.5A（以掛價成交則 7,738.82）</td><td>隔日收盤</td></tr>
 </table></div>
 
 <h3>三層振幅檢查</h3>
 <div class="scroll"><table>
 <tr><th>時點（台北）</th><th>檢查</th><th>門檻</th></tr>
-<tr><td>白天（本報告）</td><td>VIX 一年分位 75.8%</td><td>波動偏高：跳空與盤中掃停損機率上升</td></tr>
-<tr><td>21:20 期貨確認</td><td>ES 隱含開盤距前收 ÷ A</td><td>|距離| ≥ 1.0A（≈ ±71 點，7,592／7,735）＝開盤已用掉一整天的預期振幅</td></tr>
-<tr><td>22:00 開盤確認</td><td>首 30 分 K 振幅 ÷ A</td><td>≥ 0.7A（≈ 50 點）＝當日振幅很可能超過區間上緣 1.16%</td></tr>
-<tr><td>22:30 睡前檢查</td><td>關鍵位守住／跌破＋已用掉幾個 A</td><td>部位建議只在對話輸出（rule19／rule32）</td></tr>
+<tr><td>白天（本報告）</td><td>VIX 一年分位 67.1%</td><td>剛過波動偏高門檻：跳空與盤中掃停損機率上升</td></tr>
+<tr><td>21:20 期貨確認</td><td>ES 隱含開盤距前收 ÷ A</td><td>|距離| ≥ 1.0A（≈ ±69 點，7,608／7,746）＝開盤已用掉一整天的預期振幅</td></tr>
+<tr><td>22:00 開盤確認</td><td>首 30 分 K 振幅 ÷ A</td><td>≥ 0.7A（≈ 48 點）＝當日振幅很可能超過區間上緣 1.12%</td></tr>
+<tr><td>22:30 睡前檢查</td><td>關鍵位守住／跌破＋已用掉幾個 A</td><td>部位建議只在對話輸出（rule19／rule32）；FOMC 10/28 公布落在台北 10/29 凌晨</td></tr>
 </table></div>
 
 <h3>監控清單</h3>
 <ul>
-<li><b>7,667–7,700</b>（中樞）：收回 7,666.6 之上＝回到中樞震盪（方案①）</li>
-<li><b>7,703–7,705</b>（MA50／費波 0.618／10/22 高）：收上＝方案③重回 5 浪</li>
-<li><b>7,621–7,637</b>（BB 下軌／10/16 低／10/22 低）：守住＝方案①；收破續看 7,617</li>
-<li><b>7,617</b>（②浪低）：收破＝方案②修正延伸 → 7,580</li>
-<li><b>晶片與權值科技</b>：SOXX -5.3% 後能否止穩；亞盤 NQ -1.86%（對結算，薄盤），21:00 後複查</li>
-<li><b>振幅</b>：A 0.93%（±71 點）、區間 0.68–1.16%；VIX 一年分位 75.8%</li>
-<li>VIX 19.03 距 20 只差 0.97（regime 分界）；10Y 4.95、Brent 約 113；10/27–28 FOMC</li>
+<li><b>7,697–7,705</b>（MA50／中樞上沿／10/22 與 10/26 高／費波 0.618）：收上＝方案③重回 5 浪</li>
+<li><b>7,667</b>（中樞下沿）：守住＝方案①中樞震盪；收破回看 7,640</li>
+<li><b>7,612–7,617</b>（10/23 低／②浪低）：收破＝方案②修正延伸 → 7,580</li>
+<li><b>MACD 柱 -14.3</b>：跌破 -15 且事件因子高時 rule1 生效</li>
+<li><b>晶片能否延續</b>：費半 +2.8% 後是否連 2 日（rule29）；亞盤 NQ +1.59%（對結算，薄盤），21:00 後複查</li>
+<li><b>振幅</b>：A 0.90%（±69 點）、區間 0.65–1.12%；平靜期偏高 vs 事件週偏大兩股力量</li>
+<li><b>10/28 FOMC</b>（台北 10/29 凌晨）＋大型科技財報週；Brent 兩來源數字不一致、中東傳聞未查證</li>
 </ul>
 
 <h3>市場筆記速記</h3>
 <pre>📋 市場筆記速記（可直接貼入 App）
 
-日期：2026-10-23
-收盤：7,663（-1.21%）
-VIX：19.03
+日期：2026-10-27
+收盤：7,677（+0.70%）
+VIX：18.39
 拉回機率：50%（方向無 edge）
-隔日振幅：0.93%（50% 區間 0.68–1.16%）
+隔日振幅：0.90%（50% 區間 0.65–1.12%）
 
 纏論中樞：7,667 – 7,700
-關鍵支撐：7,637 / 7,632 / 7,617
-關鍵阻力：7,667 / 7,705 / 7,733
+關鍵支撐：7,667 / 7,640 / 7,612
+關鍵阻力：7,705 / 7,727 / 7,757
 
-今日催化劑：Meta／Tesla 財報後 AI 支出疑慮，NDX -2.9%、費半 -5.3%；S&amp;P 收破 MA20、MA50 與中樞下沿（三買失敗）
-明日觀察：守不守得住 7,621–7,637；能否收回 7,667 中樞；晶片能否止穩、VIX 是否站上 20
+今日催化劑：晶片領漲（費半 +2.8%，Anthropic IPO 報導帶動 AI 交易），S&amp;P 收回中樞但 7,702 碰 MA50 回落
+明日觀察：能否收上 7,705；守不守得住 7,667；FOMC 前一日、大型科技財報週
 
 策略摘要：
 實單：不掛（本日無已核准的方向 edge）
-影子單：多 7,635（停損 7,599）｜空 7,692（停損 7,728）
+影子單：多 7,649（停損 7,615）｜空 7,704（停損 7,739）
 
 📌 回測參照（下次勿刪）：
-拉回機率 50%｜支撐 7,637 / 7,632｜阻力 7,667 / 7,705｜纏論上沿 7,700</pre>
+拉回機率 50%｜支撐 7,667 / 7,612｜阻力 7,705 / 7,727｜纏論上沿 7,700</pre>
 
-<div class="note">依 rule32，本次分析未摻入任何個人財務條件。資料：Python（yfinance）為準，10/21 為 gap_fix 回補值；10/22 行情歸因見 Yahoo Finance、Korea Times、Small Caps Daily 收盤報導（各來源擷取時點不同，跌幅不引用小數）。中東事件細節未查證，不計。RSI 為 Wilder 算法、KD 為 9 日算法；費半跌幅以 SOXX 為準（^SOX 10/21 日線缺）。</div>
+<div class="note">依 rule32，本次分析未摻入任何個人財務條件。資料：Python（yfinance）為準；10/26 行情歸因見 Yahoo Finance、Quartz、CNBC 收盤報導。美以可能打擊伊朗屬傳聞、未查證，不計；Brent 報導結算約 115.8 美元與 Python 109.88 差距大（疑似換月），不引用跌幅。RSI 為 Wilder 算法、KD 為 9 日算法；費半漲幅以 ^SOX 為準（SOXX／RSP／SPY 日線末筆停在 10/23）。</div>
 
-<footer>本分析僅供學習參考，不構成投資建議｜SPX 系統 · Phase 3 · 2026-10-23 · <a href="https://johnnyhsu5509.github.io/spx-analysis/spx/" style="color:var(--cyan)">固定入口</a></footer>
+<footer>本分析僅供學習參考，不構成投資建議｜SPX 系統 · Phase 3 · 2026-10-27 · <a href="https://johnnyhsu5509.github.io/spx-analysis/spx/" style="color:var(--cyan)">固定入口</a></footer>
 </div>
 </body>
 </html>
