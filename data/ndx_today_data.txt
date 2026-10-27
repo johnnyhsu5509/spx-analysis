@@ -1,41 +1,43 @@
 {
-  "trade_date": "2026-10-23",
-  "close": 28957.53,
-  "open": 28847.82,
-  "high": 29161.03,
-  "low": 28825.72,
-  "volume": 1043947000,
-  "prev_close": 28958.69,
-  "change_pct": -0.0,
-  "vxn": 28.3,
-  "ma5": 29351.67,
-  "ma20": 30223.53,
-  "ma50": 29829.23,
-  "ma200": 27836.02,
-  "rsi": 24.02,
-  "macd_hist": -211.51,
-  "macd_line": -204.93,
-  "signal": 6.58,
-  "bb_upper": 31651.88,
-  "bb_lower": 28795.18,
-  "bb_pct": 5.7,
-  "kd_k": 13.91,
-  "kd_d": 21.69,
+  "trade_date": "2026-10-26",
+  "close": 29273.4,
+  "open": 29051.58,
+  "high": 29404.44,
+  "low": 29011.91,
+  "volume": 1209440000,
+  "prev_close": 28957.53,
+  "change_pct": 1.09,
+  "vxn": 26.4,
+  "ma5": 29300.48,
+  "ma20": 30173.36,
+  "ma50": 29813.77,
+  "ma200": 27854.85,
+  "rsi": 27.02,
+  "macd_hist": -185.2,
+  "macd_line": -224.92,
+  "signal": -39.72,
+  "bb_upper": 31663.01,
+  "bb_lower": 28683.71,
+  "bb_pct": 19.8,
+  "kd_k": 15.64,
+  "kd_d": 19.67,
   "breadth": {
-    "qqqe_qqq_ratio": 0.1663,
-    "chg_1d_pct": -0.38,
-    "chg_5d_pct": 0.83,
-    "vs_ma20_pct": 1.91,
+    "qqqe_qqq_ratio": 0.1658,
+    "chg_1d_pct": -0.31,
+    "chg_5d_pct": 1.19,
+    "vs_ma20_pct": 1.5,
     "read": "廣度擴張（中小型股同步參與）",
     "note": "QQQE(等權NDX)/QQQ(市值權重);升=廣度好,降=窄化。科技股權重極集中,窄化時指數強度打折更明顯",
-    "as_of": "2026-10-23"
+    "as_of": "2026-10-26",
+    "tail_source": "30m_approx",
+    "caveat": "ETF 日線落後，最後一筆由 30m 末根補值（不含收盤撮合，與官方收盤約差 1-3 點）。1 日變動為近似值；5 日與 vs_MA20 含此近似值"
   },
   "regime": {
     "base_5d_pullback": 57.25,
     "vxn": {
-      "regime": "VXN>=28（高波動）",
-      "pullback_5d": 72.35,
-      "vs_base": 15.1
+      "regime": "VXN 18-28（中波動）",
+      "pullback_5d": 61.55,
+      "vs_base": 4.3
     },
     "trend": {
       "regime": "NDX 在 MA200 之上（多頭結構）",
@@ -43,57 +45,49 @@
       "vs_base": -3.6
     },
     "ma20_ext": {
-      "regime": "距 MA20 -3% 以下（深跌）",
-      "pullback_5d": 73.31,
-      "vs_base": 16.1,
-      "ext_pct": -4.19
+      "regime": "距 MA20 +/-3% 內（正常）",
+      "pullback_5d": 53.48,
+      "vs_base": -3.8,
+      "ext_pct": -2.98
     },
-    "regime_avg_5d": 66.4,
-    "regime_avg_vs_base": 9.2,
+    "regime_avg_5d": 56.2,
+    "regime_avg_vs_base": -1.0,
     "horizon_1d": {
       "base_1d_pullback": 29.02,
       "vxn": {
-        "pullback_1d": 45.83,
-        "vs_base": 16.8
+        "pullback_1d": 32.03,
+        "vs_base": 3.0
       },
       "trend": {
         "pullback_1d": 24.85,
         "vs_base": -4.2
       },
       "ma20_ext": {
-        "pullback_1d": 47.59,
-        "vs_base": 18.6
+        "pullback_1d": 26.2,
+        "vs_base": -2.8
       },
-      "regime_avg_1d": 39.4,
-      "regime_avg_vs_base": 10.4
+      "regime_avg_1d": 27.7,
+      "regime_avg_vs_base": -1.3
     }
   },
   "amplitude": {
-    "as_of": "2026-10-23",
-    "amp_forecast_pct": 1.49,
-    "amp_forecast_pts": 431.5,
+    "as_of": "2026-10-26",
+    "amp_forecast_pct": 1.39,
+    "amp_forecast_pts": 407.0,
     "band_50_pct": [
-      1.149,
-      1.901
+      1.072,
+      1.773
     ],
-    "implied_daily_pct": 1.783,
+    "implied_daily_pct": 1.663,
     "c": 0.836,
     "c_window": 252,
     "realized_vs_implied_63d": 0.68,
-    "vol_pct_1y": 87.7,
-    "r0_rule27_ref_pct": 1.519,
-    "atr14_pct": 1.64,
+    "vol_pct_1y": 74.6,
+    "r0_rule27_ref_pct": 1.53,
+    "atr14_pct": 1.616,
     "method": "A = c × ^VXN/√252；c 與 50% 區間 = 近 252 個已知交易日（隔日振幅÷隱含日波動）的中位數與 25/75 分位（Phase 3 V2b 核准）"
   },
   "recent_5": [
-    {
-      "date": "2026-10-19",
-      "open": 29539.31,
-      "high": 29788.76,
-      "low": 29461.32,
-      "close": 29529.35,
-      "volume": 7537660000
-    },
     {
       "date": "2026-10-20",
       "open": 29393.96,
@@ -124,14 +118,22 @@
       "high": 29161.03,
       "low": 28825.72,
       "close": 28957.53,
-      "volume": 1043947000
+      "volume": 6554790000
+    },
+    {
+      "date": "2026-10-26",
+      "open": 29051.58,
+      "high": 29404.44,
+      "low": 29011.91,
+      "close": 29273.4,
+      "volume": 1209440000
     }
   ],
   "symbol": "NDX",
-  "wilder_rsi": 36.67,
+  "wilder_rsi": 41.77,
   "rsi_method_divergence": {
     "flag": false,
-    "cutler_chg": -4.7,
-    "wilder_chg": -0.01
+    "cutler_chg": 3.0,
+    "wilder_chg": 5.09
   }
 }

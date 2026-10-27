@@ -1,34 +1,36 @@
 {
-  "trade_date": "2026-10-23",
-  "close": 7623.68,
-  "open": 7637.18,
-  "high": 7660.15,
-  "low": 7612.07,
-  "volume": 2749563000,
-  "prev_close": 7663.43,
-  "change_pct": -0.52,
-  "vix": 19.45,
-  "ma5": 7689.52,
-  "ma20": 7727.48,
-  "ma50": 7699.64,
-  "ma200": 7291.31,
-  "rsi": 37.01,
-  "macd_hist": -15.65,
-  "macd_line": -3.05,
-  "signal": 12.6,
-  "bb_upper": 7852.23,
-  "bb_lower": 7602.72,
-  "bb_pct": 8.4,
-  "kd_k": 26.5,
-  "kd_d": 39.92,
+  "trade_date": "2026-10-26",
+  "close": 7676.77,
+  "open": 7639.7,
+  "high": 7702.13,
+  "low": 7639.7,
+  "volume": 2759066000,
+  "prev_close": 7623.68,
+  "change_pct": 0.7,
+  "vix": 18.39,
+  "ma5": 7686.72,
+  "ma20": 7727.13,
+  "ma50": 7697.46,
+  "ma200": 7295.09,
+  "rsi": 37.88,
+  "macd_hist": -14.32,
+  "macd_line": -5.3,
+  "signal": 9.02,
+  "bb_upper": 7852.44,
+  "bb_lower": 7601.82,
+  "bb_pct": 29.9,
+  "kd_k": 27.96,
+  "kd_d": 35.93,
   "breadth": {
-    "rsp_spy_ratio": 0.2849,
-    "chg_1d_pct": -0.25,
-    "chg_5d_pct": 1.58,
-    "vs_ma20_pct": 3.18,
+    "rsp_spy_ratio": 0.284,
+    "chg_1d_pct": -0.34,
+    "chg_5d_pct": 1.99,
+    "vs_ma20_pct": 2.65,
     "read": "廣度擴張（中小型股同步參與）",
     "note": "RSP(等權)/SPY(市值權重);升=廣度好,降=窄化。與指數方向背離時,指數漲勢品質打折",
-    "as_of": "2026-10-23"
+    "as_of": "2026-10-26",
+    "tail_source": "30m_approx",
+    "caveat": "ETF 日線落後，最後一筆由 30m 末根補值（不含收盤撮合，與官方收盤約差 1-3 點）。1 日變動為近似值；5 日與 vs_MA20 含此近似值"
   },
   "regime": {
     "base_5d_pullback": 61.81,
@@ -46,7 +48,7 @@
       "regime": "距 MA20 +/-3% 內（正常）",
       "pullback_5d": 60.32,
       "vs_base": -1.5,
-      "ext_pct": -1.34
+      "ext_pct": -0.65
     },
     "regime_avg_5d": 60.5,
     "regime_avg_vs_base": -1.3,
@@ -69,31 +71,23 @@
     }
   },
   "amplitude": {
-    "as_of": "2026-10-23",
-    "amp_forecast_pct": 0.95,
-    "amp_forecast_pts": 72.4,
+    "as_of": "2026-10-26",
+    "amp_forecast_pct": 0.898,
+    "amp_forecast_pts": 68.9,
     "band_50_pct": [
-      0.688,
-      1.179
+      0.65,
+      1.115
     ],
-    "implied_daily_pct": 1.225,
+    "implied_daily_pct": 1.158,
     "c": 0.775,
     "c_window": 252,
-    "realized_vs_implied_63d": 0.68,
-    "vol_pct_1y": 78.2,
-    "r0_rule27_ref_pct": 0.866,
-    "atr14_pct": 0.949,
+    "realized_vs_implied_63d": 0.67,
+    "vol_pct_1y": 67.1,
+    "r0_rule27_ref_pct": 0.887,
+    "atr14_pct": 0.948,
     "method": "A = c × ^VIX/√252；c 與 50% 區間 = 近 252 個已知交易日（隔日振幅÷隱含日波動）的中位數與 25/75 分位（Phase 3 V2b 核准）"
   },
   "recent_5": [
-    {
-      "date": "2026-10-19",
-      "open": 7702.77,
-      "high": 7731.18,
-      "low": 7684.79,
-      "close": 7690.73,
-      "volume": 4587260000
-    },
     {
       "date": "2026-10-20",
       "open": 7679.01,
@@ -124,14 +118,22 @@
       "high": 7660.15,
       "low": 7612.07,
       "close": 7623.68,
-      "volume": 2749563000
+      "volume": 5062330000
+    },
+    {
+      "date": "2026-10-26",
+      "open": 7639.7,
+      "high": 7702.13,
+      "low": 7639.7,
+      "close": 7676.77,
+      "volume": 2759066000
     }
   ],
   "symbol": "SPX",
-  "wilder_rsi": 42.15,
+  "wilder_rsi": 47.23,
   "rsi_method_divergence": {
     "flag": false,
-    "cutler_chg": -7.97,
-    "wilder_chg": -3.02
+    "cutler_chg": 0.87,
+    "wilder_chg": 5.08
   }
 }
