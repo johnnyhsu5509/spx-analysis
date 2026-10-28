@@ -56,7 +56,7 @@ ul{padding-left:20px}li{margin:5px 0}
 <tr><td>SOXX 551.7 第四輪確認線</td><td>跌破＝第四輪殺盤確認</td><td>-4.21% 收 530.5，大破確認</td><td><span class="badge b-hit">✅ 預先劃線命中</span></td></tr>
 <tr><td>7,554 得而復失警戒</td><td>收盤跌回＝假收復</td><td>收 7,533.77，假收復兌現（模擬空單以收盤價進場）</td><td><span class="badge b-hit">✅ 兌現</span></td></tr>
 <tr><td>7,505 減碼訊號（rule12）</td><td>收盤破才算</td><td>盤中插針 7,504.02（差 0.98 點！）收盤回收——四次插針全被洗</td><td><span class="badge b-hit">✅ 收盤確認再度救場</span></td></tr>
-<tr><td>7,588 修剪單</td><td>TSM 開好時第四次挑戰</td><td>高 7,570.74，第四次未成交</td><td><span class="badge b-half">🟡 未成交</span></td></tr>
+<tr><td>〔個人部位內容已移除〕</td><td>TSM 開好時第四次挑戰</td><td>高 7,570.74，第四次未成交</td><td><span class="badge b-half">🟡 未成交</span></td></tr>
 </table></div>
 <div class="note"><b>偏差分析：</b>headline 拿 half，但方案 C 把整條路徑寫對了——TSM 開壞、SOXX 破線、假收復、測 7,505，四個節點全中。<b>P&L 的教訓更重要：7,554 接多單觸價後同日停損 -29 點（-4.6bp）</b>，這是 rule8 回踩接多在 rule15 警報環境的第三次證偽（警報環境 0勝2敗 -10.7bp vs 正常環境 2勝0敗 +8.3bp）→ <b>環境過濾正式轉正為 rule8b：警報期間回踩接多減半＋當日類股止穩為前置條件</b>。累積 P&L 首度轉負 -1.8bp（在途假收復空單浮盈未計）。</div>
 
@@ -125,7 +125,7 @@ ul{padding-left:20px}li{margin:5px 0}
 <h3>纏論＋波浪情景（headline 由此推導，rule16）</h3>
 <div class="tablewrap"><table>
 <tr><th>情景</th><th>機率</th><th>路徑</th><th>觸發/否決條件</th></tr>
-<tr><td class="dn">方案 A：破位下探</td><td><b>45%</b></td><td>收盤破 7,505 → 測 7,476(MA20)/7,448(MA50)</td><td>TSM 恐慌延續＋RISK_OFF；<b>用戶減碼訊號觸發日</b></td></tr>
+<tr><td class="dn">方案 A：破位下探</td><td><b>45%</b></td><td>收盤破 7,505 → 測 7,476(MA20)/7,448(MA50)</td><td>TSM 恐慌延續＋RISK_OFF；<b>〔個人部位內容已移除〕</b></td></tr>
 <tr><td class="nt">方案 B：下沿再防守</td><td><b>35%</b></td><td>7,505 第五次插針回收，區間震盪——全市場都看得到的線，程式單在此接</td><td>rule12 已四次驗證此型態</td></tr>
 <tr><td class="up">方案 C：止穩反攻</td><td><b>20%</b></td><td>margin shock 單日消化（7/8 模式）→ 收復 7,554 測 7,570</td><td>需 SOXX 當日止穩＋NVDA 守 $5T</td></tr>
 </table></div>
@@ -140,12 +140,12 @@ ul{padding-left:20px}li{margin:5px 0}
 <h2>③ 今晚策略</h2>
 <div class="tablewrap"><table>
 <tr><th>策略</th><th>掛單型態</th><th>進場</th><th>距現價</th><th>停損</th><th>目標①</th><th>目標②</th><th>風報比</th><th>倉位</th></tr>
-<tr><td class="dn">空單優先（反彈舊撐轉壓）</td><td>limit_sell</td><td>7,554</td><td>0.27%</td><td>7,580</td><td>7,505</td><td>7,483</td><td>1 : 1.9</td><td>10%（系統模擬；用戶不做空）</td></tr>
-<tr><td class="dn">積極空（破整理線）</td><td>sell_stop_close_confirm</td><td>7,505 收盤確認</td><td>0.38%</td><td>7,538</td><td>7,476</td><td>7,448</td><td>1 : 0.9</td><td>12%（<b>用戶版＝減碼訊號，今晚最可能觸發</b>）</td></tr>
+<tr><td class="dn">空單優先（反彈舊撐轉壓）</td><td>limit_sell</td><td>7,554</td><td>0.27%</td><td>7,580</td><td>7,505</td><td>7,483</td><td>1 : 1.9</td><td>10%</td></tr>
+<tr><td class="dn">積極空（破整理線）</td><td>sell_stop_close_confirm</td><td>7,505 收盤確認</td><td>0.38%</td><td>7,538</td><td>7,476</td><td>7,448</td><td>1 : 0.9</td><td>12%<b></b></td></tr>
 <tr><td class="up">等待做多（MA20 接多）</td><td>limit_buy</td><td>7,477</td><td>0.75%</td><td>7,448</td><td>7,533</td><td>7,554</td><td>1 : 1.9</td><td>6%（<b>rule8b 首日執行：警報環境減半＋需當日半導體止穩，否則寧可錯過</b>）</td></tr>
 <tr><td class="up">突破做多</td><td>buy_stop</td><td>7,556</td><td>0.29%</td><td>7,505</td><td>7,588</td><td>7,609</td><td>—</td><td>0%（偏空矩陣禁追多，僅追蹤）</td></tr>
 </table></div>
-<div class="alert"><b>用戶部位（rule19 結構事實＋rule13 情境）：</b>今晚是<b>預定訊號的執行日</b>，不是新決策日——計畫早就寫好：① <b>收盤破 7,505＝減碼訊號</b>（隱含開盤 ~7,519，距離僅 14 點，觸發機率高）；② SOXX 已破 551.7 第四輪確認＝部位層警報已亮，你的帳戶對標 SOXX 本週約 -9.5%（自 7/10 高點）；③ 22:30 睡前檢查＝最終閘門：若當時已破 7,505 且半導體未止穩，<b>按訊號執行減碼再睡</b>，別等凌晨；④ 1.37x 融資下不加碼、不接刀；⑤ 7,588 修剪單留掛（若擠壓反彈碰到就是禮物）。在途模擬空單（7,533.77 進場）浮盈中——系統層面已對沖部分敘事風險。</div>
+<div class="alert"><b>〔個人部位內容已移除〕</b><b></b><b></b>③ 22:30 睡前檢查＝最終閘門：若當時已破 7,505 且半導體未止穩，<b>按訊號執行減碼再睡</b>，別等凌晨；在途模擬空單（7,533.77 進場）浮盈中——系統層面已對沖部分敘事風險。</div>
 
 <h3>三層進場確認</h3>
 <ul>
