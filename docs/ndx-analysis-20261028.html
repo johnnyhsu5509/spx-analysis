@@ -1,0 +1,186 @@
+<!doctype html>
+<html lang="zh-Hant">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>NDX 日線分析 2026-10-28</title>
+<style>
+:root{--bg:#0a0a0a;--panel:#111417;--line:#1e2429;--line2:#2a323a;--tx:#d6dde3;
+  --dim:#8b979f;--cy:#22d3ee;--gr:#34d399;--rd:#f87171;--am:#fbbf24;--vi:#a78bfa}
+*{box-sizing:border-box}
+body{margin:0;background:var(--bg);color:var(--tx);font:15px/1.7 -apple-system,"Segoe UI","Noto Sans TC",sans-serif}
+.wrap{max-width:1120px;margin:0 auto;padding:28px 20px 72px}
+header{border-bottom:2px solid var(--vi);padding-bottom:16px}
+.badge{display:inline-block;background:var(--vi);color:#160f2b;font-weight:800;letter-spacing:.14em;padding:3px 12px;border-radius:3px;font-size:12px}
+h1{margin:12px 0 4px;font-size:27px}
+.sub{color:var(--dim);font-size:13px}
+h2{margin:44px 0 14px;font-size:19px;color:var(--vi);border-left:3px solid var(--vi);padding-left:11px}
+.kpi{display:grid;grid-template-columns:repeat(auto-fit,minmax(146px,1fr));gap:11px;margin:20px 0}
+.k{background:var(--panel);border:1px solid var(--line);border-radius:7px;padding:13px 15px}
+.k .l{color:var(--dim);font-size:11px;letter-spacing:.09em;text-transform:uppercase}
+.k .v{font-size:21px;font-weight:700;margin-top:5px;font-variant-numeric:tabular-nums}
+.k .n{font-size:11px;color:var(--dim);margin-top:3px}
+.up{color:var(--gr)}.dn{color:var(--rd)}.nu{color:var(--am)}.cy{color:var(--cy)}
+.tw{overflow-x:auto;margin:16px 0}
+table{width:100%;border-collapse:collapse;font-size:13.5px;min-width:560px}
+th,td{padding:9px 11px;text-align:left;border-bottom:1px solid var(--line)}
+th{background:#151a1f;color:var(--vi);font-weight:600;font-size:12px;white-space:nowrap}
+td{font-variant-numeric:tabular-nums}
+.box{background:var(--panel);border:1px solid var(--line);border-radius:7px;padding:15px 18px;margin:15px 0}
+.box.hot{border-color:var(--rd);background:#170f10}
+.box.warn{border-color:var(--am);background:#171308}
+.box.good{border-color:var(--gr);background:#0c1613}
+.box.info{border-color:var(--vi);background:#12101a}
+.box h4{margin:0 0 8px;font-size:14px}
+ul,ol{padding-left:22px;margin:9px 0}li{margin:5px 0}
+.mono{font-family:"Cascadia Mono",Consolas,monospace;font-size:12.5px;background:#0c1013;border:1px solid var(--line);border-radius:6px;padding:14px 16px;white-space:pre;overflow-x:auto;color:#b9c4cc}
+footer{margin-top:56px;padding-top:18px;border-top:1px solid var(--line);color:var(--dim);font-size:12px}
+</style>
+</head>
+<body>
+<div class="wrap">
+
+<header>
+  <span class="badge">NASDAQ-100 · NDX</span>
+  <h1>NDX 日線分析：晶片續強 +1.29%，回補 29,412–29,594 缺口，向上筆成立、MA50 為下一道壓力</h1>
+  <div class="sub">報告日 2026-10-28（台北）｜資料基準 2026-10-27 美股收盤｜Phase 3：主輸出＝隔日振幅預報，方向恆 50｜今晚 FOMC 決議</div>
+</header>
+
+<div class="kpi">
+  <div class="k"><div class="l">隔日振幅預報 A</div><div class="v nu">1.31%</div><div class="n">約 ±389 點｜50% 區間 1.01–1.67%</div></div>
+  <div class="k"><div class="l">拉回機率</div><div class="v nu">50%</div><div class="n">方向無 edge（rule55）</div></div>
+  <div class="k"><div class="l">NDX 收盤</div><div class="v nu">29,651.44</div><div class="n up">+1.29%｜低 29,341／高 29,720</div></div>
+  <div class="k"><div class="l">QQQE / QQQ</div><div class="v dn">-0.21%</div><div class="n">等權 +1.06% vs 權值 +1.27%｜連 3 日回落</div></div>
+  <div class="k"><div class="l">VXN</div><div class="v nu">24.91</div><div class="n">26.40 → 24.91｜中波動檔</div></div>
+  <div class="k"><div class="l">部位水位</div><div class="v up">正常</div><div class="n">收盤在 MA200 上 6.4%</div></div>
+</div>
+
+<div class="box warn">
+  <h4>資料註記</h4>
+  <b>量能（rule36 觸發）：</b>^NDX 量 12.0 億，只有前幾日 65–90 億的約 15%＝未結算殘值，改用 QQQ：3,078 萬股＝20 日均 84.7%，偏輕，未達 rule43 帶量門檻，量能因子降為中性。<br>
+  <b>油價：</b>Python 序列 Brent 115.81 → 110.86、WTI 101.76 → 101.05，方向與新聞一致（中東談判、油價回落），但結算價未交叉查證，不引用小數。<br>
+  trade_date 2026-10-27、symbol=NDX 已核對（rule37／rule38）；重複分析防護 VERDICT=OK；ETF 日線完整、無補值。
+</div>
+
+<h2>一、回測 10/27（Phase 3 第 7 天）</h2>
+<div class="tw"><table>
+<tr><th>項目</th><th>預測</th><th>實際</th><th>結果</th></tr>
+<tr><td>方向</td><td>中性 50 → 無 edge</td><td>29,651.44，<b>+1.29%</b> → up</td><td class="nu">🟡 half｜Brier 0.25</td></tr>
+<tr><td>振幅（amp_track）</td><td>A 1.39%｜區間 1.07–1.77%</td><td>(高−低)/前收 = <b>1.295%</b>（379 點）</td><td class="up">✅ 區間內｜log_err 0.071 vs r0 0.167</td></tr>
+<tr><td>影子多（shadow）</td><td>limit_buy 29,192.00｜停損 −0.5A</td><td>全日低 29,340.54，未觸及掛單</td><td class="nu">未成交</td></tr>
+<tr><td>影子空（shadow）</td><td>limit_sell 29,354.80｜停損 +0.5A</td><td>開盤 29,407.19 跳空成交 → 11:00 棒高 29,614.7 觸及停損 29,610.69</td><td class="dn">−0.500A（−203.5 點）</td></tr>
+<tr><td>29,412–29,594 缺口</td><td>回補＝底分型延伸成向上筆</td><td>11:00 棒上破 29,594，收 29,651</td><td class="up">✅ 回補</td></tr>
+<tr><td>28,826／28,753</td><td>收破＝底分型失效</td><td>全日低 29,341，遠離</td><td class="up">✅ 守住</td></tr>
+<tr><td>晶片</td><td>能否延續</td><td>SOXX +3.91%，5 日轉正 +2.2%</td><td class="up">延續</td></tr>
+<tr><td>VXN</td><td>能否守在 28 以下</td><td>26.40 → 24.91</td><td class="up">✅ 續降</td></tr>
+<tr><td>策略（主帳）</td><td>預設休眠，不掛實單</td><td>無單</td><td class="nu">0 bp</td></tr>
+</table></div>
+<div class="box warn">
+  <b>偏差分析：</b>方向層照舊沒有資訊量（恆報中性遇上漲日只得 half）。振幅這筆落在 50% 區間內，實際＝A 的 0.93 倍，log_err 0.071 是 Phase 3 以來最準的一筆；舊算法 r0（1.53%）高估較多。7 筆累計平均 log_err：A 0.297、r0 0.309，A 首次小幅領先；覆蓋 57.1%（目標 45–55%），區間上方 2、下方 1。樣本太少，60 筆後再比。
+  影子空單開盤跳空成交後被上漲一路掃到停損（−0.5A），影子多沒有成交；同日「收盤買、隔日收盤賣」為 +0.93A。7 天樣本不具統計意義，不新增規則。
+</div>
+<div class="tw"><table>
+<tr><th>累積</th><th>數值</th><th>說明</th></tr>
+<tr><td>P&amp;L 主帳</td><td class="dn">-6.29 bp</td><td>當日 0bp；已結算 23 筆 8 勝 15 敗；預設休眠</td></tr>
+<tr><td>方向分數</td><td>65.4%</td><td>n=39；always-neutral 基準 69.2%（並列）</td></tr>
+<tr><td>Brier</td><td>0.2464</td><td>n=24（平盤排除 15 筆）；基準 0.25</td></tr>
+<tr><td>振幅帳</td><td>n=7</td><td>平均 log_err 0.297（r0 0.309）｜覆蓋 57.1%（目標 45–55%）｜區間上方 2、下方 1</td></tr>
+<tr><td>影子帳</td><td>n=7 天</td><td>多：成交 4／7，平均 −0.127A｜空：成交 5／7，平均 −0.200A｜漂移基準平均 −0.261A</td></tr>
+</table></div>
+
+<h2>二、七維分析（敘事與價位，不換算機率）</h2>
+<div class="tw"><table>
+<tr><th>維度</th><th>讀數</th><th>判讀</th></tr>
+<tr><td>廣度</td><td>QQQE +1.06% vs QQQ +1.27%｜比值 1D -0.21%、5D +0.11%、距 MA20 +1.18%</td><td>連 2 日權值帶漲，比值連 3 日小降，5 日由擴張退回中性。新聞稱 Nasdaq 新低 239 檔對新高 62 檔＝參與度不足。廣度是同步指標，不外推方向</td></tr>
+<tr><td>價格行為</td><td>開 29,407（+0.46% 跳空）→ 10:00 棒低 29,341 → 11:00 棒破 29,594 → 12:00 棒 29,713 → 午後高位整理 → 15:30 棒高 29,720 → 收 29,651，位於區間 82%</td><td>紅 K 實體 +244 點、上下影線各約 67 點；開盤小幅回測未補跳空，上午即回補 10/22 留下的缺口，收在缺口上方</td></tr>
+<tr><td>均線</td><td>MA5 29,333｜MA20 30,139｜MA50 29,807｜MA200 27,874</td><td>站上 MA5（MA5 翻升），仍在 MA50（差 156 點）與 MA20（距 -1.6%）之下；MA20 續下彎（30,173 → 30,139），MA50 小幅下彎；MA200 上 6.4% 且續升</td></tr>
+<tr><td>指標</td><td>RSI 33.5（Cutler）｜MACD 柱 -135（前日 -185）｜KD 22.4／20.6｜%B 33.8</td><td>MACD 柱連續收斂；KD 低檔金叉；%B 由 19.8 升到 33.8。Cutler RSI 偏低仍因 14 日窗口含 10/22 的 -864 點；Wilder 47.2，兩法本日同向（+6.4／+5.5）</td></tr>
+<tr><td>葛蘭威爾</td><td>MA200 上 6.4%；距 MA20 -1.6%</td><td>相對 MA20／MA50：價格往兩條下彎均線靠近，未站上前屬反彈受壓＝賣⑦觀察區。相對 MA5：已站上且翻升。相對 MA200：在其上且 MA200 上升——僅形態描述</td></tr>
+<tr><td>纏論</td><td>向上筆成立</td><td>10/23 底分型（低 28,826）→ 10/26、10/27 高低點連續抬高，回補缺口 → 向上筆成立；底背馳延續（MACD 柱 -204 → -185 → -135）。10/6–10/22 下跌段的中樞約 29,600–30,400，價格正回到中樞下緣；第一道考驗是 MA50 29,807／0.382 回撤 29,794</td></tr>
+<tr><td>波浪</td><td>見下方三情景</td><td>主情景：C 浪在 28,826 結束，現為新上升段第 1 浪</td></tr>
+</table></div>
+<div class="mono">波浪多情景（敘事，不推導 headline）：
+主（45%）28,826 為 C 浪終點，10/23 起為新上升段第 1 浪：缺口已回補，延伸目標 0.382 29,794 → 0.5 30,094
+替（35%）更大級別修正中的 B 浪反彈：止於 29,794–30,094（MA50／MA20 下彎壓制）後再下探 28,826 以下
+替（20%）反彈失敗：收回 29,412 缺口下緣之下 → 上升段失效，回測 29,012／28,826
+費波（10/6 高 31,361 → 10/23 低 28,826）：0.236 29,424｜0.382 29,794｜0.5 30,094｜0.618 30,393</div>
+
+<h2>三、波動尺度與主輸出</h2>
+<div class="mono">隔日振幅預報：A = 1.31%（約 ±389 點）｜50% 區間 1.01–1.67%｜c = 0.84（近 63 日實際÷隱含 0.68）
+方向：50（方向無 edge，bias 中性）
+ATR14 1.75%｜近 5 日均振幅 1.36%｜A_NDX ÷ A_SPX = 1.31 ÷ 0.86 = 1.53</div>
+<div class="box warn">
+  近 63 日實際÷隱含 0.68 &lt; 0.75 → 平靜期，振幅預報可能偏高；VXN 一年分位 65.5%＝一般（33–67%）。<b>A 不手動調整</b>（rule55）。
+  <b>事件日：</b>今晚（10/28）FOMC 決議，本週大型科技財報，實際振幅可能超出區間。振幅是中性資訊，大振幅不代表會跌。
+</div>
+
+<h2>四、環境水位（regime）與 SPX 對照</h2>
+<div class="mono">環境水位（regime）：1D 拉回 27.7%（基準 29.0%，-1.3pp）｜5D 拉回 56.2%（基準 57.3%，-1.0pp）
+  ├ VXN：18–28 中波動（24.91）→ 1D 32.0% ／ 5D 61.6%
+  ├ 趨勢：MA200 之上 → 1D 24.9% ／ 5D 53.7%
+  └ MA20：±3% 內正常（-1.62%，離邊界已拉開）→ 1D 26.2% ／ 5D 53.5%
+（拉回定義：盤中低點跌破訊號日收盤 −1.00%；只作環境水位，不產生倉位指令）
+
+NDX：振幅 A 1.31%｜regime 1D 超額 -1.3pp｜VXN 24.91（中波動檔）
+SPX：振幅 A 0.86%｜regime 1D 超額 -3.9pp｜VIX 17.52（16–20 檔）
+A_NDX ÷ A_SPX = 1.53（長期 1.25–1.37）｜環境：【分歧】</div>
+<div class="box warn">
+  <b>分歧成因：</b>振幅比 1.53 超過 1.45（連 7 份報告），科技側波動仍明顯大於大盤；波動指數一年分位 NDX 65.5% vs SPX 57.5%。
+  <b>趨同的部分：</b>①兩邊波動檔都在中檔且同步下降；②regime 1D 都低於基準；③兩邊廣度都轉弱（QQQE/QQQ -0.21%、RSP/SPY 約 -0.5%），成因相同：晶片／AI 權值帶漲。兩套方向皆恆 50，不比方向，皆不掛實單。
+</div>
+
+<h2>五、新聞檢索（rule49）</h2>
+<div class="box info">
+  <b>10/27 歸因：</b>晶片續強、權值帶動的上漲日。S&amp;P +0.60%（7,722.60）、Dow +0.03%（52,377.57）、Nasdaq Composite +1.18%（26,477.81）、NDX +1.29%。Anthropic IPO 申請效應延續，晶片連 2 日反彈（SOXX +3.91%）；油價因中東談判回落，能源為最弱類股。Nasdaq 新低 239 檔對新高 62 檔，量低於 20 日均。<br>
+  <b>症狀 vs 病因：</b>症狀是晶片漲、VXN 降、油價跌；病因是 AI 交易情緒修復與中東談判期待。利率不是驅動（10Y 約 4.99% 持平）。<br>
+  <b>待查證、不計入：</b>有報導稱「伊朗新攻擊、川普宣布報復」，但文章日期不明，未計入。Kitco/Reuters 的 S&amp;P +0.16% 是盤中快照，以收盤版為準。rule2 不成立；FOMC＋財報屬排程事件（基準率不是訊號）。Phase 3 方向恆 50，不改評分。<br>
+  <b>來源：</b>TheStreet、Cappnotes、Yahoo Finance、Kitco（Reuters）、Motley Fool。
+</div>
+
+<h2>六、掛單幾何與影子帳</h2>
+<div class="box good"><b>本日無已核准的方向 edge → 不掛實單</b>（rule57 預設休眠）</div>
+<div class="tw"><table>
+<tr><th>k（×A）</th><th>多單價位</th><th>多單成交率</th><th>空單價位</th><th>空單成交率</th></tr>
+<tr><td>0.2</td><td>29,574</td><td>65%（43% 跳空）</td><td>29,729</td><td>73%（53% 跳空）</td></tr>
+<tr><td>0.4</td><td>29,496</td><td>51%（34%）</td><td>29,807</td><td>58%（41%）</td></tr>
+<tr><td>0.6</td><td>29,418</td><td>39%（28%）</td><td>29,885</td><td>44%（29%）</td></tr>
+<tr><td>0.8</td><td>29,340</td><td>30%（24%）</td><td>29,963</td><td>32%（20%）</td></tr>
+</table></div>
+<div class="mono">影子單（只寫 shadow_ledger，不進主帳；隔日收盤平倉、停損優先）
+影子多：limit_buy 29,573.66｜停損＝成交價 −0.5A（約 −194 點）
+影子空：limit_sell 29,729.22｜停損＝成交價 +0.5A（約 +194 點）
+關鍵支撐 29,594 / 29,341 / 29,012 / 28,826｜關鍵壓力 29,720 / 29,807 / 30,094 / 30,139</div>
+
+<h2>七、明日觀察</h2>
+<ol>
+<li><b>10/28 FOMC 決議＋大型科技財報週</b>：事件日，實際振幅可能超出區間</li>
+<li><b>MA50 29,807／0.382 回撤 29,794</b>：向上筆的第一道壓力</li>
+<li><b>29,594／29,412（已回補缺口）</b>：收回 29,412 之下＝缺口回補失敗</li>
+<li><b>28,826（10/23 低）</b>：收破＝向上筆失效</li>
+<li><b>晶片能否連 3 日</b>：SOXX +3.91%，5 日轉正、10 日仍 -6.0%</li>
+<li><b>廣度</b>：QQQE/QQQ 連 3 日回落，等權是否跟上</li>
+<li><b>VXN 24.91</b>：中波動檔內續降</li>
+<li><b>振幅</b>：A 1.31%（±389 點）、50% 區間 1.01–1.67%；一年分位 65.5%＝一般</li>
+<li><b>MA200 27,874</b>：距收盤 -6.0%，部位水位切換線</li>
+</ol>
+
+<h2>部位水位（部位層，不是分析）</h2>
+<div class="box good">
+<ul>
+<li>訊號：NDX 收盤 29,651.44 vs MA200 27,874.28（+6.4%）→ 在 MA200 之上</li>
+<li>水位：<b>正常</b>（基準部位 100%）</li>
+<li>狀態：自 2026-04-08 起維持；今日未切換</li>
+<li>距切換線：收盤需再跌 6.0% 才轉為半倉</li>
+<li>依據：prc-014（預先登記、樣本外 4/4 通過）。本段不改變上方的振幅與方向輸出。</li>
+</ul>
+</div>
+
+<footer>
+  NDX 分析系統｜與 SPX 並列、帳本分離｜資料來源 yfinance（日線＋30 分 K）｜新聞：TheStreet、Cappnotes、Yahoo Finance、Kitco<br>
+  <a href="https://johnnyhsu5509.github.io/spx-analysis/ndx/" style="color:#a78bfa">NDX</a> · <a href="https://johnnyhsu5509.github.io/spx-analysis/spx/" style="color:#22d3ee">SPX</a><br><br>
+  <b>本分析僅供學習參考，不構成投資建議。</b>
+</footer>
+
+</div>
+</body>
+</html>
