@@ -1,43 +1,43 @@
 {
-  "trade_date": "2026-10-29",
-  "close": 29402.51,
-  "open": 29421.18,
-  "high": 29517.8,
-  "low": 29257.05,
-  "volume": 1435677000,
-  "prev_close": 29813.16,
-  "change_pct": -1.38,
-  "vxn": 25.18,
-  "ma5": 29419.61,
-  "ma20": 30054.25,
-  "ma50": 29812.87,
-  "ma200": 27912.71,
-  "rsi": 33.69,
-  "macd_hist": -74.39,
-  "macd_line": -187.51,
-  "signal": -113.13,
-  "bb_upper": 31580.33,
-  "bb_lower": 28528.16,
-  "bb_pct": 28.6,
-  "kd_k": 29.97,
-  "kd_d": 25.9,
+  "trade_date": "2026-10-30",
+  "close": 28384.85,
+  "open": 28604.92,
+  "high": 28713.45,
+  "low": 28093.24,
+  "volume": 2208196000,
+  "prev_close": 29402.51,
+  "change_pct": -3.46,
+  "vxn": 28.5,
+  "ma5": 29305.07,
+  "ma20": 29933.09,
+  "ma50": 29796.3,
+  "ma200": 27927.3,
+  "rsi": 28.65,
+  "macd_hist": -127.94,
+  "macd_line": -273.05,
+  "signal": -145.11,
+  "bb_upper": 31586.65,
+  "bb_lower": 28279.53,
+  "bb_pct": 3.2,
+  "kd_k": 23.86,
+  "kd_d": 25.22,
   "breadth": {
-    "qqqe_qqq_ratio": 0.1665,
-    "chg_1d_pct": 0.82,
-    "chg_5d_pct": -0.26,
-    "vs_ma20_pct": 1.66,
-    "read": "廣度中性",
+    "qqqe_qqq_ratio": 0.1684,
+    "chg_1d_pct": 1.05,
+    "chg_5d_pct": 1.24,
+    "vs_ma20_pct": 2.59,
+    "read": "廣度擴張（中小型股同步參與）",
     "note": "QQQE(等權NDX)/QQQ(市值權重);升=廣度好,降=窄化。科技股權重極集中,窄化時指數強度打折更明顯",
-    "as_of": "2026-10-29",
+    "as_of": "2026-10-30",
     "tail_source": "30m_approx",
     "caveat": "ETF 日線落後，最後一筆由 30m 末根補值（不含收盤撮合，與官方收盤約差 1-3 點）。1 日變動為近似值；5 日與 vs_MA20 含此近似值"
   },
   "regime": {
     "base_5d_pullback": 57.25,
     "vxn": {
-      "regime": "VXN 18-28（中波動）",
-      "pullback_5d": 61.55,
-      "vs_base": 4.3
+      "regime": "VXN>=28（高波動）",
+      "pullback_5d": 72.35,
+      "vs_base": 15.1
     },
     "trend": {
       "regime": "NDX 在 MA200 之上（多頭結構）",
@@ -45,57 +45,49 @@
       "vs_base": -3.6
     },
     "ma20_ext": {
-      "regime": "距 MA20 +/-3% 內（正常）",
-      "pullback_5d": 53.48,
-      "vs_base": -3.8,
-      "ext_pct": -2.17
+      "regime": "距 MA20 -3% 以下（深跌）",
+      "pullback_5d": 73.31,
+      "vs_base": 16.1,
+      "ext_pct": -5.17
     },
-    "regime_avg_5d": 56.2,
-    "regime_avg_vs_base": -1.0,
+    "regime_avg_5d": 66.4,
+    "regime_avg_vs_base": 9.2,
     "horizon_1d": {
       "base_1d_pullback": 29.02,
       "vxn": {
-        "pullback_1d": 32.03,
-        "vs_base": 3.0
+        "pullback_1d": 45.83,
+        "vs_base": 16.8
       },
       "trend": {
         "pullback_1d": 24.85,
         "vs_base": -4.2
       },
       "ma20_ext": {
-        "pullback_1d": 26.2,
-        "vs_base": -2.8
+        "pullback_1d": 47.59,
+        "vs_base": 18.6
       },
-      "regime_avg_1d": 27.7,
-      "regime_avg_vs_base": -1.3
+      "regime_avg_1d": 39.4,
+      "regime_avg_vs_base": 10.4
     }
   },
   "amplitude": {
-    "as_of": "2026-10-29",
-    "amp_forecast_pct": 1.326,
-    "amp_forecast_pts": 389.9,
+    "as_of": "2026-10-30",
+    "amp_forecast_pct": 1.504,
+    "amp_forecast_pts": 426.8,
     "band_50_pct": [
-      1.022,
-      1.691
+      1.157,
+      1.932
     ],
-    "implied_daily_pct": 1.586,
-    "c": 0.836,
+    "implied_daily_pct": 1.795,
+    "c": 0.837,
     "c_window": 252,
     "realized_vs_implied_63d": 0.66,
-    "vol_pct_1y": 65.9,
-    "r0_rule27_ref_pct": 1.33,
-    "atr14_pct": 1.569,
+    "vol_pct_1y": 88.5,
+    "r0_rule27_ref_pct": 1.56,
+    "atr14_pct": 1.838,
     "method": "A = c × ^VXN/√252；c 與 50% 區間 = 近 252 個已知交易日（隔日振幅÷隱含日波動）的中位數與 25/75 分位（Phase 3 V2b 核准）"
   },
   "recent_5": [
-    {
-      "date": "2026-10-23",
-      "open": 28847.82,
-      "high": 29161.03,
-      "low": 28825.72,
-      "close": 28957.53,
-      "volume": 6554790000
-    },
     {
       "date": "2026-10-26",
       "open": 29051.58,
@@ -126,14 +118,22 @@
       "high": 29517.8,
       "low": 29257.05,
       "close": 29402.51,
-      "volume": 1435677000
+      "volume": 7405880000
+    },
+    {
+      "date": "2026-10-30",
+      "open": 28604.92,
+      "high": 28713.45,
+      "low": 28093.24,
+      "close": 28384.85,
+      "volume": 2208196000
     }
   ],
   "symbol": "NDX",
-  "wilder_rsi": 44.39,
+  "wilder_rsi": 34.9,
   "rsi_method_divergence": {
     "flag": false,
-    "cutler_chg": -5.66,
-    "wilder_chg": -5.04
+    "cutler_chg": -5.04,
+    "wilder_chg": -9.49
   }
 }
