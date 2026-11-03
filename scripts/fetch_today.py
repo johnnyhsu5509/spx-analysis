@@ -29,6 +29,7 @@ SYMBOLS = {
         "outfile": "today_data.txt",
         "breadth": ("RSP", "SPY"),
         "breadth_note": "RSP(等權)/SPY(市值權重);升=廣度好,降=窄化。與指數方向背離時,指數漲勢品質打折",
+        "sector": ("SOXX", "SMH", "XLV", "^TNX", "QQQ"),
         "pullback_txt": "-0.75%",
         "default_c": {"BASE_5D": 61.65,
                       "vix": {"vix_lt16": 49.45, "vix_16_20": 63.08, "vix_ge20": 71.15},
@@ -44,6 +45,7 @@ SYMBOLS = {
         "outfile": "ndx_today_data.txt",
         "breadth": ("QQQE", "QQQ"),
         "breadth_note": "QQQE(等權NDX)/QQQ(市值權重);升=廣度好,降=窄化。科技股權重極集中,窄化時指數強度打折更明顯",
+        "sector": ("SOXX", "SMH", "XLV", "^TNX"),
         "pullback_txt": "-1.00%",
         "default_c": {"BASE_5D": 57.14,
                       "vxn": {"vxn_lt18": 40.36, "vxn_18_28": 61.47, "vxn_ge28": 72.35},
@@ -256,6 +258,35 @@ def _amplitude(index_day, close):
     except Exception as exc:
         print("[amplitude] WARNING computation failed: %r" % (exc,))
         return None
+
+
+def _daily_pair(ticker, days):
+    try:
+        df = yf_compat.download(ticker, period="1mo", progress=False)
+        if hasattr(df.columns, "levels"):
+            df.columns = [c[0] if isinstance(c, tuple) else c for c in df.columns]
+        c = df["Close"].squeeze().dropna()
+        c = pd.Series(c.values, index=c.index.strftime("%Y-%m-%d"))
+        prev, cur = (float(c[d]) for d in days)
+        nd = 3 if ticker == "^TNX" else 2
+        return {"close": round(cur, nd), "prev_close": round(prev, nd),
+                "change_pct": round((cur - prev) / prev * 100, 2)}
+    except Exception:
+        return None
+
+
+def _sector_daily(days):
+    """todo2：類股與 10Y 日線收盤，取指數前收日與當日（days）兩筆；任一筆缺 = 該代號 null 並列入 stale，全部缺 = None。"""
+    rows = {t: _daily_pair(t, days) for t in CFG["sector"]}
+    stale = [t for t, v in rows.items() if v is None]
+    if len(stale) == len(rows):
+        return None
+    out = {"as_of": days[-1], **rows}
+    if stale:
+        out["stale"] = stale
+        out["caveat"] = ("⚠%s 缺 %s 或 %s 的日線收盤（抓不到或未對齊指數），該代號為 null，不得以 0 或中性代入"
+                         % ("、".join(stale), days[0], days[1]))
+    return out
 
 
 end = datetime.today() + timedelta(days=1)
@@ -478,6 +509,7 @@ if not spx_close.empty:
     w_last = float(wilder_s.iloc[-1])
     result["wilder_rsi"] = round(w_last, 2) if w_last == w_last else None
     result["rsi_method_divergence"] = wilder.divergence(100 - 100 / (1 + gain / loss), wilder_s)
+    result["sector_daily"] = _sector_daily([str(d.date()) for d in raw_spx.index[-2:]])
 
 if not result or not result.get("trade_date"):
     print("FETCH FAILED: no trade_date computed; %s left UNCHANGED" % OUTFILE)

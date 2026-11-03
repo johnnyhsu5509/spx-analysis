@@ -12,7 +12,10 @@ def _frame(ticker, interval):
     if _FX.get("mode") == "raise":
         raise ConnectionError("synthetic network failure")
     kind = "daily" if interval == "1d" else "intraday"
-    return _FX[kind].get(ticker, pd.DataFrame()).copy()
+    df = _FX[kind].get(ticker, pd.DataFrame())
+    if isinstance(df, Exception):
+        raise df
+    return df.copy()
 
 
 def download(ticker, interval="1d", **kwargs):

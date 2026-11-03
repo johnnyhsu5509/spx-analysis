@@ -26,10 +26,13 @@ Result = collections.namedtuple("Result", "code out err files")
 DAYS = pd.bdate_range("2025-06-02", periods=330, name="Date")
 SYMBOLS = {
     "spx": {"index": ("^GSPC", 6000.0), "vol": ("^VIX", 17.0), "breadth": (("RSP", 180.0), ("SPY", 600.0)),
-            "baseline": "regime_baseline.json", "vol_key": "vix", "buckets": ("vix_lt16", "vix_16_20", "vix_ge20")},
+            "baseline": "regime_baseline.json", "vol_key": "vix", "buckets": ("vix_lt16", "vix_16_20", "vix_ge20"),
+            "sector": ("SOXX", "SMH", "XLV", "^TNX", "QQQ")},
     "ndx": {"index": ("^NDX", 21000.0), "vol": ("^VXN", 22.0), "breadth": (("QQQE", 95.0), ("QQQ", 520.0)),
-            "baseline": "ndx_regime_baseline.json", "vol_key": "vxn", "buckets": ("vxn_lt18", "vxn_18_28", "vxn_ge28")},
+            "baseline": "ndx_regime_baseline.json", "vol_key": "vxn", "buckets": ("vxn_lt18", "vxn_18_28", "vxn_ge28"),
+            "sector": ("SOXX", "SMH", "XLV", "^TNX")},
 }
+SECTOR_START = {"SOXX": 230.0, "SMH": 260.0, "XLV": 145.0, "^TNX": 4.3, "QQQ": 520.0}
 # 覆寫指數末段報酬：index -15 的漲跌今天滑出 Cutler 的 14 日窗口，index -1 為當日
 TAILS = {
     "diverge": {-15: -0.045, -1: -0.006},  # 大黑 K 滑出、當日小跌 → Cutler 升、Wilder 降（2026-08-18 型）
@@ -74,11 +77,29 @@ def fetch_fixture(sym="spx", tail=None, gap=False):
     full = {idx: bars(ret, s["index"][1], 11), vol: vol_bars(s["vol"][1])}
     for j, (t, p) in enumerate(s["breadth"]):
         full[t] = bars(walk(20 + j, 0.006), p, 30 + j)
+    for j, t in enumerate(s["sector"]):
+        full.setdefault(t, bars(walk(40 + j, 0.01), SECTOR_START[t], 50 + j))
     daily = dict(full)
     if gap:
         daily[idx], daily[vol] = full[idx].drop(DAYS[-10]), full[vol].drop(DAYS[-10])
         daily[eq] = full[eq].iloc[:-1]
     return {"daily": daily, "intraday": {t: intraday(df) for t, df in full.items()}, "quote": {}}
+
+
+def break_sector(fx, how):
+    """how：{代號: missing（無資料）| raise（下載拋例外）| tail_nan（末日 Close 為 NaN）| prev_gap（缺前收日）}。"""
+    fx = copy.deepcopy(fx)
+    d = fx["daily"]
+    for t, kind in how.items():
+        df = d.pop(t)
+        if kind == "raise":
+            d[t] = ConnectionError("synthetic %s failure" % t)
+        elif kind == "tail_nan":
+            df.iloc[-1, df.columns.get_loc("Close")] = float("nan")
+            d[t] = df
+        elif kind == "prev_gap":
+            d[t] = df.drop(df.index[-2])
+    return fx
 
 
 def with_nan(fx, col, rows, ticker="^GSPC"):
