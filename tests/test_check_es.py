@@ -55,7 +55,7 @@ class WeekendClosedTest(unittest.TestCase):
 
 
 class CheckEsSessionTest(unittest.TestCase):
-    """同一假時鐘下比對原版（BASELINE_REF）與新版 check_es.py 的輸出。"""
+    """同一假時鐘下比對原版（ES_BASELINE_REF，WEEKEND_CLOSED 加入前）與新版 check_es.py 的輸出。"""
 
     WEEKDAY = [  # UTC；註解為台北時間（原版標籤依台北鐘點判定）
         "2026-10-20T21:30",  # 週三 05:30 US_AFTERHOURS
@@ -77,13 +77,13 @@ class CheckEsSessionTest(unittest.TestCase):
     @classmethod
     def setUpClass(cls):
         fx = harness.es_fixture()
-        base = harness.has_baseline()
+        base = harness.has_baseline(harness.ES_BASELINE_REF, "check_es.py")
         cls.runs = {}
         for args, out in (((), "es_check.txt"), (("--symbol", "ndx"), "ndx_es_check.txt")):
             for ts in cls.WEEKDAY + cls.WEEKEND:
                 if args and ts not in (cls.WEEKDAY[1], cls.WEEKEND[0]):
                     continue
-                old = harness.run("check_es.py", fx, args, ref=harness.BASELINE_REF, now_utc=ts,
+                old = harness.run("check_es.py", fx, args, ref=harness.ES_BASELINE_REF, now_utc=ts,
                                   files=harness.ES_FILES) if base else None
                 new = harness.run("check_es.py", fx, args, now_utc=ts, files=harness.ES_FILES)
                 cls.runs[(out, ts)] = (old, new)
@@ -98,7 +98,7 @@ class CheckEsSessionTest(unittest.TestCase):
             if ts not in self.WEEKDAY:
                 continue
             if old is None:
-                self.skipTest("找不到基準版本 %s" % harness.BASELINE_REF)
+                self.skipTest("找不到基準版本 %s" % harness.ES_BASELINE_REF)
             with self.subTest(out=out, utc=ts):
                 self.assertEqual(new.code, old.code)
                 self.assertEqual(new.out, old.out)

@@ -39,8 +39,8 @@ class RegressionTest(unittest.TestCase):
             with self.subTest(case=name):
                 self.assertEqual((old.code, new.code), (0, 0), old.err + new.err)
                 if how:
-                    self.assertEqual([l for l in new.out.splitlines() if not l.startswith("[yf_compat]")],
-                                     old.out.splitlines())
+                    strip = lambda s: [l for l in s.splitlines() if not l.startswith("[yf_compat]")]
+                    self.assertEqual(strip(new.out), strip(old.out))
                 else:
                     self.assertEqual(new.out, old.out)
                 self.assertEqual(sorted(new.files), sorted(old.files))

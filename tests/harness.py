@@ -17,6 +17,8 @@ REPO = os.path.dirname(TESTS)
 SCRIPTS = os.path.join(REPO, "scripts")
 RUNNER = os.path.join(TESTS, "stubs", "run.py")
 BASELINE_REF = os.environ.get("BASELINE_REF", "origin/main")
+# check_es 的比對基準固定在 WEEKEND_CLOSED（todo6，25a2bbe）加入前；用 origin/main 會變成新版比新版
+ES_BASELINE_REF = os.environ.get("ES_BASELINE_REF", "ea73cd7d0205e81a4e5b3a6e527784082b81b16b")
 MODULES = ("fetch_today.py", "check_es.py", "guard.py", "gap_fix.py", "yf_compat.py", "wilder.py", "cme_session.py")
 OUTPUTS = ("today_data.txt", "ndx_today_data.txt", "es_check.txt", "ndx_es_check.txt")
 sys.path.insert(0, SCRIPTS)
@@ -145,9 +147,9 @@ def cutler(close):
     return 100 - 100 / (1 + d.clip(lower=0).rolling(14).mean() / (-d.clip(upper=0)).rolling(14).mean())
 
 
-def has_baseline():
+def has_baseline(ref=BASELINE_REF, module="fetch_today.py"):
     try:
-        p = subprocess.run(["git", "cat-file", "-e", "%s:scripts/fetch_today.py" % BASELINE_REF],
+        p = subprocess.run(["git", "cat-file", "-e", "%s:scripts/%s" % (ref, module)],
                            cwd=REPO, capture_output=True, encoding="utf-8")
     except OSError:
         return False
