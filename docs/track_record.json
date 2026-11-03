@@ -972,7 +972,7 @@
   "brier": {
    "as_of": "2026-11-03",
    "included": 56,
-   "excluded_flat": 29,
+   "excluded_flat": 30,
    "per_entry": [
     {
      "report_date": "2026-06-16",

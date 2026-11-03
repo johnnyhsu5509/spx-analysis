@@ -41,7 +41,7 @@ python scripts/shadow_check.py --symbol ndx --since 2026-11-04 --all --report sc
 
 每次實跑一段：`## spx <commit>（報告日 …，判定 …）：數值差異 N、字串差異 M、欄位有無 K`。
 
-- **數值差異必須是 0。** 唯一的已知例外是 SPX `track_record.json:summary.brier.excluded_flat`（腳本 30、實跑 29）：實跑 10/28 判定 flat 時漏加這個欄位，之後每天照抄，帳本修正前每天都會出現。
+- **數值差異必須是 0。** 歷史上唯一的記帳錯誤是 SPX `track_record.json:summary.brier.excluded_flat`（腳本 30、實跑 29）：實跑 10/28 判定 flat 時漏加這個欄位，之後照抄到 11/03；帳本已在 11/03 修正為 30，之後的實跑不應再出現。
 - **字串差異**只會出在腳本產生的模板句（`note_latest`、`backtest_prev.shadow`、`rule66`、NDX 的 rule57／58／59 與 `backtest_prev.predicted`／`amp`、漂移基準說明）：實跑每天措辭不同，不影響帳。
 - **輸入修正**：git 裡的 `data/` 快照（GitHub Actions 抓的）和本機實跑抓到的數據不同的欄位，以帳本記下的為準。這是說明，不算差異。當天的快照還沒進 git 時，會改用本機的 `scripts/today_data.txt`／`ndx_today_data.txt`（trade_date 要對得上）。
 - 有數值差異時結束碼是 1。
@@ -105,4 +105,4 @@ gap day（例如 10/26：前一個收盤沒做分析）會自動處理：待判�
 2. 沒有新的數值差異 → 改 SPX／NDX SKILL 的 Step 2／5／6：寫敘事 JSON → 跑 `daily_run.py --out docs` → 讀報告確認 → commit／push。
 3. 依慣例交 Codex 做隔離驗收。
 
-另外兩件可以順手處理、但這次沒動：帳本 `excluded_flat` 的修正（要改 `docs/`），以及 `track_record.summary` 每天新增一個 `always_neutral_baseline_YYYYMMDD` 鍵（改成單一鍵每天覆寫，屬帳本格式變更）。
+另外一件可以順手處理、但還沒動：`track_record.summary` 每天新增一個 `always_neutral_baseline_YYYYMMDD` 鍵（改成單一鍵每天覆寫，屬帳本格式變更）。
