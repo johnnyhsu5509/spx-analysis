@@ -36,7 +36,7 @@ NEW_SCRIPTS = ('mech_lib.py', 'spx_daily_mech.py', 'ndx_daily_mech.py', 'ndx_las
 REASONS = {
     'R1': '實跑先把 10/19 振幅取 3 位（0.606）才算 log_err；其他天用未取整值。平均值跟著差 0.0002–0.0004',
     'R2': '實跑 backtest_prev 寫 3 位（1.045），同一天 amp_track 寫 4 位（1.0453）',
-    'R3': '實跑記帳錯誤：10/28 判定 flat 時漏加 brier.excluded_flat（帳上 flat 已 30 筆、欄位停在 29），之後照抄；腳本從帳本重數＝30',
+    'R3': '實跑記帳錯誤：10/28 判定 flat 時漏加 brier.excluded_flat（帳上 flat 已 30 筆、欄位停在 29），之後照抄；腳本從帳本重數＝30。11/03 已修正帳本',
     'R4': '實跑 actual_pct 在 10/27 以前取 2 位、之後取 3 位；腳本一律 3 位',
     'R5': '10/20 實跑未成交的影子單少寫 fill／stop／exit／exit_type／pnl_pts 五個 null 欄位，之後每天都有寫',
     'T1': '模板措辭：實跑 10/20–10/28 的報告寫「Brier 0.25（Phase 3 恆值）」，10/29 報告的 flat 日措辭也不同；10/30 起與腳本相同',
@@ -52,7 +52,7 @@ KNOWN = [
     ('spx', '2026-10-20', '2026-10-20', 'track_record.json', r'amp_track\.(entries\[1\]\.(actual_range_pct|log_err|r0_log_err)|summary\.mean_(r0_)?log_err)', 'R1'),
     ('spx', '2026-10-20', '2026-10-20', 'last_analysis.json', r'backtest_prev\.amp\.(actual_range_pct|log_err|r0_log_err)', 'R1'),
     ('spx', '2026-10-21', '2026-10-21', 'last_analysis.json', r'backtest_prev\.amp\.actual_range_pct', 'R2'),
-    ('spx', '2026-10-29', None, 'track_record.json', r'summary\.brier\.excluded_flat', 'R3'),
+    ('spx', '2026-10-29', '2026-11-03', 'track_record.json', r'summary\.brier\.excluded_flat', 'R3'),
     ('ndx', '2026-10-20', '2026-10-23', 'ndx_track_record.json', r'entries\[\d+\]\.actual_pct', 'R4'),
     ('ndx', '2026-10-20', '2026-10-20', 'ndx_pnl_ledger.json', r'shadow_ledger\.entries\[\d+\]\.(fill|stop|exit|exit_type|pnl_pts)', 'R5'),
 ]
@@ -303,6 +303,21 @@ class HtmlRenderTest(unittest.TestCase):
         with self.assertRaises(SystemExit) as cm:
             render_spx_html.render(r['after'], r['today'], {'html': {k: v for k, v in HTML_SPX.items() if k != 'deviation'}}, render_spx_html.head_from(head, '2026-10-22'))
         self.assertIn('deviation', str(cm.exception))
+
+
+class LiveLedgerTest(unittest.TestCase):
+    """docs/ 現行帳本的統計欄位要等於逐筆重數（R3 這類漏加會在這裡被擋下）。"""
+
+    def test_summary_counts_match_entries(self):
+        for f in ('track_record.json', 'ndx_track_record.json'):
+            tr = ld(os.path.join(REPO, 'docs', f))
+            graded = [e for e in tr['entries'] if e['grade'] in ('hit', 'half', 'miss')]
+            s, b = tr['summary'], tr['summary']['brier']
+            with self.subTest(ledger=f):
+                self.assertEqual([s['graded'], s['hits'], s['half'], s['miss']],
+                                 [len(graded)] + [sum(e['grade'] == g for e in graded) for g in ('hit', 'half', 'miss')])
+                self.assertEqual(b['excluded_flat'], sum(e.get('actual_dir') == 'flat' for e in graded))
+                self.assertEqual(b['included'], sum(x['brier'] is not None for x in b['per_entry']))
 
 
 class EncodingTest(unittest.TestCase):
