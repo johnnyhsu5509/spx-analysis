@@ -1,36 +1,34 @@
 {
-  "trade_date": "2026-10-30",
-  "close": 28384.85,
-  "open": 28604.92,
-  "high": 28713.45,
-  "low": 28093.24,
-  "volume": 2208196000,
-  "prev_close": 29402.51,
-  "change_pct": -3.46,
-  "vxn": 28.5,
-  "ma5": 29305.07,
-  "ma20": 29933.09,
-  "ma50": 29796.3,
-  "ma200": 27927.3,
-  "rsi": 28.65,
-  "macd_hist": -127.94,
-  "macd_line": -273.05,
-  "signal": -145.11,
-  "bb_upper": 31586.65,
-  "bb_lower": 28279.53,
-  "bb_pct": 3.2,
-  "kd_k": 23.86,
-  "kd_d": 25.22,
+  "trade_date": "2026-11-02",
+  "close": 27989.82,
+  "open": 28561.17,
+  "high": 28753.39,
+  "low": 27967.44,
+  "volume": 1625235000,
+  "prev_close": 28384.85,
+  "change_pct": -1.39,
+  "vxn": 30.89,
+  "ma5": 29048.36,
+  "ma20": 29778.76,
+  "ma50": 29769.92,
+  "ma200": 27939.51,
+  "rsi": 27.13,
+  "macd_hist": -178.68,
+  "macd_line": -368.46,
+  "signal": -189.78,
+  "bb_upper": 31554.65,
+  "bb_lower": 28002.87,
+  "bb_pct": -0.4,
+  "kd_k": 16.21,
+  "kd_d": 22.22,
   "breadth": {
-    "qqqe_qqq_ratio": 0.1684,
-    "chg_1d_pct": 1.05,
-    "chg_5d_pct": 1.24,
-    "vs_ma20_pct": 2.59,
+    "qqqe_qqq_ratio": 0.1702,
+    "chg_1d_pct": 1.03,
+    "chg_5d_pct": 2.65,
+    "vs_ma20_pct": 3.39,
     "read": "廣度擴張（中小型股同步參與）",
     "note": "QQQE(等權NDX)/QQQ(市值權重);升=廣度好,降=窄化。科技股權重極集中,窄化時指數強度打折更明顯",
-    "as_of": "2026-10-30",
-    "tail_source": "30m_approx",
-    "caveat": "ETF 日線落後，最後一筆由 30m 末根補值（不含收盤撮合，與官方收盤約差 1-3 點）。1 日變動為近似值；5 日與 vs_MA20 含此近似值"
+    "as_of": "2026-11-02"
   },
   "regime": {
     "base_5d_pullback": 57.25,
@@ -48,7 +46,7 @@
       "regime": "距 MA20 -3% 以下（深跌）",
       "pullback_5d": 73.31,
       "vs_base": 16.1,
-      "ext_pct": -5.17
+      "ext_pct": -6.01
     },
     "regime_avg_5d": 66.4,
     "regime_avg_vs_base": 9.2,
@@ -71,31 +69,23 @@
     }
   },
   "amplitude": {
-    "as_of": "2026-10-30",
-    "amp_forecast_pct": 1.504,
-    "amp_forecast_pts": 426.8,
+    "as_of": "2026-11-02",
+    "amp_forecast_pct": 1.633,
+    "amp_forecast_pts": 456.9,
     "band_50_pct": [
-      1.157,
-      1.932
+      1.254,
+      2.104
     ],
-    "implied_daily_pct": 1.795,
-    "c": 0.837,
+    "implied_daily_pct": 1.946,
+    "c": 0.839,
     "c_window": 252,
     "realized_vs_implied_63d": 0.66,
-    "vol_pct_1y": 88.5,
-    "r0_rule27_ref_pct": 1.56,
-    "atr14_pct": 1.838,
+    "vol_pct_1y": 97.2,
+    "r0_rule27_ref_pct": 1.748,
+    "atr14_pct": 1.932,
     "method": "A = c × ^VXN/√252；c 與 50% 區間 = 近 252 個已知交易日（隔日振幅÷隱含日波動）的中位數與 25/75 分位（Phase 3 V2b 核准）"
   },
   "recent_5": [
-    {
-      "date": "2026-10-26",
-      "open": 29051.58,
-      "high": 29404.44,
-      "low": 29011.91,
-      "close": 29273.4,
-      "volume": 7402660000
-    },
     {
       "date": "2026-10-27",
       "open": 29407.19,
@@ -122,18 +112,26 @@
     },
     {
       "date": "2026-10-30",
-      "open": 28604.92,
+      "open": 28604.91,
       "high": 28713.45,
       "low": 28093.24,
       "close": 28384.85,
-      "volume": 2208196000
+      "volume": 9068930000
+    },
+    {
+      "date": "2026-11-02",
+      "open": 28561.17,
+      "high": 28753.39,
+      "low": 27967.44,
+      "close": 27989.82,
+      "volume": 1625235000
     }
   ],
   "symbol": "NDX",
-  "wilder_rsi": 34.9,
+  "wilder_rsi": 32.04,
   "rsi_method_divergence": {
     "flag": false,
-    "cutler_chg": -5.04,
-    "wilder_chg": -9.49
+    "cutler_chg": -1.52,
+    "wilder_chg": -2.86
   }
 }
