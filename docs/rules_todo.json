@@ -1,6 +1,6 @@
 {
  "purpose": "由候補清單分離出來的『待實作』項目。它們不是待驗證的假設，是卡在沒人動手的工程項目，故不佔 rule_candidates 名額、也不進每日讀寫。完成後在此標記並刪除。",
- "as_of": "2026-10-23",
+ "as_of": "2026-11-03",
  "items": {
   "todo1_close_confirm_carry": {
    "來源": "原 rule33_candidate",
@@ -15,7 +15,7 @@
    "問題": "macro_layer 為 null 時，類股與 10Y 維度整段留白，但它們的**日線收盤**在分析當下即可取得、不需期貨。2026-08-18 的兩大驅動（10Y 連三日≥4.70、SOXX 崩 4.96%）因此缺席三個交易日",
    "修正": "fetch_today.py 納入 SOXX/SMH/QQQ/SPY/RSP/XLV 與 ^TNX 的日線收盤；期貨層（ES/NQ）仍歸 check_es.py",
    "檔案": "scripts/fetch_today.py",
-   "狀態": "【2026-10-23 核對：仍待實作（部分已有）】已有：fetch_today.py 的 breadth 區塊抓 SPX 的 RSP／SPY（scripts/fetch_today.py:30）、NDX 的 QQQE／QQQ（:45）日線收盤；SOXX 與 ^TNX 只在 check_es.py（:159-177、:186-196，fast_info 即時報價，非日線收盤）與 check_open30.py（:22、:25，SOXX 30 分 K），Actions 會把 es_check.txt 快照進 data/。仍缺：fetch_today.py 沒有 SOXX、SMH、XLV、^TNX 的日線收盤（SPX 這邊也沒有 QQQ），不跑 check_es.py 時類股與 10Y 維度仍會留白。本 PR 未處理｜原狀態：待實作",
+   "狀態": "【2026-11-03：已實作，待合併（claude/brave-carson-ankioo PR）】fetch_today.py 在既有欄位之後附加 sector_daily（scripts/fetch_today.py:263-289、:512；代號清單 :32、:48）：SOXX、SMH、XLV、^TNX 的日線收盤 close／前收 prev_close／漲跌 change_pct（SPX 另含 QQQ），SPX 與 --symbol ndx 皆輸出。取值對齊指數的前收日與當日（as_of＝trade_date），不取 ETF 自己的最後兩筆，避免 rule51 尾端 NaN 與中間缺日靜默錯位；單一代號抓不到或未對齊 → 該代號 null 並列入 stale（附 caveat），全部抓不到 → sector_daily 為 null，缺資料不寫 0 或中性。既有欄位名稱、數值、順序、格式不變；快照退回（SNAPSHOT）與失敗不寫檔、exit 1 不受影響。驗證：tests/test_fetch_today.py（origin/main 原版 vs 新版舊欄位逐欄相同，含 SPX／NDX、缺日回補、類股部分缺、類股全缺六種情境；另以 2026-11-02 真實資料同時段對照亦逐欄相同）。⚠兩套 SKILL.md 尚未讀取 sector_daily；期貨層（ES/NQ）照舊歸 check_es.py；SPY／RSP（SPX）與 QQQE／QQQ（NDX）照舊在 breadth 區塊｜2026-10-23 狀態：仍待實作（部分已有：breadth 區塊的 RSP／SPY、QQQE／QQQ；SOXX 與 ^TNX 只在 check_es.py 的 fast_info 即時報價與 check_open30.py 的 SOXX 30 分 K）｜原狀態：待實作",
    "附帶效益": "可省下每日一趟額外 yfinance 往返"
   },
   "todo3_wilder_rsi_output": {
