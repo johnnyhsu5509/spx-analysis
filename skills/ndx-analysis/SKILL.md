@@ -225,7 +225,7 @@ repo 與 SPX 系統共用：`https://github.com/johnnyhsu5509/spx-analysis`
 ```
 - A＝c × VXN/√252；c 與 50% 區間取近 252 個已知交易日（V2b 驗證通過）
 - 近 63 日實際÷隱含明顯低於 c 時（例如低於 0.75），註明「平靜期，振幅預報可能偏高」——**不得手動下修 A**
-- 權值股財報或 rule4 事件日寫「事件日，實際振幅可能超出區間」，同樣不改 A
+- 權值股財報或 rule4 事件日寫「事件日，實際振幅可能超出區間」，同樣不改 A；同一個判斷寫入 `ndx_last_analysis.json` 的 `event_day`（見 Step 6 的頁面頂端摘要行）
 - 振幅是**中性資訊**：大振幅不代表會跌
 - rule35 仍適用：不得因「NDX 高 beta」再額外加減，波動已在 A 裡
 
@@ -373,6 +373,14 @@ close > ma200 → 水位「正常」（基準部位 100%）
 git add + commit + push（PowerShell 用分號串接，不能用 &&）
 ```
 
+**頁面頂端摘要行（2026-11-04 Phase 3 修正起，每份 JSON 與 HTML 都要有）**：一行寫「資料日、方向、A、關鍵價位／MA200、預報日是否事件日」。
+- JSON：`ndx_last_analysis.json` 的 `summary_line`（另有 `position_level`、`amp_hit_rate`、`event_day`）。HTML：放在頁面最上方（`<div class="wrap">` 之後），同一區塊第二行是振幅命中率（NDX 自己的 `amp_track`，A 的 50% 區間，n 未達 60 筆標「無統計意義」）。
+- `event_day`＝`{is_event_day: true|false, note}`，判斷與 Step 4a 的「事件日」是**同一個**（rule4 已知事件：重大數據／財報，或已查證的重大排程事件），不另設標準。沒有查證就不填，摘要行會顯示「未標註」，不要猜。
+- 不要手寫摘要行。寫完 `ndx_last_analysis.json` 與 HTML 後執行（可重複執行；`ndx_today_data.txt` 的 trade_date 必須等於資料基準日；方向不會被改動）：
+  `python3 {repo}\scripts\phase3_fields.py --symbol ndx --docs docs --today scripts\ndx_today_data.txt --event-day yes|no --event-note "說明" --apply --html docs\ndx-analysis-YYYYMMDD.html docs\ndx\index.html`
+  走 `daily_run.py` 流水線時已內建同一套，不需再執行這一步。
+
+
 > **【硬規則・首頁分家】禁止覆蓋 `docs\index.html`**
 > `docs\index.html` 是**靜態導覽頁**（連向 `spx/` 與 `ndx/` 兩個入口），2026-08-18 起不再由任一套系統每日覆蓋。
 > NDX 只寫 `docs\ndx\index.html`，SPX 只寫 `docs\spx\index.html`。
@@ -408,7 +416,7 @@ git add + commit + push（PowerShell 用分號串接，不能用 &&）
 >
 > 注意：本系統存在的理由本身就是「用戶部位貼近 NDX」，但這只影響**選哪個指數分析**，不影響**分析怎麼做**。
 
-`ndx_last_analysis.json` 必含欄位：trade_date / close / change_pct / vxn / pullback_prob（Phase 3 起恆為 50）/ rating / **amplitude**（Phase 3：A_pct、band_lo、band_hi、r0_ref_pct、c、vol_pct_1y，供振幅帳判定）/ **direction**（{prob: 50, bias: "中性", rule: null}）/ predictions（short_bias、key_resistance、key_support、fib_targets、zhongshu、elliott、strategies、watch_points）/ catalysts / **system_rules** / backtest_prev / spx_cross_check / dashboard_url / **position_level**（rule59：state、close、ma200、pct、since、switched_today、data_missing）
+`ndx_last_analysis.json` 必含欄位：trade_date / close / change_pct / vxn / pullback_prob（Phase 3 起恆為 50）/ rating / **amplitude**（Phase 3：A_pct、band_lo、band_hi、r0_ref_pct、c、vol_pct_1y，供振幅帳判定）/ **direction**（{prob: 50, bias: "中性", rule: null}）/ predictions（short_bias、key_resistance、key_support、fib_targets、zhongshu、elliott、strategies、watch_points）/ catalysts / **system_rules** / backtest_prev / spx_cross_check / dashboard_url / **position_level**（rule59：state、close、ma200、pct、since、switched_today、data_missing） / **event_day**（{is_event_day, note}）/ **amp_hit_rate**（A 的 50% 區間命中率）/ **summary_line**（頁面頂端摘要行，見 Step 6）
 
 ---
 

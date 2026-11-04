@@ -9,7 +9,7 @@ import argparse
 import os
 import re
 
-from mech_lib import hu, ld, md
+from mech_lib import banner_html, hu, ld, md
 from render_spx_html import head_from
 
 FILES = ('ndx_last_analysis.json', 'ndx_track_record.json', 'ndx_pnl_ledger.json')
@@ -51,7 +51,8 @@ def render(ledgers, td, nar, head):
     sl, ps = pl['shadow_ledger'], pl['summary']
     sh = {x['side']: x for x in sl['entries'] if x['eval_date'] == t}
     brier = [x for x in b['per_entry'] if x['report_date'] == prev['report_date']][-1]['brier']
-    o = [f'<header>\n  <span class="badge">NASDAQ-100 · NDX</span>\n  <h1>{H["title"]}</h1>\n'
+    top = [banner_html(la)] if la.get('summary_line') and la.get('amp_hit_rate') else []
+    o = top + [f'<header>\n  <span class="badge">NASDAQ-100 · NDX</span>\n  <h1>{H["title"]}</h1>\n'
          f'  <div class="sub">報告日 {rep}（台北）｜資料基準 {day} 美股收盤｜Phase 3：主輸出＝隔日振幅預報，方向恆 50</div>\n</header>']
     br = la['breadth']['chg_1d_pct']
     o.append('<div class="kpi">\n' + '\n'.join([

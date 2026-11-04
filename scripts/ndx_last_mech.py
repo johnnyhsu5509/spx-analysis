@@ -10,7 +10,7 @@ SPX 的 A、VIX、regime 直接讀 SPX 當天的 last_analysis.json；SPX 當天
 import argparse
 import os
 
-from mech_lib import ld, md, merge, next_bday, sv
+from mech_lib import amp_hit_rate, ld, md, merge, next_bday, position_level, summary_line, sv
 
 K_SHADOW = 0.2
 SHALLOW = ('amplitude', 'volatility_scale', 'breadth', 'sector', 'macro', 'regime_check', 'spx_cross_check', 'predictions', 'backtest_prev', 'position_level')
@@ -43,14 +43,9 @@ def build(docs, ledgers, td, aux, spx, nar=None, report_date=None):
     lim_l, lim_s = round(C - K_SHADOW * A, 2), round(C + K_SHADOW * A, 2)
     spxA = spx['amplitude']['A_pct']
     ratio = round(am['amp_forecast_pct'] / spxA, 3)
-    pos_pct = round((C / ma200 - 1) * 100, 2)
-    dist = round((1 - ma200 / C) * 100, 2)
-    state = '正常' if C > ma200 else '半倉'
-    if state != old['position_level']['state']:
-        raise SystemExit(f"部位水位切換 {old['position_level']['state']} → {state}：rule59 事件，請人工處理（含 position_gate.events）")
-    if state != '正常':
-        raise SystemExit('部位水位為半倉：只驗證過正常狀態的文字模板，請人工處理')
-    gaps = tr['amp_track']['summary'].get('gap_days', []) if day != t else []
+    plv = position_level(old['position_level'], C, ma200, day)
+    pos_pct, dist, state = plv['pct'], plv['dist_to_switch_pct'], plv['state']
+    gaps =tr['amp_track']['summary'].get('gap_days', []) if day != t else []
     gaps = [x for x in gaps if t < x <= day]
 
     ae, asum = tr['amp_track']['entries'][-1], tr['amp_track']['summary']
@@ -114,10 +109,12 @@ def build(docs, ledgers, td, aux, spx, nar=None, report_date=None):
                           'pnl': f"預設休眠 → 0bp，累積 {pl['summary']['cumulative_weighted_bp']}bp"},
         'dashboard_url': 'https://johnnyhsu5509.github.io/spx-analysis/ndx/',
         'dated_report_url': f"https://johnnyhsu5509.github.io/spx-analysis/ndx-analysis-{rep.replace('-', '')}.html",
-        'position_level': {'state': state, 'close': C, 'ma200': ma200, 'pct': pos_pct, 'since': old['position_level']['since'], 'switched_today': False,
-                           'data_missing': False, 'basis_date': day, 'dist_to_switch_pct': dist, 'note': f'收盤需再跌約 {dist:.1f}% 才轉半倉'},
+        'position_level': plv,
+        'event_day': {'is_event_day': None, 'note': ''},
+        'amp_hit_rate': amp_hit_rate(tr['amp_track']['entries']),
     }
     merge(n, nar.get('last_analysis', {}), SHALLOW, deep=('spx_cross_check',))
+    n['summary_line'] = summary_line('NDX', n, n['position_level'])
     n['system_rules_notes'] += nar.get('system_rules_notes_extra', [])
     report = {'trade_date': rep, 'eval_date': t, 'lim_l': lim_l, 'lim_s': lim_s, 'pos_pct': pos_pct, 'dist': dist, 'ratio': ratio, 'spxA': spxA,
               'narrative_keys': sorted(nar.get('last_analysis', {}))}

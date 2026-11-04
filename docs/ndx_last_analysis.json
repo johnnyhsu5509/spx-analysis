@@ -297,5 +297,22 @@
   "basis_date": "2026-11-03",
   "dist_to_switch_pct": 0.81,
   "note": "收盤需再跌約 0.8% 才轉半倉"
- }
+ },
+ "amp_hit_rate": {
+  "definition": "實際振幅 (高−低)/前收×100 落在預報當時發布的 50% 區間 [band_lo, band_hi]（含端點）",
+  "n": 12,
+  "date_from": "2026-10-16",
+  "date_to": "2026-11-03",
+  "hits": 4,
+  "rate_pct": 33.3,
+  "below_band": 4,
+  "above_band": 4,
+  "source": "amp_track.entries（逐筆以 band_lo／band_hi 與 actual_range_pct 重判）",
+  "note": "n=12，未達 60 筆，無統計意義"
+ },
+ "event_day": {
+  "is_event_day": true,
+  "note": "期中選舉開票，既有敘事標為事件日"
+ },
+ "summary_line": "NDX｜資料日 2026-11-03（收 28,180.26）｜方向 50（中性・無 edge）｜A 1.61%（約 ±454 點；50% 區間 1.24–2.08%）｜MA200 27,952.77（收盤 +0.81%・水位正常）｜關鍵位 支撐 28,086／27,967 壓力 28,308／28,561｜預報日 2026-11-04 事件日：是（期中選舉開票，既有敘事標為事件日）"
 }

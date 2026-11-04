@@ -31,7 +31,7 @@ SINCE = '2026-10-20'
 EXPECTED = {'spx': ('05bd018', '436057e', 'f45bb65', 'dedb32f', '877fd89', 'bda2806', 'bddd70f', 'df7a3a0', '3512cdd', 'b991687'),
             'ndx': ('dc83855', '7a3c346', '24d3ad9', '8d344a0', '31fea6e', 'ef97c3f', 'c9c0485', 'c59a838', '7094312', '36df61b')}
 NEW_SCRIPTS = ('mech_lib.py', 'spx_daily_mech.py', 'ndx_daily_mech.py', 'ndx_last_mech.py', 'render_spx_html.py', 'render_ndx_html.py',
-               'daily_run.py', 'shadow_check.py')
+               'daily_run.py', 'shadow_check.py', 'phase3_fields.py')
 
 REASONS = {
     'R1': '實跑先把 10/19 振幅取 3 位（0.606）才算 log_err；其他天用未取整值。平均值跟著差 0.0002–0.0004',
@@ -46,6 +46,9 @@ REASONS = {
     'T5': '漂移基準說明：10/23 以前每項附「A」，11/03 平均寫 -0.55（未補 0）',
     'T6': '價位與百分比位數：實跑時而 28081.2 時而 28081.20、MA200 距離時而 1 位時而 2 位、A 時而 2 位時而 3 位',
     'T7': '10/20 是 rule59 首次每日輸出，實跑在部位水位說明多加一句首日註記',
+    'R6': 'Phase 3 修正（2026-11-04）新增欄位：SPX position_level、兩邊的 summary_line／amp_hit_rate／event_day；歷史實跑沒有這些欄位',
+    'R7': '11/04 實跑（8efd11e）把未成交的影子多單寫成 exit_type「未成交」、pnl_pts／pnl_A 0.0；其餘 8 張未成交單與帳本現況（9 張）都是全欄 null，e2a0e30 已把帳本改回 null。腳本一直輸出 null，這裡的 8efd11e 是更正前的快照',
+    'R8': '半分位取整：實跑 10/21 SPX 影子空單平均精確值 0.1225（n=2），寫成 0.122（Python round 看二進位表示而捨去）；腳本用精確十進位＋一般四捨五入得 0.123。11/04 NDX 的 -0.0095 帳本卻進位成 -0.01，帳本歷史本身兩個方向都有，差 0.001',
 }
 # (系統, 報告日起, 報告日迄, 檔案, 路徑 regex, 原因)；日期 None＝不限
 KNOWN = [
@@ -55,6 +58,10 @@ KNOWN = [
     ('spx', '2026-10-29', None, 'track_record.json', r'summary\.brier\.excluded_flat', 'R3'),
     ('ndx', '2026-10-20', '2026-10-23', 'ndx_track_record.json', r'entries\[\d+\]\.actual_pct', 'R4'),
     ('ndx', '2026-10-20', '2026-10-20', 'ndx_pnl_ledger.json', r'shadow_ledger\.entries\[\d+\]\.(fill|stop|exit|exit_type|pnl_pts)', 'R5'),
+    ('spx', None, None, 'last_analysis.json', r'position_level|summary_line|amp_hit_rate|event_day', 'R6'),
+    ('ndx', None, None, 'ndx_last_analysis.json', r'summary_line|amp_hit_rate|event_day', 'R6'),
+    ('ndx', '2026-11-04', '2026-11-04', 'ndx_pnl_ledger.json', r'shadow_ledger\.entries\[22\]\.(pnl_pts|pnl_A)', 'R7'),
+    ('spx', '2026-10-21', '2026-10-21', 'pnl_ledger.json', r'shadow_ledger\.summary\.mean_pnl_A_short', 'R8'),
 ]
 TEMPLATE = [
     ('spx', 'track_record.json', r'summary\.brier\.note_latest', 'T1'),
@@ -65,6 +72,7 @@ TEMPLATE = [
     ('ndx', 'ndx_last_analysis.json', r'system_rules_notes\[3\]|backtest_prev\.amp', 'T3'),
     ('ndx', 'ndx_last_analysis.json', r'system_rules_notes\[[24]\]|backtest_prev\.predicted', 'T6'),
     ('ndx', 'ndx_last_analysis.json', r'position_level\.note', 'T7'),
+    ('ndx', 'ndx_pnl_ledger.json', r'shadow_ledger\.entries\[22\]\.exit_type', 'R7'),
 ]
 HTML_SPX = {'backtest_notes': ['說明'], 'deviation': '偏差', 'amp_note': '振幅說明。', 'macro_title': '盤前', 'macro_note': '宏觀',
             'regime_labels': ['a', 'b', 'c'], 'regime_warn': '環境', 'breadth_note': '廣度', 'price_rows': [['K', 'x', 'up', 'y']],
@@ -161,7 +169,7 @@ class LedgerReplayTest(unittest.TestCase):
     def test_pnl_ledgers_identical_except_known(self):
         for sym, f in (('spx', 'pnl_ledger.json'), ('ndx', 'ndx_pnl_ledger.json')):
             for r in self.results[sym]:
-                left = [d for d in r['diffs'] if d[0] == f and classify(sym, r['report_date'], d)[1] not in ('R5', 'T5')]
+                left = [d for d in r['diffs'] if d[0] == f and classify(sym, r['report_date'], d)[1] not in ('R5', 'T5', 'R7', 'R8')]
                 self.assertEqual(left, [], f"{sym} {r['report_date']}")
 
     def test_gap_day_reproduced(self):

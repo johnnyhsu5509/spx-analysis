@@ -8,7 +8,7 @@
 import argparse
 import os
 
-from mech_lib import eval_session, ld, log_err, md, next_bday, shadow_fill, sv
+from mech_lib import eval_session, ld, log_err, md, mean_hu, next_bday, shadow_fill, sv
 
 K_ENTRY, S_STOP, DIR_TH = 0.2, 0.5, 0.4
 FILES = ('ndx_track_record.json', 'ndx_pnl_ledger.json')
@@ -145,8 +145,8 @@ def build(docs, td, nar=None, report_date=None):
     dm = sum(v for _, v in dr) / len(dr)
     ss = sl['summary']
     ss.update(days=len(days), filled_long=len(fl), filled_short=len(fs),
-              mean_pnl_A_long=round(sum(x['pnl_A'] for x in fl) / len(fl), 3) if fl else None,
-              mean_pnl_A_short=round(sum(x['pnl_A'] for x in fs) / len(fs), 3) if fs else None,
+              mean_pnl_A_long=mean_hu([x['pnl_A'] for x in fl]) if fl else None,
+              mean_pnl_A_short=mean_hu([x['pnl_A'] for x in fs]) if fs else None,
               fill_rate_long_pct=round(len(fl) / nl * 100, 1), fill_rate_short_pct=round(len(fs) / ns * 100, 1),
               drift_bench_mean_A=round(dm, 3),
               drift_bench_note='同期『收盤買、隔日收盤賣』每天平均報酬（以 A 計）：' + '、'.join(f"{d[5:].replace('-', '/').lstrip('0')} {v:+.3f}" for d, v in dr) + f'，平均 {dm:.3f} A',

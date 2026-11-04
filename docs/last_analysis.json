@@ -344,5 +344,34 @@
   "bias": "中性",
   "rule": null,
   "note": "Phase 3 恆 50；目前無方向規則達 rule63 門檻"
- }
+ },
+ "position_level": {
+  "state": "正常",
+  "close": 7568.92,
+  "ma200": 7315.89,
+  "pct": 3.46,
+  "since": "2026-04-08",
+  "switched_today": false,
+  "data_missing": false,
+  "basis_date": "2026-11-03",
+  "dist_to_switch_pct": 3.34,
+  "note": "收盤需再跌約 3.3% 才轉半倉"
+ },
+ "amp_hit_rate": {
+  "definition": "實際振幅 (高−低)/前收×100 落在預報當時發布的 50% 區間 [band_lo, band_hi]（含端點）",
+  "n": 12,
+  "date_from": "2026-10-16",
+  "date_to": "2026-11-03",
+  "hits": 4,
+  "rate_pct": 33.3,
+  "below_band": 5,
+  "above_band": 3,
+  "source": "amp_track.entries（逐筆以 band_lo／band_hi 與 actual_range_pct 重判）",
+  "note": "n=12，未達 60 筆，無統計意義"
+ },
+ "event_day": {
+  "is_event_day": true,
+  "note": "期中選舉開票，既有敘事標為事件日"
+ },
+ "summary_line": "SPX｜資料日 2026-11-03（收 7,568.92）｜方向 50（中性・無 edge）｜A 1.02%（約 ±77 點；50% 區間 0.73–1.28%）｜MA200 7,315.89（收盤 +3.46%・水位正常）｜關鍵位 支撐 7,545／7,528 壓力 7,580／7,595｜預報日 2026-11-04 事件日：是（期中選舉開票，既有敘事標為事件日）"
 }

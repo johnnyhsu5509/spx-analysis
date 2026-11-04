@@ -73,13 +73,13 @@ python scripts/daily_run.py --symbol ndx --docs docs --today scripts/ndx_today_d
 - **SPX**
   - `track`：`grade_note`、`bias`、`amp_note`，gap day 另給 `gap_note`（接在原文後面）
   - `pnl`：`day_note`、`honest_read`、`shadow_note_long`／`short`，30 分 K 看到的 `shadow_fill_time_et`／`shadow_stop_time_et`（只影響說明）
-  - `last_analysis`：`rating`、`news_check`、`macro_layer`、`sector_rotation`、`breadth`、`regime_check`、`six_factors`、`catalysts`、`event_week`、`amplitude.note`、`predictions`（`short_bias`、`key_resistance`、`key_support`、`fib_targets`、`zhongshu`、`elliott`、`watch_points`）、`backtest_prev.summary`（gap day 另給 `gap_day`）、`rule_status` 裡 rule63／64／65／66／16／17 以外的規則
+  - `last_analysis`：`rating`、`news_check`、`macro_layer`、`sector_rotation`、`breadth`、`regime_check`、`six_factors`、`catalysts`、`event_week`、`event_day`（`{is_event_day, note}`，沒給＝「未標註」）、`amplitude.note`、`predictions`（`short_bias`、`key_resistance`、`key_support`、`fib_targets`、`zhongshu`、`elliott`、`watch_points`）、`backtest_prev.summary`（gap day 另給 `gap_day`）、`rule_status` 裡 rule63／64／65／66／16／17 以外的規則
   - `rule_candidates_append`：只寫要接在原文後面的字
   - `html`（必填）：`backtest_notes`、`deviation`、`amp_note`、`macro_title`、`macro_note`、`regime_labels`、`regime_warn`、`breadth_note`、`price_rows`、`granville`、`chan_note`、`elliott_rows`、`bias_note`、`levels`、`notes_catalyst`、`notes_watch`
 - **NDX**
   - `track`：`note`、`sample_caveat`、`brier_honest_read`、`amp_note`、gap day 的 `gap_note`
   - `pnl`：`day_note`、`honest_read`、`fill_type_long`／`short`、`exit_type_long`／`short`、gap day 的 `gap_note`
-  - `last_analysis`：`rating`、`data_quality`、`catalysts`、`news_check_rule49`、`candidate_updates`、各區塊的說明句（`amplitude.note`、`volatility_scale.note`、`breadth.read`、`sector.read`、`macro.read`、`regime_check.alignment`、`spx_cross_check` 的 `band`／`verdict`）、`predictions`（價位、波浪、情景、觀察點）、`backtest_prev.actual`／`shadow`（含 30 分 K 的時間）
+  - `last_analysis`：`rating`、`data_quality`、`catalysts`、`news_check_rule49`、`candidate_updates`、`event_day`（`{is_event_day, note}`，沒給＝「未標註」）、各區塊的說明句（`amplitude.note`、`volatility_scale.note`、`breadth.read`、`sector.read`、`macro.read`、`regime_check.alignment`、`spx_cross_check` 的 `band`／`verdict`）、`predictions`（價位、波浪、情景、觀察點）、`backtest_prev.actual`／`shadow`（含 30 分 K 的時間）
   - `system_rules_notes_extra`：rule55～59 以外的規則註記
   - `html`（必填）：`title`、`breadth_kpi`、`vxn_kpi`、`data_note`、`deviation`、`dims`、`amp_warn`、`regime_labels`、`ndx_band`、`spx_band`、`cross_label`、`cross_note`、`news`、`news_sources`
   - `--aux`（當天另外量的數據，原樣搬進對應區塊）：`{"volatility_scale": {"atr14_pct", "range5_pct", …}, "breadth": {"qqqe_qqq_ratio", "chg_1d_pct", …}, "sector": {"soxx_close", …}, "macro": {"tnx", "vix", "vxn", "dxy", …}}`
@@ -93,6 +93,7 @@ python scripts/daily_run.py --symbol ndx --docs docs --today scripts/ndx_today_d
 - 有實單（SPX `trades_pending`、NDX `trades_pending.trades`），或方向偏離 50：腳本只涵蓋 Phase 3 休眠期
 - 待判定預測的目標日不在 today_data 的 `recent_5` 裡（連續漏跑超過 3 個交易日）
 - NDX 部位水位（rule59）切換或處於半倉
+- SPX 部位水位切換或處於半倉（2026-11-04 起與 NDX 同一段判定，`mech_lib.position_level`）
 - NDX 跑的時候 SPX 當天還沒跑完
 - HTML 敘事缺必填欄位
 
@@ -106,3 +107,15 @@ gap day（例如 10/26：前一個收盤沒做分析）會自動處理：待判�
 3. 依慣例交 Codex 做隔離驗收。
 
 另外兩件可以順手處理、但這次沒動：帳本 `excluded_flat` 的修正（要改 `docs/`），以及 `track_record.summary` 每天新增一個 `always_neutral_baseline_YYYYMMDD` 鍵（改成單一鍵每天覆寫，屬帳本格式變更）。
+
+
+## Phase 3 修正欄位（2026-11-04）
+
+兩邊的 `last_analysis`／`ndx_last_analysis` 與 HTML 多了：
+
+- `position_level`（SPX 新增；NDX 原本就有，改為共用 `mech_lib.position_level`）：close > MA200 → 正常，否則半倉；起算日在 `track_record.json` 的 `position_gate.events`。
+- `amp_hit_rate`：A 的 50% 區間命中率，逐筆用 `band_lo`／`band_hi` 與 `actual_range_pct` 重判，NDX 與 SPX 各用自己的 `amp_track`。
+- `event_day`：`{is_event_day, note}`，敘事給值；沒給顯示「未標註」，不猜。
+- `summary_line` 與 HTML 頁面頂端摘要區塊：資料日、方向、A、關鍵價位／MA200、預報日是否事件日。
+
+模型手寫報告時用 `scripts/phase3_fields.py` 產生並注入（可重複執行）；`daily_run.py` 已內建。

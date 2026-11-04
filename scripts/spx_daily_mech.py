@@ -8,7 +8,7 @@
 import argparse
 import os
 
-from mech_lib import eval_session, ld, log_err, md, merge, next_bday, shadow_fill, sv
+from mech_lib import amp_hit_rate, eval_session, ld, log_err, md, mean_hu, merge, next_bday, position_level, seed_position, shadow_fill, summary_line, sv
 
 K_ENTRY, S_STOP, DIR_TH = 0.4, 0.5, 0.3
 FILES = ('track_record.json', 'pnl_ledger.json', 'last_analysis.json')
@@ -31,6 +31,7 @@ def build(docs, td, nar=None, report_date=None):
     if not amp or amp.get('stale') or amp.get('as_of') != day:
         raise SystemExit('amplitude 缺或過期：照 SKILL 寫「振幅資料缺」，本腳本不處理')
     C, chg = td['close'], td['change_pct']
+    plv = position_level(la.get('position_level') or seed_position(tr), C, td['ma200'], day)
     A_pct, (BLO, BHI) = amp['amp_forecast_pct'], amp['band_50_pct']
     A_pts = round(A_pct * C / 100, 2)
     rep = report_date or next_bday(day)
@@ -152,8 +153,8 @@ def build(docs, td, nar=None, report_date=None):
     fs = [x for x in sh['entries'] if x['side'] == 'short' and x['filled']]
     ss = sh['summary']
     ss.update(evaluated_days=len({x['report_date'] for x in sh['entries']}), filled_long=len(fl), filled_short=len(fs),
-              mean_pnl_A_long=round(sum(x['pnl_A'] for x in fl) / len(fl), 3) if fl else None,
-              mean_pnl_A_short=round(sum(x['pnl_A'] for x in fs) / len(fs), 3) if fs else None,
+              mean_pnl_A_long=mean_hu([x['pnl_A'] for x in fl]) if fl else None,
+              mean_pnl_A_short=mean_hu([x['pnl_A'] for x in fs]) if fs else None,
               cum_pnl_A=round(sum(x['pnl_A'] for x in sh['entries']), 3), as_of=rep)
     if gaps:
         ss['gap_days'] = ss.get('gap_days', []) + gaps
@@ -197,9 +198,13 @@ def build(docs, td, nar=None, report_date=None):
                                     + (f"；{'、'.join(md(x) for x in gaps)} gap day 無預報" if gaps else '')),
                          'rule16': 'headline 恆 50（Phase 3）',
                          'rule17': f"系統 {s['rolling_direction_score_pct']}% vs 每天報中性 {base}%；Brier {b['mean_brier']} vs 0.25"}
+    la['position_level'] = plv
+    la['event_day'] = {'is_event_day': None, 'note': ''}
+    la['amp_hit_rate'] = amp_hit_rate(at['entries'])
     merge(la, nar.get('last_analysis', {}), SHALLOW)
     for k, v in nar.get('rule_candidates_append', {}).items():
         la['rule_candidates'][k] = la['rule_candidates'].get(k, '') + v
+    la['summary_line'] = summary_line('SPX', la, la['position_level'])
 
     report = {'trade_date': day, 'eval_date': t, 'report_date': rep, 'gap_days': gaps, 'A_pts': A_pts, 'shadow_pending': [LL, SL],
               'grade': g, 'brier': brier, 'rolling_direction_pct': s['rolling_direction_score_pct'], 'always_neutral_pct': base,

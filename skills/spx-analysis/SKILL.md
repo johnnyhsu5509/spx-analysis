@@ -216,6 +216,7 @@ description: |
 - A＝c × VIX/√252；c 與 50% 區間取近 252 個已知交易日（V2b 驗證通過）
 - 近 63 日實際÷隱含明顯低於 c 時（例如低於 0.75），報告註明「平靜期，振幅預報可能偏高」——**不得手動下修 A**
 - 有 rule4 已知事件時寫「事件日，實際振幅可能超出區間」，同樣不改 A
+- 同一個判斷寫入 `last_analysis.json` 的 `event_day`（見 Step 6 的頁面頂端摘要行）
 - 振幅是**中性資訊**：大振幅不代表會跌
 
 **4b 方向（預設中性 50）**
@@ -274,6 +275,32 @@ description: |
 
 保留的執行規則（實單放行後才有作用）：rule12（收盤確認）、rule23（重大數據日不預掛）、rule57（睡眠時段撤單）。掛單型態標註仍用 `limit_buy`／`buy_stop`／`limit_sell`／`sell_stop_close_confirm`，影子單用 `limit_buy`／`limit_sell`。
 
+### Step 5.5 — 部位水位（報告最後一區）（2026-11-04 起；判定式沿用 NDX 的 rule59／prc-014）
+
+**這一區屬於部位層，不是分析。**不影響 Step 4 的振幅與方向、Step 4.5 的 regime、Step 5 的影子帳。判定式與 NDX 完全相同；prc-014 的樣本外驗證集含 SPX 1928–89，SPX 現行期間未另行登記，`system_rules` 也尚未登記 rule59（是否登記由 Johnny 決定）。
+
+**判定**（不得手動推翻）：
+```
+讀 today_data.txt 的 close 與 ma200（不得臨場改算）
+close > ma200 → 水位「正常」（基準部位 100%）
+否則          → 水位「半倉」（基準部位 50%）
+```
+- 訊號用 t 日收盤；t+1 日美股收盤執行。不加緩衝帶、不分批、不因新聞或振幅大小改判。
+- 水位切換或處於半倉時：停下並回報 Johnny 人工處理，同時在 `track_record.json` 的 `position_gate.events` 加一筆 `{date, from, to, close, ma200}`（`date` 為訊號日 t）。
+- `close` 或 `ma200` 缺漏、或 `trade_date` 不是預期交易日：沿用前一日水位並標註「水位資料缺」，不得自行估算。
+
+**記帳**：`last_analysis.json` 的 `position_level`：`{state, close, ma200, pct, since, switched_today, data_missing, basis_date, dist_to_switch_pct, note}`；起算日在 `track_record.json` 的 `position_gate.events`（目前：2026-04-08 半倉→正常，^GSPC 收盤重算補登）。流水線與 `scripts\phase3_fields.py` 都呼叫 `mech_lib.position_level`（與 NDX 同一段程式）。
+
+**報告格式**（固定放在報告最後；只寫指數數字，**禁止**寫基準部位金額、持股、槓桿、融資或帳戶規模）：
+```
+## 部位水位（部位層，不是分析）
+- 訊號：SPX 收盤 {close} vs MA200 {ma200}（{(close/ma200−1)×100:+.1f}%）→ 在 MA200 之上／之下
+- 水位：**正常**（基準部位 100%）｜**半倉**（基準部位 50%）
+- 狀態：自 {since} 起維持；今日未切換｜⚠️ 今日切換：正常 → 半倉（今晚美股收盤執行）
+- 距切換線：收盤需再跌 X.X% 才轉為半倉｜收盤需漲 X.X% 站回 MA200 才恢復正常
+- 依據：沿用 NDX 的 rule59／prc-014 判定式；prc-014 的樣本外驗證集含 SPX 1928–89，SPX 現行期間未另行登記。本段不改變上方的振幅與方向輸出。
+```
+
 ### Step 6 — 產出單一 HTML 報告 + 推 GitHub
 
 一份 HTML 包含三區：
@@ -283,6 +310,13 @@ description: |
 第三區：明日掛單（「本日無已核准的方向 edge → 不掛實單」、各距離事前成交率、影子單兩張、三層振幅檢查[期貨→開盤30分→22:30睡前]、監控清單、市場筆記速記）
 ```
 > 盤前宏觀層資料來自 check_es.py（含 10Y 殖利率方向、macro_backdrop）；若分析當下期貨未開（週末/盤前太早）則標註「待開盤」。
+
+**頁面頂端摘要行（2026-11-04 Phase 3 修正起，每份 JSON 與 HTML 都要有）**：一行寫「資料日、方向、A、關鍵價位／MA200、預報日是否事件日」。
+- JSON：`last_analysis.json` 的 `summary_line`（另有 `position_level`、`amp_hit_rate`、`event_day`）。HTML：放在頁面最上方（`<div class="wrap">` 之後），同一區塊第二行是振幅命中率（SPX 自己的 `amp_track`，A 的 50% 區間，n 未達 60 筆標「無統計意義」）。
+- `event_day`＝`{is_event_day: true|false, note}`，判斷與 Step 4a 的「事件日」是**同一個**（rule4 已知事件：重大數據／財報，或已查證的重大排程事件），不另設標準。沒有查證就不填，摘要行會顯示「未標註」，不要猜。
+- 不要手寫摘要行。寫完 `last_analysis.json` 與 HTML 後執行（可重複執行；`today_data.txt` 的 trade_date 必須等於資料基準日；方向不會被改動）：
+  `python3 {repo}\scripts\phase3_fields.py --symbol spx --docs docs --today scripts\today_data.txt --event-day yes|no --event-note "說明" --apply --html docs\spx-analysis-YYYYMMDD.html docs\spx\index.html`
+  走 `daily_run.py` 流水線時已內建同一套，不需再執行這一步。
 
 設計風格：深色金融終端（黑底 #0a0a0a、青/綠/紅霓虹）。
 
@@ -351,6 +385,7 @@ git add + commit + push（PowerShell 用分號串接，不能用 &&）
 - **rule_candidates**（候補：每日仍讀，單行命題 ＋ 結案條件，**不得無限期掛「觀察中」**）
 - **rule_status**（當日規則觸發狀態，與規則正文分離，每日重寫）
 - backtest_prev（本次回測結果摘要）
+- **position_level**（Step 5.5：state、close、ma200、pct、since、switched_today、data_missing）／**event_day**（{is_event_day, note}）／**amp_hit_rate**（A 的 50% 區間命中率）／**summary_line**（頁面頂端摘要行，見 Step 6）
 - dashboard_url
 
 > 另有兩個**不進每日讀寫**的檔案，只在需要時開：

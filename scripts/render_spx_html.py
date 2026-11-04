@@ -10,7 +10,7 @@ import html
 import os
 import re
 
-from mech_lib import hu, ld, md
+from mech_lib import banner_html, hu, ld, md, position_html
 
 FILES = ('track_record.json', 'pnl_ledger.json', 'last_analysis.json')
 FILL = {0.2: ('65%', '32%', '72%', '41%'), 0.4: ('51%', '21%', '58%', '26%'), 0.6: ('39%', '16%', '43%', '16%'), 0.8: ('30%', '11%', '32%', '9%')}
@@ -64,7 +64,8 @@ def render(ledgers, td, nar, head):
     base = bp['always_neutral_baseline_pct']
     d = prev['actual_dir']
     K = H.get('ledger_kpi_notes', {})
-    out = [f'<header>\n  <h1>S&amp;P 500 <span>日線分析</span> — {rep}</h1>\n'
+    top = [banner_html(la)] if la.get('summary_line') and la.get('amp_hit_rate') else []
+    out = top + [f'<header>\n  <h1>S&amp;P 500 <span>日線分析</span> — {rep}</h1>\n'
            f'  <div class="sub">資料基準：{day} 美股收盤　｜　{C:,.2f}（{chg:+.2f}%）　｜　隔日振幅 A {hu(A, 2):.2f}%（±{round(Ap)} 點）・方向 50 無 edge・不掛實單　｜　SPX 系統・Phase 3</div>\n</header>',
            f'<h2>第一區 · 回測驗證（{md(t)} 預測 vs 實際）</h2>',
            grid([kpi('上次預測', '50', 'nu', '中性・方向無 edge・不掛實單'),
@@ -158,6 +159,8 @@ def render(ledgers, td, nar, head):
                f"📌 回測參照（下次勿刪）：\n拉回機率 50%｜支撐 {ks[0]:,} / {ks[1]:,}｜阻力 {kr[0]:,} / {kr[1]:,}｜纏論上沿 {zs['upper']:,.0f}</pre>")
     if H.get('footer_note'):
         out.append(f'<div class="note">{H["footer_note"]}</div>')
+    if la.get('position_level'):
+        out.append(position_html('SPX', la['position_level']))
     out.append(f'<footer>本分析僅供學習參考，不構成投資建議｜SPX 系統 · Phase 3 · {rep} · <a href="https://johnnyhsu5509.github.io/spx-analysis/spx/" style="color:var(--cyan)">固定入口</a></footer>')
     return head + '<body>\n<div class="wrap">\n\n' + '\n\n'.join(out) + '\n</div>\n</body>\n</html>\n'
 
