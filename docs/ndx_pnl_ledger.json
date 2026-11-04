@@ -2406,9 +2406,9 @@
     "fill_type": "未成交（全日低 28085.50 > 掛單 27898.44）",
     "stop": null,
     "exit": null,
-    "exit_type": "未成交",
-    "pnl_pts": 0.0,
-    "pnl_A": 0.0,
+    "exit_type": null,
+    "pnl_pts": null,
+    "pnl_A": null,
     "A_pts": 456.9
    },
    {
