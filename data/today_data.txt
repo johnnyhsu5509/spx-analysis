@@ -1,36 +1,34 @@
 {
-  "trade_date": "2026-11-05",
-  "close": 7353.73,
-  "open": 7678.72,
-  "high": 7681.29,
-  "low": 7350.35,
-  "volume": 5039705000,
-  "prev_close": 7688.62,
-  "change_pct": -4.36,
-  "vix": 28.18,
-  "ma5": 7546.55,
-  "ma20": 7679.54,
-  "ma50": 7686.53,
-  "ma200": 7322.74,
-  "rsi": 35.25,
-  "macd_hist": -27.69,
-  "macd_line": -45.67,
-  "signal": -17.98,
-  "bb_upper": 7895.46,
-  "bb_lower": 7463.61,
-  "bb_pct": -25.4,
-  "kd_k": 25.49,
-  "kd_d": 31.03,
+  "trade_date": "2026-11-06",
+  "close": 7376.86,
+  "open": 7377.65,
+  "high": 7444.2,
+  "low": 7369.55,
+  "volume": 3410452000,
+  "prev_close": 7353.73,
+  "change_pct": 0.31,
+  "vix": 25.64,
+  "ma5": 7505.91,
+  "ma20": 7657.8,
+  "ma50": 7679.45,
+  "ma200": 7325.05,
+  "rsi": 34.73,
+  "macd_hist": -34.47,
+  "macd_line": -61.07,
+  "signal": -26.6,
+  "bb_upper": 7903.27,
+  "bb_lower": 7412.34,
+  "bb_pct": -7.2,
+  "kd_k": 19.1,
+  "kd_d": 27.05,
   "breadth": {
-    "rsp_spy_ratio": 0.2958,
-    "chg_1d_pct": 1.55,
-    "chg_5d_pct": 3.42,
-    "vs_ma20_pct": 4.52,
+    "rsp_spy_ratio": 0.2938,
+    "chg_1d_pct": -0.69,
+    "chg_5d_pct": 1.71,
+    "vs_ma20_pct": 3.47,
     "read": "廣度擴張（中小型股同步參與）",
     "note": "RSP(等權)/SPY(市值權重);升=廣度好,降=窄化。與指數方向背離時,指數漲勢品質打折",
-    "as_of": "2026-11-05",
-    "tail_source": "30m_approx",
-    "caveat": "ETF 日線落後，最後一筆由 30m 末根補值（不含收盤撮合，與官方收盤約差 1-3 點）。1 日變動為近似值；5 日與 vs_MA20 含此近似值"
+    "as_of": "2026-11-06"
   },
   "regime": {
     "base_5d_pullback": 61.81,
@@ -48,7 +46,7 @@
       "regime": "距 MA20 -3% 以下（深跌）",
       "pullback_5d": 77.48,
       "vs_base": 15.7,
-      "ext_pct": -4.24
+      "ext_pct": -3.67
     },
     "regime_avg_5d": 68.6,
     "regime_avg_vs_base": 6.8,
@@ -71,31 +69,23 @@
     }
   },
   "amplitude": {
-    "as_of": "2026-11-05",
-    "amp_forecast_pct": 1.376,
-    "amp_forecast_pts": 101.2,
+    "as_of": "2026-11-06",
+    "amp_forecast_pct": 1.249,
+    "amp_forecast_pts": 92.2,
     "band_50_pct": [
-      0.988,
-      1.75
+      0.899,
+      1.592
     ],
-    "implied_daily_pct": 1.775,
-    "c": 0.775,
+    "implied_daily_pct": 1.615,
+    "c": 0.774,
     "c_window": 252,
     "realized_vs_implied_63d": 0.66,
-    "vol_pct_1y": 98.8,
-    "r0_rule27_ref_pct": 1.597,
-    "atr14_pct": 1.382,
+    "vol_pct_1y": 95.2,
+    "r0_rule27_ref_pct": 1.548,
+    "atr14_pct": 1.367,
     "method": "A = c × ^VIX/√252；c 與 50% 區間 = 近 252 個已知交易日（隔日振幅÷隱含日波動）的中位數與 25/75 分位（Phase 3 V2b 核准）"
   },
   "recent_5": [
-    {
-      "date": "2026-10-30",
-      "open": 7631.07,
-      "high": 7637.48,
-      "low": 7527.56,
-      "close": 7580.07,
-      "volume": 6149170000
-    },
     {
       "date": "2026-11-02",
       "open": 7610.83,
@@ -126,33 +116,51 @@
       "high": 7681.29,
       "low": 7350.35,
       "close": 7353.73,
-      "volume": 5039705000
+      "volume": 7654840000
+    },
+    {
+      "date": "2026-11-06",
+      "open": 7377.65,
+      "high": 7444.2,
+      "low": 7369.55,
+      "close": 7376.86,
+      "volume": 3410452000
     }
   ],
   "symbol": "SPX",
-  "wilder_rsi": 33.49,
+  "wilder_rsi": 35.11,
   "rsi_method_divergence": {
-    "flag": false,
-    "cutler_chg": -11.22,
-    "wilder_chg": -16.95
+    "flag": true,
+    "cutler_chg": -0.51,
+    "wilder_chg": 1.62,
+    "note": "Cutler 與 Wilder RSI 當日變動方向相反：Cutler 可能受 14 日窗口滑出的大幅變動扭曲"
   },
   "sector_daily": {
-    "as_of": "2026-11-05",
-    "SOXX": null,
-    "SMH": null,
-    "XLV": null,
-    "^TNX": {
-      "close": 4.837,
-      "prev_close": 4.894,
-      "change_pct": -1.16
+    "as_of": "2026-11-06",
+    "SOXX": {
+      "close": 136.53,
+      "prev_close": 131.9,
+      "change_pct": 3.51
     },
-    "QQQ": null,
-    "stale": [
-      "SOXX",
-      "SMH",
-      "XLV",
-      "QQQ"
-    ],
-    "caveat": "⚠SOXX、SMH、XLV、QQQ 缺 2026-11-04 或 2026-11-05 的日線收盤（抓不到或未對齊指數），該代號為 null，不得以 0 或中性代入"
+    "SMH": {
+      "close": 463.96,
+      "prev_close": 447.73,
+      "change_pct": 3.62
+    },
+    "XLV": {
+      "close": 184.8,
+      "prev_close": 184.91,
+      "change_pct": -0.06
+    },
+    "^TNX": {
+      "close": 4.859,
+      "prev_close": 4.837,
+      "change_pct": 0.45
+    },
+    "QQQ": {
+      "close": 656.1,
+      "prev_close": 647.05,
+      "change_pct": 1.4
+    }
   }
 }
