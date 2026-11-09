@@ -1950,12 +1950,28 @@
    "trades": [],
    "day_weighted_bp": 0.0,
    "day_note": "Phase 3 預設不掛實單 → 當日 **0bp**。累積維持 **-6.29bp**。"
+  },
+  {
+   "report_date": "2026-11-06",
+   "basis_close": 26629.81,
+   "eval_date": "2026-11-06",
+   "eval_ohlc": {
+    "open": 27045.26,
+    "high": 27316.09,
+    "low": 26887.69,
+    "close": 26989.99
+   },
+   "rule50_check": "Phase 3 預設休眠（rule57），無實單可判。",
+   "rule51_check": "無成交單，不需判序。",
+   "trades": [],
+   "day_weighted_bp": 0.0,
+   "day_note": "Phase 3 預設不掛實單 → 當日 **0bp**。累積維持 **-6.29bp**。"
   }
  ],
  "open_positions": [],
  "summary": {
-  "as_of": "2026-11-06",
-  "days_evaluated": 46,
+  "as_of": "2026-11-09",
+  "days_evaluated": 47,
   "trades_total": 49,
   "signals_triggered": 26,
   "trades_filled": 23,
@@ -1985,11 +2001,11 @@
   "cumulative_if_intraday_checked": -8.58
  },
  "trades_pending": {
-  "report_date": "2026-11-06",
-  "basis_close": 26629.81,
-  "eval_rule": "用 2026-11-06 美股 NDX OHLC 判定。**Phase 3 預設休眠（rule57）**：無已核准方向規則 → 不掛實單；明日記 0bp 並更新 days_evaluated。",
-  "signal_A_pct": 2.022,
-  "signal_A_pts": 538.5,
+  "report_date": "2026-11-09",
+  "basis_close": 26989.99,
+  "eval_rule": "用 2026-11-09 美股 NDX OHLC 判定。**Phase 3 預設休眠（rule57）**：無已核准方向規則 → 不掛實單；明日記 0bp 並更新 days_evaluated。",
+  "signal_A_pct": 1.795,
+  "signal_A_pts": 484.4,
   "trades": []
  },
  "gap_note_2026_08_27": {
@@ -2083,26 +2099,26 @@
   "verdict_rule": "累積 6 個月後判定：t>2、扣成本後仍為正、且超過同期『收盤買、隔日收盤賣』的漂移",
   "pending": [
    {
-    "report_date": "2026-11-06",
-    "basis_close": 26629.81,
+    "report_date": "2026-11-09",
+    "basis_close": 26989.99,
     "side": "long",
     "order": "limit_buy",
-    "limit": 26522.11,
+    "limit": 26893.11,
     "k": 0.2,
     "s": 0.5,
-    "A_pts": 538.5,
+    "A_pts": 484.4,
     "stop_rule": "成交價 − s×A",
     "exit": "隔日收盤"
    },
    {
-    "report_date": "2026-11-06",
-    "basis_close": 26629.81,
+    "report_date": "2026-11-09",
+    "basis_close": 26989.99,
     "side": "short",
     "order": "limit_sell",
-    "limit": 26737.51,
+    "limit": 27086.87,
     "k": 0.2,
     "s": 0.5,
-    "A_pts": 538.5,
+    "A_pts": 484.4,
     "stop_rule": "成交價 + s×A",
     "exit": "隔日收盤"
    }
@@ -2517,22 +2533,52 @@
     "pnl_pts": null,
     "pnl_A": null,
     "A_pts": 376.9
+   },
+   {
+    "report_date": "2026-11-06",
+    "eval_date": "2026-11-06",
+    "side": "long",
+    "limit": 26522.11,
+    "filled": false,
+    "fill": null,
+    "fill_type": "未成交（全日低 26887.69 > 掛單 26522.11）",
+    "stop": null,
+    "exit": null,
+    "exit_type": null,
+    "pnl_pts": null,
+    "pnl_A": null,
+    "A_pts": 538.5
+   },
+   {
+    "report_date": "2026-11-06",
+    "eval_date": "2026-11-06",
+    "side": "short",
+    "limit": 26737.51,
+    "filled": true,
+    "fill": 27045.26,
+    "fill_type": "開盤跳空成交（開 27045.26 > 掛單 26737.51）",
+    "stop": 27314.51,
+    "exit": 27314.51,
+    "exit_type": "停損（09:30 首根 30 分 K 高 27,316.0／日高 27316.09 ≥ 停損 27314.51；停損優先）",
+    "pnl_pts": -269.25,
+    "pnl_A": -0.5,
+    "A_pts": 538.5
    }
   ],
   "summary": {
-   "days": 14,
+   "days": 15,
    "filled_long": 8,
-   "filled_short": 9,
+   "filled_short": 10,
    "mean_pnl_A_long": -0.257,
-   "mean_pnl_A_short": -0.064,
-   "fill_rate_long_pct": 57.1,
-   "fill_rate_short_pct": 64.3,
-   "drift_bench_mean_A": -0.704,
-   "drift_bench_note": "同期『收盤買、隔日收盤賣』每天平均報酬（以 A 計）：10/16 -2.069、10/19 +0.818、10/20 -0.098、10/21 +0.848、10/22 -2.252、10/23 -0.003、10/27 +0.929、10/28 +0.416、10/29 -1.100、10/30 -2.610、11/02 -0.926、11/03 +0.417、11/04 +0.566、11/05 -4.795，平均 -0.704 A",
+   "mean_pnl_A_short": -0.108,
+   "fill_rate_long_pct": 53.3,
+   "fill_rate_short_pct": 66.7,
+   "drift_bench_mean_A": -0.613,
+   "drift_bench_note": "同期『收盤買、隔日收盤賣』每天平均報酬（以 A 計）：10/16 -2.069、10/19 +0.818、10/20 -0.098、10/21 +0.848、10/22 -2.252、10/23 -0.003、10/27 +0.929、10/28 +0.416、10/29 -1.100、10/30 -2.610、11/02 -0.926、11/03 +0.417、11/04 +0.566、11/05 -4.795、11/06 +0.669，平均 -0.613 A",
    "gap_days": [
     "2026-10-26"
    ],
-   "as_of": "2026-11-06"
+   "as_of": "2026-11-09"
   }
  },
  "gap_note_2026_10_26": "10/23 收盤未產出報告（10/24 排程未執行），10/26 無以 10/23 為基準的策略或影子單，不回補。"
