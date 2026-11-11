@@ -73,7 +73,7 @@ class NewFieldsTest(unittest.TestCase):
     def test_appended_after_existing_fields(self):
         for sym, d in self.out.items():
             with self.subTest(sym=sym):
-                self.assertEqual(list(d)[-3:], NEW_FIELDS)
+                self.assertEqual(list(d)[-4:], NEW_FIELDS + ["semis_daily"])
 
     def test_wilder_matches_reference(self):
         for sym, ticker in (("spx", "^GSPC"), ("ndx", "^NDX")):
@@ -143,6 +143,34 @@ class SectorDailyTest(unittest.TestCase):
         self.assertEqual(d["trade_date"], str(harness.DAYS[-2].date()))
         for t in harness.SYMBOLS["spx"]["sector"]:
             self.assertEqual(d["sector_daily"][t], self.expected(fx, t, harness.DAYS[-2], harness.DAYS[-3]))
+
+
+class SemisDailyTest(unittest.TestCase):
+    """半導體日線：依序 ^SOX → SOXX → SMH，第一個成功的當 basis；末列 NaN 走 30m 補值並標 approx；全失敗為 None，不得以 0 代入。"""
+
+    def test_falls_back_to_soxx_when_sox_missing(self):
+        for sym in ("spx", "ndx"):
+            with self.subTest(sym=sym):
+                fx, d = SectorDailyTest.fetch(sym)
+                s = d["semis_daily"]
+                self.assertEqual((s["basis"], s["missing"], s["as_of"]), ("SOXX", ["^SOX"], d["trade_date"]))
+                exp = SectorDailyTest.expected(None, fx, "SOXX", harness.DAYS[-1], harness.DAYS[-2])
+                self.assertEqual((s["close"], s["prev_close"], s["change_pct"]), (exp["close"], exp["prev_close"], exp["change_pct"]))
+                self.assertAlmostEqual(s["vs_index_pp"], s["change_pct"] - d["change_pct"], delta=0.011)
+                self.assertNotIn("tail_source", s)
+                self.assertIn("SMH", s["alt"])
+
+    def test_tail_nan_uses_30m_approx(self):
+        _, d = SectorDailyTest.fetch("ndx", {"SOXX": "tail_nan"})
+        s = d["semis_daily"]
+        self.assertEqual((s["basis"], s["tail_source"]), ("SOXX", "30m_approx"))
+        self.assertIn("caveat", s)
+
+    def test_all_failed_is_none(self):
+        _, d = SectorDailyTest.fetch("ndx", {"SOXX": "raise", "SMH": "raise"})
+        self.assertIn("semis_daily", d)
+        self.assertIsNone(d["semis_daily"])
+        self.assertIsNotNone(d["close"])
 
 
 class FailSafeTest(unittest.TestCase):

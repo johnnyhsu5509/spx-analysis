@@ -5,6 +5,8 @@ import yf_compat
 import guard
 import gap_fix
 import wilder
+import contextlib
+import io
 import json
 import pandas as pd
 import os
@@ -289,6 +291,68 @@ def _sector_daily(days):
     return out
 
 
+SEMIS_CHAIN = ("^SOX", "SOXX", "SMH")
+SEMIS_PP = 1.0
+
+
+def _semis_one(ticker, days):
+    """單一半導體代號的日線摘要。日線末列 Close 為 NaN 時沿用 rule51：用當日 30m 末根補並標 approx。失敗 → None。
+    yf_compat 失敗重試時會 print 一行；這裡吞掉，維持 stdout 與舊版逐字相同（回歸測試要求）。"""
+    try:
+        with contextlib.redirect_stdout(io.StringIO()):
+            df = yf_compat.download(ticker, period="1y", progress=False)
+            if df is None or df.empty:
+                return None
+            if hasattr(df.columns, "levels"):
+                df.columns = [c[0] if isinstance(c, tuple) else c for c in df.columns]
+            c = df["Close"].squeeze().dropna()
+            c = pd.Series([float(x) for x in c.values], index=c.index.strftime("%Y-%m-%d"))
+            prev_day, day = days
+            c = c[c.index <= day]
+            if len(c) < 30 or prev_day not in c.index:
+                return None
+            approx = False
+            if c.index[-1] != day:
+                tail = _tail_close_from_30m(ticker, day)
+                if tail is None:
+                    return None
+                c = pd.concat([c, pd.Series({day: float(tail)})])
+                approx = True
+        cur, prev = float(c[day]), float(c[prev_day])
+        n = len(c)
+        out = {"close": round(cur, 2), "prev_close": round(prev, 2), "change_pct": round((cur - prev) / prev * 100, 2),
+               "chg_5d_pct": round((cur / float(c.iloc[-6]) - 1) * 100, 2) if n >= 6 else None,
+               "vs_ma20_pct": round((cur / float(c.iloc[-20:].mean()) - 1) * 100, 2) if n >= 20 else None,
+               "vs_ma200_pct": round((cur / float(c.iloc[-200:].mean()) - 1) * 100, 2) if n >= 200 else None}
+        if approx:
+            out["tail_source"] = "30m_approx"
+        return out
+    except Exception:
+        return None
+
+
+def _semis_daily(days, idx_chg):
+    """依序 ^SOX（指數）、SOXX、SMH；第一個成功的當 basis，其餘列 alt 供交叉核對；全失敗 → None（不得以 0 代入）。只描述強弱，不產生部位指令。"""
+    try:
+        rows = {t: _semis_one(t, days) for t in SEMIS_CHAIN}
+        basis = next((t for t in SEMIS_CHAIN if rows[t]), None)
+        if basis is None:
+            return None
+        b = rows[basis]
+        pp = round(b["change_pct"] - idx_chg, 2)
+        read = ("半導體領跌（落後指數 ≥1.0pp）" if pp <= -SEMIS_PP else
+                "半導體領漲（領先指數 ≥1.0pp）" if pp >= SEMIS_PP else "半導體與指數同步（差距 <1.0pp）")
+        out = {"as_of": days[-1], "basis": basis, **b, "vs_index_pp": pp, "read": read,
+               "alt": {t: {k: v for k, v in rows[t].items() if k in ("close", "change_pct", "tail_source")}
+                       for t in SEMIS_CHAIN if t != basis and rows[t]},
+               "missing": [t for t in SEMIS_CHAIN if not rows[t]]}
+        if "tail_source" in b:
+            out["caveat"] = "%s 日線末列缺 Close，最後一筆由 30m 末根補值（與官方收盤約差 1-3 點）；1 日與 5 日變動為近似值" % basis
+        return out
+    except Exception:
+        return None
+
+
 end = datetime.today() + timedelta(days=1)
 start = end - timedelta(days=300)
 
@@ -510,6 +574,7 @@ if not spx_close.empty:
     result["wilder_rsi"] = round(w_last, 2) if w_last == w_last else None
     result["rsi_method_divergence"] = wilder.divergence(100 - 100 / (1 + gain / loss), wilder_s)
     result["sector_daily"] = _sector_daily([str(d.date()) for d in raw_spx.index[-2:]])
+    result["semis_daily"] = _semis_daily([str(d.date()) for d in raw_spx.index[-2:]], change_pct)
 
 if not result or not result.get("trade_date"):
     print("FETCH FAILED: no trade_date computed; %s left UNCHANGED" % OUTFILE)

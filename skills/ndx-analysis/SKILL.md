@@ -340,6 +340,7 @@ close > ma200 → 水位「正常」（基準部位 100%）
 - 訊號用 t 日收盤；**t+1 日美股收盤執行**（09:41 報告 → 當晚收盤）。這和驗證設定一致，不得盤中提前。
 - 不加緩衝帶、不分批、不因新聞或振幅大小改判。任何修改都需要新的核准案，而且要先預先登記、再驗證。
 - `close` 或 `ma200` 缺漏、或 `trade_date` 不是預期交易日時：**沿用前一日水位**，並標註「水位資料缺」，不得自行估算。
+- 水位切換或處於半倉時（2026-11-10 方案 G 起）：`scripts\phase3_fields.py` **不再停下**（改呼叫 `mech_lib.position_state`，判定式與 `position_level` 完全相同），改由 Step 5.6 的第一句寫出動作；切換日在 `--apply` 時自動補寫 `position_gate.events`（同日不重複）。daily_run 流水線同樣不停下（2026-11-10 接上；`ndx_last_mech.py` 改呼叫 `mech_lib.position_state`），由 `daily_run.py` 寫第一句並補記 `position_gate.events`。
 
 **報告格式**（固定放在報告最後；只寫指數數字，**禁止**寫基準部位金額、持股、槓桿、融資或帳戶規模）：
 ```
@@ -363,6 +364,36 @@ close > ma200 → 水位「正常」（基準部位 100%）
 
 > **證據**：NDX 2001–2026：持有 MDD −70.5% → 減半倉 −46.7%，ΔCAGR +0.3pp。預先登記的樣本外驗證（SPX 1928–89、台股、日經、DAX）4/4 通過，BH 全過，19 個年代中 18 個回撤變淺。代價：平均每年切換 6.7 次，六成的狀態只維持 5 天以內；短急殺（例如 2024-07）不會觸發。
 > 「基準部位」是什麼、水位套用到哪些實際部位，**只由使用者自己決定，不寫入 repo**。
+
+### Step 5.6 — 現有持股動作（報告第一句）（方案 G，2026-11-10 起）
+
+**報告第一句、`rating` 的第一句、排程最後三行回報的第一句，一律先寫這句動作。**只改報告格式，不改任何交易規則（prc-014 判定式、direction 恆 50、rule57 不下實單都不動）。
+
+- **只允許三種動作**：加碼到 X%／減碼到 X%／維持 X%。
+- **分母**＝「科技／NDX／QQQ／半導體相關持股」這一籃＝100%，**不是帳戶總曝險**。
+- **水位來源一律是 NDX 閘門**（prc-014 是 NDX 規則）。SPX 報告也引用 NDX 閘門，因為兩者常分歧（11/05 NDX 在 MA200 下 −4.81%，SPX 仍在上方 +0.42%）。SPX 自己的水位仍寫在 Step 5.5 的最後一區。
+- **「新增多單」單獨一行**，與第一句分開（固定：不新增，rule57）。
+- **出清不是可執行動作**：半倉狀態的句子固定附「出清不在現行規則內，另案討論」，不得寫出清建議或出清條件。
+- **禁用語**：第一句不得用「觀望」「防守」「不交易」代替動作。
+
+| NDX 閘門狀態 | 第一句動作 |
+|---|---|
+| 正常、未切換 | 維持 100% |
+| 半倉→正常（當日切換） | 加碼到 100% |
+| 正常→半倉（當日切換） | 減碼到 50% |
+| 半倉、未切換 | 維持 50% |
+
+**產生方式**（不得手寫數字）：
+- **走 `daily_run.py` 流水線時（2026-11-10 起）已自動產生**：`holding_action` 寫進 last_analysis，`rating` 開頭自動換成這句（敘事的 rating 接在下一行；重跑不會疊加），HTML 頁首依序放動作句 → 新增多單 → 半導體參考 → 摘要行；切換日補記 `position_gate.events`。SPX 可加 `--ndx-today 檔 …` 指定 NDX 閘門備援檔。不需再跑下面的指令。
+- 模型手寫報告時才用：
+```
+python3 scripts\phase3_fields.py --symbol spx --docs docs --today scripts\today_data.txt [--ndx-today 檔 …] [--event-day yes|no --event-note 說明]
+python3 scripts\phase3_fields.py --symbol ndx --docs docs --today scripts\ndx_today_data.txt [--event-day yes|no --event-note 說明]
+```
+- 不加 `--apply` 只算，讀 `scripts\phase3_fields_report.txt` 的 `holding_action.text`、`new_long`、`semis_ref`；確認後加 `--apply --html 報告.html`，頁面最上方依序放：動作句 → 新增多單 → 半導體參考 → 摘要行。
+- 水位切換或半倉**不再停下**；切換日由腳本在 `--apply` 時補寫 `position_gate.events`。
+- SPX 報告的 NDX 閘門來源順序：`docs\ndx_last_analysis.json`（`position_level.basis_date` 等於今日資料日）→ `--ndx-today` 檔（預設 `scripts\ndx_today_data.txt`、`data\ndx_today_data.txt`，須 `symbol`＝NDX 且同一 `trade_date`）→ 都沒有就沿用前一日水位，句尾自動註明「NDX 閘門資料日為 …，沿用前一日水位」。
+- 「半導體參考」一行來自 today_data 的 `semis_daily`（依序 ^SOX → SOXX → SMH），**僅供參考、不改水位**；資料缺時照寫「資料缺」，不得以 0 代入。
 
 ### Step 6 — 產出 HTML 報告 + 推 GitHub
 

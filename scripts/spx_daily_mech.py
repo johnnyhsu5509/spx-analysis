@@ -8,7 +8,7 @@
 import argparse
 import os
 
-from mech_lib import amp_hit_rate, eval_session, ld, log_err, md, mean_hu, merge, next_bday, position_level, seed_position, shadow_fill, summary_line, sv
+from mech_lib import amp_hit_rate, eval_session, ld, log_err, md, mean_hu, merge, next_bday, position_state, seed_position, shadow_fill, summary_line, sv
 
 K_ENTRY, S_STOP, DIR_TH = 0.4, 0.5, 0.3
 FILES = ('track_record.json', 'pnl_ledger.json', 'last_analysis.json')
@@ -31,7 +31,7 @@ def build(docs, td, nar=None, report_date=None):
     if not amp or amp.get('stale') or amp.get('as_of') != day:
         raise SystemExit('amplitude 缺或過期：照 SKILL 寫「振幅資料缺」，本腳本不處理')
     C, chg = td['close'], td['change_pct']
-    plv = position_level(la.get('position_level') or seed_position(tr), C, td['ma200'], day)
+    plv = position_state(la.get('position_level') or seed_position(tr), C, td['ma200'], day)
     A_pct, (BLO, BHI) = amp['amp_forecast_pct'], amp['band_50_pct']
     A_pts = round(A_pct * C / 100, 2)
     rep = report_date or next_bday(day)

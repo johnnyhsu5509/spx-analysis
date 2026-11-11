@@ -46,8 +46,13 @@ REASONS = {
     'T5': '漂移基準說明：10/23 以前每項附「A」，11/03 平均寫 -0.55（未補 0）',
     'T6': '價位與百分比位數：實跑時而 28081.2 時而 28081.20、MA200 距離時而 1 位時而 2 位、A 時而 2 位時而 3 位',
     'T7': '10/20 是 rule59 首次每日輸出，實跑在部位水位說明多加一句首日註記',
-    'R6': 'Phase 3 修正（2026-11-04）新增欄位：SPX position_level、兩邊的 summary_line／amp_hit_rate／event_day；歷史實跑沒有這些欄位',
+    'R6': 'Phase 3 修正（2026-11-04）新增欄位：SPX position_level、兩邊的 summary_line／amp_hit_rate／event_day；方案 G 的 holding_action 2026-11-10 起由流水線（daily_run.py）與 phase3_fields.py 寫入（記帳腳本本身不寫，所以重算結果沒有）；歷史實跑沒有這些欄位',
     'R7': '11/04 實跑（8efd11e）把未成交的影子多單寫成 exit_type「未成交」、pnl_pts／pnl_A 0.0；其餘 8 張未成交單與帳本現況（9 張）都是全欄 null，e2a0e30 已把帳本改回 null。腳本一直輸出 null，這裡的 8efd11e 是更正前的快照',
+    'R9': 'event_day 由敘事以 phase3_fields.py --event-day 提供（11/05 起實跑有標註），重算沒有這個輸入、留 null；summary_line 尾段「事件日：…」跟著不同',
+    'R10': '實跑記帳誤差：11/05 NDX drift_bench_mean_A 寫 -0.389；13 筆合計 -5.064／13＝-0.38954，應為 -0.390（腳本值）',
+    'R11': '方案 G 已接上流水線（2026-11-10）：記帳腳本改用 mech_lib.position_state（判定式與 position_level 相同、遇切換／半倉不停下），多一個 rise_to_reclaim_pct 欄位；歷史實跑沒有',
+    'T9': '方案 G round4（2026-11-11）：SPX 摘要行的水位改寫成「SPX 自身水位…；科技籃倉位跟 NDX」，避免與頁首依 NDX 判定的動作句被讀成矛盾；歷史實跑寫「水位正常」',
+    'T8': '影子單價位位數：實跑 11/05、11/09 的 rule65 寫 7713.5／7340.0（省略尾 0），腳本一律 2 位',
     'R8': '半分位取整：實跑 10/21 SPX 影子空單平均精確值 0.1225（n=2），寫成 0.122（Python round 看二進位表示而捨去）；腳本用精確十進位＋一般四捨五入得 0.123。11/04 NDX 的 -0.0095 帳本卻進位成 -0.01，帳本歷史本身兩個方向都有，差 0.001',
 }
 # (系統, 報告日起, 報告日迄, 檔案, 路徑 regex, 原因)；日期 None＝不限
@@ -58,10 +63,15 @@ KNOWN = [
     ('spx', '2026-10-29', None, 'track_record.json', r'summary\.brier\.excluded_flat', 'R3'),
     ('ndx', '2026-10-20', '2026-10-23', 'ndx_track_record.json', r'entries\[\d+\]\.actual_pct', 'R4'),
     ('ndx', '2026-10-20', '2026-10-20', 'ndx_pnl_ledger.json', r'shadow_ledger\.entries\[\d+\]\.(fill|stop|exit|exit_type|pnl_pts)', 'R5'),
-    ('spx', None, None, 'last_analysis.json', r'position_level|summary_line|amp_hit_rate|event_day', 'R6'),
-    ('ndx', None, None, 'ndx_last_analysis.json', r'summary_line|amp_hit_rate|event_day', 'R6'),
+    ('spx', None, None, 'last_analysis.json', r'position_level|summary_line|amp_hit_rate|event_day|holding_action', 'R6'),
+    ('ndx', None, None, 'ndx_last_analysis.json', r'summary_line|amp_hit_rate|event_day|holding_action', 'R6'),
     ('ndx', '2026-11-04', '2026-11-04', 'ndx_pnl_ledger.json', r'shadow_ledger\.entries\[22\]\.(pnl_pts|pnl_A)', 'R7'),
     ('spx', '2026-10-21', '2026-10-21', 'pnl_ledger.json', r'shadow_ledger\.summary\.mean_pnl_A_short', 'R8'),
+    ('spx', '2026-11-05', None, 'last_analysis.json', r'event_day\.is_event_day', 'R9'),
+    ('ndx', '2026-11-05', None, 'ndx_last_analysis.json', r'event_day\.is_event_day', 'R9'),
+    ('ndx', '2026-11-05', '2026-11-05', 'ndx_pnl_ledger.json', r'shadow_ledger\.summary\.drift_bench_mean_A', 'R10'),
+    ('spx', None, None, 'last_analysis.json', r'position_level\.rise_to_reclaim_pct', 'R11'),
+    ('ndx', None, None, 'ndx_last_analysis.json', r'position_level\.rise_to_reclaim_pct', 'R11'),
 ]
 TEMPLATE = [
     ('spx', 'track_record.json', r'summary\.brier\.note_latest', 'T1'),
@@ -73,6 +83,10 @@ TEMPLATE = [
     ('ndx', 'ndx_last_analysis.json', r'system_rules_notes\[[24]\]|backtest_prev\.predicted', 'T6'),
     ('ndx', 'ndx_last_analysis.json', r'position_level\.note', 'T7'),
     ('ndx', 'ndx_pnl_ledger.json', r'shadow_ledger\.entries\[22\]\.exit_type', 'R7'),
+    ('spx', 'last_analysis.json', r'summary_line', 'T9'),
+    ('spx', 'last_analysis.json', r'event_day\.note', 'R9'),
+    ('ndx', 'ndx_last_analysis.json', r'event_day\.note|summary_line', 'R9'),
+    ('spx', 'last_analysis.json', r'rule_status\.rule65', 'T8'),
 ]
 HTML_SPX = {'backtest_notes': ['說明'], 'deviation': '偏差', 'amp_note': '振幅說明。', 'macro_title': '盤前', 'macro_note': '宏觀',
             'regime_labels': ['a', 'b', 'c'], 'regime_warn': '環境', 'breadth_note': '廣度', 'price_rows': [['K', 'x', 'up', 'y']],
@@ -81,6 +95,13 @@ HTML_SPX = {'backtest_notes': ['說明'], 'deviation': '偏差', 'amp_note': '�
 HTML_NDX = {'title': 'NDX 標題', 'breadth_kpi': 'b', 'vxn_kpi': 'v', 'data_note': 'd', 'deviation': 'dv', 'dims': [['廣度', 'x', 'y']],
             'amp_warn': 'aw', 'regime_labels': ['a', 'b', 'c'], 'ndx_band': 'n', 'spx_band': 's', 'cross_label': 'l', 'cross_note': 'cn',
             'news': 'nw', 'news_sources': 'src'}
+
+
+def mech_commits(sym):
+    """逐欄重算只涵蓋水位正常的日子：2026-11-06 起 NDX 半倉的實跑是人工記帳（當時流水線遇半倉會停下），敘事與模板跟機械輸出不可比。
+    方案 G 接上流水線後（2026-11-10）流水線已不停下，半倉日的渲染與動作句另由 GuardAndCliTest 的半倉案例驗證。"""
+    last = f"docs/{sc.SYM[sym]['last']}"
+    return [s for s in sc.analysis_commits(sym, SINCE) if (sc.show(s, last).get('position_level') or {}).get('state') != '半倉']
 
 
 def history_ok():
@@ -121,7 +142,7 @@ class LedgerReplayTest(unittest.TestCase):
         if not history_ok():
             return
         for sym in EXPECTED:
-            cls.results[sym] = sc.replay_all(sym, sc.analysis_commits(sym, SINCE))
+            cls.results[sym] = sc.replay_all(sym, mech_commits(sym))
 
     @classmethod
     def tearDownClass(cls):
@@ -169,7 +190,7 @@ class LedgerReplayTest(unittest.TestCase):
     def test_pnl_ledgers_identical_except_known(self):
         for sym, f in (('spx', 'pnl_ledger.json'), ('ndx', 'ndx_pnl_ledger.json')):
             for r in self.results[sym]:
-                left = [d for d in r['diffs'] if d[0] == f and classify(sym, r['report_date'], d)[1] not in ('R5', 'T5', 'R7', 'R8')]
+                left = [d for d in r['diffs'] if d[0] == f and classify(sym, r['report_date'], d)[1] not in ('R5', 'T5', 'R7', 'R8', 'R10')]
                 self.assertEqual(left, [], f"{sym} {r['report_date']}")
 
     def test_gap_day_reproduced(self):
@@ -242,7 +263,13 @@ class GuardAndCliTest(unittest.TestCase):
             self.assertEqual(os.listdir(os.path.join(out, 'ndx')), ['index.html'])
             self.assertEqual(rep['spx_last'], os.path.join(d, 'last_analysis.json'))
             for f in sc.SYM['ndx']['files']:
-                self.assertEqual(ld(os.path.join(out, f)), self.ndx['mech'][f])
+                got = ld(os.path.join(out, f))
+                if f == 'ndx_last_analysis.json':
+                    ha = got.pop('holding_action')
+                    self.assertEqual((ha['action'], ha['target_pct']), ('維持', 100))
+                    self.assertEqual(got.pop('rating'), ha['text'] + (f"\n{self.ndx['mech'][f]['rating']}" if self.ndx['mech'][f]['rating'] else ''))
+                    got = {**got, 'rating': self.ndx['mech'][f]['rating']}
+                self.assertEqual(got, self.ndx['mech'][f])
 
     def assert_stops(self, msg, fn):
         with self.assertRaises(SystemExit) as cm:
@@ -273,8 +300,103 @@ class GuardAndCliTest(unittest.TestCase):
             ledgers, _ = ndx_daily_mech.build(d, td)
             spx = ld(os.path.join(d, 'last_analysis.json'))
             self.assert_stops('SPX 今天還沒跑完', lambda: ndx_last_mech.build(d, ledgers, td, aux, {**spx, 'data_basis': '2026-10-20 US close'}))
-            self.assert_stops('部位水位切換', lambda: ndx_last_mech.build(d, ledgers, {**td, 'ma200': td['close'] + 1}, aux, spx))
             self.assert_stops('先跑 ndx_daily_mech', lambda: ndx_last_mech.build(d, {f: ld(os.path.join(d, f)) for f in ndx_daily_mech.FILES}, td, aux, spx))
+            # 方案 G：切換不再停下；判定式不變（收盤 ≤ MA200 → 半倉）
+            out, _ = ndx_last_mech.build(d, ledgers, {**td, 'ma200': td['close'] + 1}, aux, spx)
+            pl = out['ndx_last_analysis.json']['position_level']
+            self.assertEqual((pl['state'], pl['switched_today'], pl['since']), ('半倉', True, td['trade_date']))
+            self.assertIn('今日切換（正常 → 半倉）', out['ndx_last_analysis.json']['system_rules_notes'][4])
+
+    def run_ndx(self, root, td_edit=None):
+        d = self.docs(root, self.ndx, 'ndx')
+        td = {**self.ndx['today'], **(td_edit or {})}
+        sv(os.path.join(root, 'td.json'), td)
+        sv(os.path.join(root, 'aux.json'), sc.ndx_aux(self.ndx['after']))
+        sv(os.path.join(root, 'nar.json'), {**self.ndx['narrative'], 'html': HTML_NDX})
+        with open(os.path.join(d, 'ndx-analysis-20261021.html'), 'w', encoding='utf-8') as f:
+            f.write(sc.git('show', f"{self.ndx['sha']}^:docs/ndx-analysis-20261021.html"))
+        out = os.path.join(root, 'out')
+        rep = daily_run.main(['--symbol', 'ndx', '--docs', d, '--today', os.path.join(root, 'td.json'), '--aux', os.path.join(root, 'aux.json'),
+                              '--narrative', os.path.join(root, 'nar.json'), '--report', os.path.join(root, 'rpt.txt'), '--out', out])
+        with open(os.path.join(out, 'ndx-analysis-20261022.html'), encoding='utf-8') as f:
+            return rep, ld(os.path.join(out, 'ndx_last_analysis.json')), ld(os.path.join(out, 'ndx_track_record.json')), f.read()
+
+    def assert_first_sentence(self, la, page, act, tgt):
+        ha = la['holding_action']
+        self.assertEqual((ha['action'], ha['target_pct']), (act, tgt))
+        self.assertTrue(la['rating'].startswith(ha['text']))
+        self.assertTrue(ha['text'].startswith('對現有科技／NDX／QQQ／半導體相關持股（以這一籃為 100%，不是帳戶總曝險）：'))
+        i = page.index(ha['text'][:40])
+        self.assertLess(i, page.index(ha['new_long']))
+        self.assertLess(page.index(ha['new_long']), page.index(la['summary_line'][:20]))
+        self.assertLess(i, page.index('<header>'))
+        for w in ('觀望', '防守', '不交易'):
+            self.assertNotIn(w, ha['text'])
+        self.assertEqual(ha['text'].count('出清'), ha['text'].count('出清不在現行規則內，另案討論'))
+
+    def test_daily_run_writes_holding_action_ndx_normal(self):
+        with tempfile.TemporaryDirectory() as root:
+            rep, la, _, page = self.run_ndx(root)
+            self.assert_first_sentence(la, page, '維持', 100)
+            self.assertEqual(rep['holding_action'], la['holding_action']['text'])
+            self.assertIn('半導體參考：日線資料缺（不得以 0 代入）', page)
+
+    def test_daily_run_half_switch_does_not_stop(self):
+        with tempfile.TemporaryDirectory() as root:
+            td = self.ndx['today']
+            sd = {'as_of': td['trade_date'], 'basis': '^SOX', 'change_pct': -2.5, 'vs_index_pp': -1.2, 'read': '半導體領跌（落後指數 ≥1.0pp）',
+                  'chg_5d_pct': -3.0, 'vs_ma20_pct': -4.0, 'vs_ma200_pct': 1.0}
+            rep, la, tr, page = self.run_ndx(root, {'ma200': td['close'] + 50, 'semis_daily': sd})
+            self.assert_first_sentence(la, page, '減碼', 50)
+            self.assertTrue(rep['position_switched'])
+            self.assertEqual(tr['position_gate']['events'][-1]['date'], td['trade_date'])
+            self.assertEqual(tr['position_gate']['events'][-1]['to'], '半倉')
+            self.assertIn('收盤需再漲', page)
+            self.assertIn('今日切換：正常 → 半倉', page)
+            self.assertIn('半導體參考（^SOX', page)
+            self.assertEqual(la['direction']['prob'], 50)
+            self.assertEqual(la['predictions']['strategies'], {})
+
+    def test_daily_run_spx_uses_ndx_gate(self):
+        r = self.spx
+        for ndx_td, stale in ((True, False), (False, True)):
+            with tempfile.TemporaryDirectory() as root:
+                d = self.docs(root, r, 'spx')
+                ndx_old = sc.show(f"{r['sha']}^", 'docs/ndx_last_analysis.json')
+                sv(os.path.join(d, 'ndx_last_analysis.json'), ndx_old)
+                day = r['today']['trade_date']
+                files = []
+                if ndx_td:
+                    files = [os.path.join(root, 'ndx_td.json')]
+                    sv(files[0], {'symbol': 'NDX', 'trade_date': day, 'close': 30000.0, 'ma200': 25000.0, 'change_pct': 1.0,
+                                  'semis_daily': {'as_of': day, 'basis': '^SOX', 'change_pct': 2.5, 'vs_index_pp': 1.5, 'read': 'x',
+                                                  'chg_5d_pct': 1.0, 'vs_ma200_pct': 3.0}})
+                sv(os.path.join(root, 'td.json'), r['today'])
+                sv(os.path.join(root, 'nar.json'), {**r['narrative'], 'html': HTML_SPX})
+                with open(os.path.join(d, 'spx-analysis-20261021.html'), 'w', encoding='utf-8') as f:
+                    f.write(sc.git('show', f"{r['sha']}^:docs/spx-analysis-20261021.html"))
+                out = os.path.join(root, 'out')
+                daily_run.main(['--symbol', 'spx', '--docs', d, '--today', os.path.join(root, 'td.json'), '--narrative', os.path.join(root, 'nar.json'),
+                                '--report', os.path.join(root, 'rpt.txt'), '--out', out, '--ndx-today', *files])
+                la = ld(os.path.join(out, 'last_analysis.json'))
+                with open(os.path.join(out, 'spx-analysis-20261022.html'), encoding='utf-8') as f:
+                    page = f.read()
+                with self.subTest(ndx_td=ndx_td):
+                    self.assert_first_sentence(la, page, '維持', 100)
+                    self.assertIn('NDX 收盤', la['holding_action']['text'])
+                    self.assertEqual('⚠NDX 閘門資料日為' in la['holding_action']['text'], stale)
+                    sem = la['holding_action']['semis_ref']
+                    if ndx_td:
+                        self.assertIn('NDX 收盤 30,000.00', la['holding_action']['text'])
+                        # SPX 的 today_data 沒有 semis_daily → 借 NDX 同日的 ^SOX，並以 SPX 漲跌重算對指數差距
+                        exp = round(2.5 - r['today']['change_pct'], 2)
+                        self.assertIn('取自 NDX 同日資料', sem)
+                        self.assertIn(f'對指數 {exp:+.2f}pp', sem)
+                    else:
+                        self.assertIn('日線資料缺（不得以 0 代入）', sem)
+                    self.assertIn('SPX 自身水位', la['summary_line'])
+                    self.assertIn('科技籃倉位跟 NDX', la['summary_line'])
+                    self.assertIn('SPX 自身水位：', page)
 
     def test_shadow_check_cli(self):
         with tempfile.TemporaryDirectory() as root:
@@ -292,7 +414,7 @@ class HtmlRenderTest(unittest.TestCase):
 
     def test_render_every_day(self):
         for sym, render, H in (('spx', render_spx_html.render, HTML_SPX), ('ndx', render_ndx_html.render, HTML_NDX)):
-            for r in sc.replay_all(sym, sc.analysis_commits(sym, SINCE)):
+            for r in sc.replay_all(sym, mech_commits(sym)):
                 with self.subTest(sym=sym, report=r['report_date']):
                     a = r['after']
                     last = a[sc.SYM[sym]['last']]

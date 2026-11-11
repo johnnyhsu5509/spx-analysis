@@ -117,5 +117,6 @@ gap day（例如 10/26：前一個收盤沒做分析）會自動處理：待判�
 - `amp_hit_rate`：A 的 50% 區間命中率，逐筆用 `band_lo`／`band_hi` 與 `actual_range_pct` 重判，NDX 與 SPX 各用自己的 `amp_track`。
 - `event_day`：`{is_event_day, note}`，敘事給值；沒給顯示「未標註」，不猜。
 - `summary_line` 與 HTML 頁面頂端摘要區塊：資料日、方向、A、關鍵價位／MA200、預報日是否事件日。
+- `holding_action`（方案 G，2026-11-10）：報告第一句＝對現有持股的動作，只有 維持／加碼／減碼（含目標百分比）。分母是「科技／NDX／QQQ／半導體」這一籃＝100%，不是帳戶總曝險；兩邊都看 NDX 閘門（prc-014，判定式未改）；「新增多單」另起一行（固定不新增，rule57）；出清不是可執行動作，只寫「另案討論」。附 `semis_ref`（來自 today_data 的 `semis_daily`，僅供參考、不改水位）。HTML 頁首順序：動作句 → 新增多單 → 半導體參考 → 摘要行。
 
-模型手寫報告時用 `scripts/phase3_fields.py` 產生並注入（可重複執行）；`daily_run.py` 已內建。
+模型手寫報告時用 `scripts/phase3_fields.py` 產生並注入（可重複執行；SPX 可加 `--ndx-today` 指定 NDX 資料檔）；`daily_run.py` 已內建全部五項（`holding_action` 於 2026-11-10 接上）：第一句寫進 last_analysis 的 `holding_action` 與 `rating` 開頭、HTML 頁首；SPX 的 NDX 閘門依序取 `--docs` 的 ndx_last_analysis.json（基準日相符）→ `--ndx-today` 檔（預設 scripts／data 的 ndx_today_data.txt）→ 沿用前一日並註明資料落後。記帳腳本改用 `mech_lib.position_state`（判定式與 `position_level` 相同），切換／半倉不再停下，切換日由 `daily_run.py` 補記 `position_gate.events`。

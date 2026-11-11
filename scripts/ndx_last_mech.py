@@ -5,12 +5,12 @@
 
 SPX 的 A、VIX、regime 直接讀 SPX 當天的 last_analysis.json；SPX 當天還沒跑完就停下。
 --aux 是當天另外量的數據（原樣搬進對應區塊）：{"volatility_scale": {"atr14_pct", "range5_pct", …}, "breadth": {…}, "sector": {…}, "macro": {…}}
-部位水位（rule59）切換或處於半倉時停下，要求人工處理。不加 --out 只寫 --report。
+部位水位（rule59）判定式不變；切換或處於半倉時不停下（2026-11-10 方案 G），由 daily_run 寫出現有持股動作並補記 position_gate.events。不加 --out 只寫 --report。
 """
 import argparse
 import os
 
-from mech_lib import amp_hit_rate, ld, md, merge, next_bday, position_level, summary_line, sv
+from mech_lib import amp_hit_rate, ld, md, merge, next_bday, position_state, summary_line, sv
 
 K_SHADOW = 0.2
 SHALLOW = ('amplitude', 'volatility_scale', 'breadth', 'sector', 'macro', 'regime_check', 'spx_cross_check', 'predictions', 'backtest_prev', 'position_level')
@@ -43,7 +43,7 @@ def build(docs, ledgers, td, aux, spx, nar=None, report_date=None):
     lim_l, lim_s = round(C - K_SHADOW * A, 2), round(C + K_SHADOW * A, 2)
     spxA = spx['amplitude']['A_pct']
     ratio = round(am['amp_forecast_pct'] / spxA, 3)
-    plv = position_level(old['position_level'], C, ma200, day)
+    plv = position_state(old['position_level'], C, ma200, day)
     pos_pct, dist, state = plv['pct'], plv['dist_to_switch_pct'], plv['state']
     gaps =tr['amp_track']['summary'].get('gap_days', []) if day != t else []
     gaps = [x for x in gaps if t < x <= day]
@@ -98,7 +98,9 @@ def build(docs, ledgers, td, aux, spx, nar=None, report_date=None):
             (f"rule58：振幅帳第 {asum['graded']} 筆（{md(t)}）：實際 {ae['actual_range_pct']:.3f}% vs A {ae['A_pct']}%，log_err {ae['log_err']:.3f}、r0 {ae['r0_log_err']:.3f}，{pos}；"
              f"累計覆蓋 {asum['band_coverage_pct']:.1f}%（n={asum['graded']}），平均 log_err A {asum['mean_log_err']:.3f} vs r0 {asum['mean_r0_log_err']:.3f}"
              + ''.join(f'；{md(x)} gap day' for x in gaps)),
-            f"rule59：部位水位 {state}（收盤 > MA200 {pos_pct:+.1f}%），自 {old['position_level']['since']} 起維持，今日未切換"],
+            (f"rule59：部位水位 {state}（收盤 > MA200 {pos_pct:+.1f}%），自 {plv['since']} 起維持，今日未切換" if state == '正常' and not plv['switched_today'] else
+             f"rule59：部位水位 {state}（收盤 {'>' if state == '正常' else '≤'} MA200 {pos_pct:+.1f}%），"
+             + (f"今日切換（{'半倉 → 正常' if state == '正常' else '正常 → 半倉'}），t+1 美股收盤執行" if plv['switched_today'] else f"自 {plv['since']} 起維持，今日未切換"))],
         'candidate_updates': {'note': '未新增候補；候補上限 15。'},
         'backtest_prev': {'report_date': tre['report_date'],
                           'predicted': f"中性 50（方向無 edge）；振幅 A {oam['A_pct']:.2f}%（50% 區間 {oam['band_lo']:.3f}–{oam['band_hi']:.3f}%）",

@@ -124,8 +124,12 @@ def render(ledgers, td, nar, head):
     o.append('<ol>\n' + '\n'.join('<li>' + BOLD.sub(r'<b>\1</b>', w) + '</li>' for w in pr.get('watch_points', [])) + '\n</ol>')
     o.append('<h2>部位水位（部位層，不是分析）</h2>')
     o.append(f"<div class=\"box good\">\n<ul>\n<li>訊號：NDX 收盤 {pos['close']:,.2f} vs MA200 {pos['ma200']:,.2f}（{pos['pct']:+.1f}%）→ 在 MA200 {'之上' if pos['pct'] > 0 else '之下'}</li>\n"
-             f"<li>水位：<b>{pos['state']}</b>（基準部位 {'100' if pos['state'] == '正常' else '50'}%）</li>\n<li>狀態：自 {pos['since']} 起維持；今日{'已' if pos['switched_today'] else '未'}切換</li>\n"
-             f"<li>距切換線：收盤需再跌 {pos['dist_to_switch_pct']:.1f}% 才轉為半倉</li>\n<li>依據：prc-014（預先登記、樣本外 4/4 通過）。本段不改變上方的振幅與方向輸出。</li>\n</ul>\n</div>")
+             f"<li>水位：<b>{pos['state']}</b>（基準部位 {'100' if pos['state'] == '正常' else '50'}%）</li>\n"
+             + (f"<li>狀態：⚠️ 今日切換：{'半倉 → 正常' if pos['state'] == '正常' else '正常 → 半倉'}（t+1 美股收盤執行）</li>\n" if pos['switched_today']
+                else f"<li>狀態：自 {pos['since']} 起維持；今日未切換</li>\n")
+             + (f"<li>距切換線：收盤需再跌 {pos['dist_to_switch_pct']:.1f}% 才轉為半倉</li>\n" if pos['state'] == '正常' else
+                f"<li>距切換線：收盤需再漲 {pos.get('rise_to_reclaim_pct', hu((pos['ma200'] / pos['close'] - 1) * 100, 2)):.1f}% 站回 MA200 才恢復正常</li>\n")
+             + "<li>依據：prc-014（預先登記、樣本外 4/4 通過）。本段不改變上方的振幅與方向輸出。</li>\n</ul>\n</div>")
     o.append(f"<footer>\n  NDX 分析系統｜與 SPX 並列、帳本分離｜資料來源 yfinance（日線＋30 分 K）｜新聞：{H['news_sources']}<br>\n"
              '  <a href="https://johnnyhsu5509.github.io/spx-analysis/ndx/" style="color:#a78bfa">NDX</a> · <a href="https://johnnyhsu5509.github.io/spx-analysis/spx/" style="color:#22d3ee">SPX</a><br><br>\n'
              '  <b>本分析僅供學習參考，不構成投資建議。</b>\n</footer>')

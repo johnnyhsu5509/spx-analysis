@@ -154,13 +154,19 @@ class HtmlInjectTest(unittest.TestCase):
 class Phase3FieldsCliTest(unittest.TestCase):
     TD = {'trade_date': '2026-11-03', 'close': 7568.92, 'ma200': 7315.89}
 
-    def docs(self, root, events=True, position=None):
+    NDX_GATE = {'state': '正常', 'close': 25979.36, 'ma200': 24822.71, 'pct': 4.66, 'since': '2026-04-08', 'switched_today': False,
+                'data_missing': False, 'basis_date': '2026-11-03', 'dist_to_switch_pct': 4.45, 'note': ''}
+
+    def docs(self, root, events=True, position=None, ndx_gate=NDX_GATE):
         d = os.path.join(root, 'docs')
         os.makedirs(d)
         la = la_fixture()
         if position:
             la['position_level'] = position
-        for f, o in (('last_analysis.json', la), ('track_record.json', tr_fixture(events))):
+        files = [('last_analysis.json', la), ('track_record.json', tr_fixture(events))]
+        if ndx_gate:
+            files.append(('ndx_last_analysis.json', {'position_level': ndx_gate}))
+        for f, o in files:
             with open(os.path.join(d, f), 'w', encoding='utf-8', newline='\n') as fh:
                 fh.write(json.dumps(o, ensure_ascii=False, indent=1))
         return d, la
@@ -215,6 +221,119 @@ class Phase3FieldsCliTest(unittest.TestCase):
             self.assertEqual((rb(page), rb(os.path.join(d, 'last_analysis.json'))), (h1, j1))
             self.assertIn('phase3-summary'.encode(), h1)
             self.assertIn('部位水位'.encode(), h1)
+
+    def test_spx_uses_ndx_gate_and_notes_stale_data(self):
+        with tempfile.TemporaryDirectory() as root:
+            d, _ = self.docs(root)
+            ha = pf.build('spx', d, self.TD, ndx_td_files=())['holding_action']
+            self.assertEqual((ha['action'], ha['target_pct']), ('維持', 100))
+            self.assertIn('NDX 收盤 25,979.36', ha['text'])
+            self.assertNotIn('⚠', ha['text'])
+        with tempfile.TemporaryDirectory() as root:
+            d, _ = self.docs(root, ndx_gate={**self.NDX_GATE, 'basis_date': '2026-10-31'})
+            ha = pf.build('spx', d, self.TD, ndx_td_files=())['holding_action']
+            self.assertIn('NDX 閘門資料日為 2026-10-31', ha['text'])
+            self.assertEqual(ha['action'], '維持')
+
+    def test_spx_stops_without_ndx_gate(self):
+        with tempfile.TemporaryDirectory() as root:
+            d, _ = self.docs(root, ndx_gate=None)
+            with self.assertRaises(SystemExit) as cm:
+                pf.build('spx', d, self.TD, ndx_td_files=())
+            self.assertIn('NDX 閘門', str(cm.exception))
+
+    def test_half_position_does_not_stop_and_records_switch_once(self):
+        with tempfile.TemporaryDirectory() as root:
+            d, _ = self.docs(root)
+            td, rpt = os.path.join(root, 'td.json'), os.path.join(root, 'r.json')
+            with open(td, 'w', encoding='utf-8') as fh:
+                fh.write(json.dumps({**self.TD, 'ma200': 7600.0}))
+            args = ['--symbol', 'spx', '--docs', d, '--today', td, '--report', rpt, '--ndx-today', '--apply']
+            la = pf.main(args)
+            self.assertEqual((la['position_level']['state'], la['position_level']['switched_today']), ('半倉', True))
+            self.assertEqual(la['direction']['prob'], 50)
+            pf.main(args)
+            with open(os.path.join(d, 'track_record.json'), encoding='utf-8') as fh:
+                ev = json.load(fh)['position_gate']['events']
+            self.assertEqual([(e['date'], e['to']) for e in ev], [('2026-04-08', '正常'), ('2026-11-03', '半倉')])
+
+
+class HoldingActionTest(unittest.TestCase):
+    """方案 G：第一句只有 維持／加碼／減碼；分母是這一籃；出清只能出現在「另案討論」註記；判定式與 position_level 相同。"""
+    MA = 27976.53
+
+    def gate(self, old_state, close):
+        return ml.position_state({'state': old_state, 'since': '2026-04-08'}, close, self.MA, '2026-11-05')
+
+    def test_four_states(self):
+        for old, close, act, tgt, sw in (('正常', 29000.0, '維持', 100, False), ('半倉', 29000.0, '加碼', 100, True),
+                                         ('正常', 26629.81, '減碼', 50, True), ('半倉', 26629.81, '維持', 50, False)):
+            with self.subTest(old=old, close=close):
+                g = self.gate(old, close)
+                self.assertEqual(g['switched_today'], sw)
+                self.assertEqual(g['state'], '正常' if close > self.MA else '半倉')
+                ha = ml.holding_action(g, '2026-11-06')
+                self.assertEqual((ha['action'], ha['target_pct']), (act, tgt))
+                self.assertTrue(ha['text'].startswith(f'對現有{ml.BASKET}（以這一籃為 100%，不是帳戶總曝險）：{act}'))
+
+    def test_same_rule_as_position_level(self):
+        old = {'state': '正常', 'since': '2026-04-08'}
+        a, b = ml.position_state(old, 7568.92, 7315.89, '2026-11-03'), ml.position_level(old, 7568.92, 7315.89, '2026-11-03')
+        self.assertEqual({k: a[k] for k in b}, b)
+        self.assertEqual(ml.position_state(None, 100.0, 100.0, 'd')['state'], '半倉')
+
+    def test_forbidden_words_and_exit_only_as_side_note(self):
+        for old, close in (('正常', 29000.0), ('半倉', 29000.0), ('正常', 26629.81), ('半倉', 26629.81)):
+            text = ml.holding_action(self.gate(old, close), '2026-11-06')['text']
+            with self.subTest(old=old, close=close):
+                for w in ('觀望', '防守', '不交易'):
+                    self.assertNotIn(w, text)
+                self.assertEqual(text.count('出清'), text.count(ml.EXIT_ALL))
+
+    def test_half_reclaim_distance(self):
+        g = self.gate('半倉', 26629.81)
+        self.assertEqual(g['rise_to_reclaim_pct'], 5.06)
+        self.assertIn('收盤需再漲 5.1% 站回 MA200 才加回 100%', ml.holding_action(g, '2026-11-06')['text'])
+        self.assertIn('收盤需再漲 5.1% 站回 MA200 才恢復正常', ml.position_html('SPX', g))
+
+    def test_banner_puts_action_before_summary(self):
+        la = HtmlInjectTest().la()
+        la['holding_action'] = ml.holding_action(self.gate('正常', 26629.81), '2026-11-06')
+        la['holding_action']['semis_ref'] = ml.semis_ref(None)
+        out = ml.inject_banner(HtmlInjectTest.PAGE, la)
+        self.assertLess(out.index('減碼到 50%'), out.index('新增多單'))
+        self.assertLess(out.index('新增多單'), out.index('SPX｜測試'))
+        self.assertIn('不得以 0 代入', out)
+
+    def test_semis_for_borrows_same_day_only(self):
+        sd = {'as_of': '2026-11-09', 'basis': '^SOX', 'change_pct': 6.85, 'vs_index_pp': 3.45, 'read': '半導體領漲（領先指數 ≥1.0pp）'}
+        ndx = {'symbol': 'NDX', 'trade_date': '2026-11-09', 'semis_daily': sd}
+        spx = {'symbol': 'SPX', 'trade_date': '2026-11-09', 'change_pct': 2.35}
+        got = ml.semis_for(spx, [ndx])
+        self.assertEqual((got['change_pct'], got['vs_index_pp'], got['borrowed_from']), (6.85, 4.5, 'NDX'))
+        self.assertIn('取自 NDX 同日資料', ml.semis_ref(got))
+        self.assertIs(ml.semis_for({**spx, 'semis_daily': {**sd, 'basis': 'SOXX'}}, [ndx])['basis'], 'SOXX')
+        self.assertIsNone(ml.semis_for(spx, [{**ndx, 'semis_daily': {**sd, 'as_of': '2026-11-06'}}]))
+        self.assertIsNone(ml.semis_for(spx, [{**ndx, 'semis_daily': None}]))
+        self.assertIn('資料缺（不得以 0 代入）', ml.semis_ref(ml.semis_for(spx, [])))
+        self.assertNotIn('+0.00%', ml.semis_ref(None))
+
+    def test_spx_level_wording_cannot_be_read_as_basket(self):
+        pos = ml.position_state({'state': '正常', 'since': '2026-04-08'}, 7568.92, 7315.89, '2026-11-03')
+        la = la_fixture()
+        s = ml.summary_line('SPX', la, pos)
+        self.assertIn('SPX 自身水位正常；科技籃倉位跟 NDX', s)
+        self.assertIn('・水位正常', ml.summary_line('NDX', la, pos))
+        h = ml.position_html('SPX', pos)
+        self.assertIn('SPX 自身水位：<b>正常</b>', h)
+        self.assertIn('這一籃的倉位一律跟 NDX 閘門', h)
+
+    def test_semis_ref(self):
+        sd = {'as_of': '2026-11-05', 'basis': '^SOX', 'change_pct': -3.21, 'vs_index_pp': -1.5, 'read': '半導體領跌（落後指數 ≥1.0pp）',
+              'chg_5d_pct': None, 'vs_ma200_pct': 2.0, 'tail_source': '30m_approx'}
+        s = ml.semis_ref(sd)
+        for part in ('^SOX', '資料日 2026-11-05', '日 -3.21%', '-1.50pp', '5 日 —', '近似值', '不改水位'):
+            self.assertIn(part, s)
 
 
 if __name__ == '__main__':
