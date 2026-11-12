@@ -1,103 +1,93 @@
 {
-  "trade_date": "2026-11-10",
-  "close": 27740.79,
-  "open": 27649.63,
-  "high": 27990.34,
-  "low": 27421.18,
-  "volume": 1519246000,
-  "prev_close": 27907.63,
-  "change_pct": -0.6,
-  "vxn": 28.97,
-  "ma5": 27541.08,
-  "ma20": 28811.66,
-  "ma50": 29567.86,
-  "ma200": 28005.54,
-  "rsi": 35.63,
-  "macd_hist": -159.34,
-  "macd_line": -659.29,
-  "signal": -499.94,
-  "bb_upper": 30782.64,
-  "bb_lower": 26840.68,
-  "bb_pct": 22.8,
-  "kd_k": 25.61,
-  "kd_d": 19.85,
+  "trade_date": "2026-11-11",
+  "close": 28374.25,
+  "open": 28267.33,
+  "high": 28593.52,
+  "low": 28102.75,
+  "volume": 1564286000,
+  "prev_close": 27740.79,
+  "change_pct": 2.28,
+  "vxn": 26.74,
+  "ma5": 27528.49,
+  "ma20": 28732.83,
+  "ma50": 29553.8,
+  "ma200": 28017.71,
+  "rsi": 45.83,
+  "macd_hist": -77.42,
+  "macd_line": -596.72,
+  "signal": -519.3,
+  "bb_upper": 30636.95,
+  "bb_lower": 26828.71,
+  "bb_pct": 40.6,
+  "kd_k": 35.25,
+  "kd_d": 24.98,
   "breadth": {
-    "qqqe_qqq_ratio": 0.1706,
-    "chg_1d_pct": 0.29,
-    "chg_5d_pct": 0.81,
-    "vs_ma20_pct": 2.05,
-    "read": "廣度擴張（中小型股同步參與）",
+    "qqqe_qqq_ratio": 0.1705,
+    "chg_1d_pct": -0.09,
+    "chg_5d_pct": 0.48,
+    "vs_ma20_pct": 1.74,
+    "read": "廣度中性",
     "note": "QQQE(等權NDX)/QQQ(市值權重);升=廣度好,降=窄化。科技股權重極集中,窄化時指數強度打折更明顯",
-    "as_of": "2026-11-10",
+    "as_of": "2026-11-11",
     "tail_source": "30m_approx",
     "caveat": "ETF 日線落後，最後一筆由 30m 末根補值（不含收盤撮合，與官方收盤約差 1-3 點）。1 日變動為近似值；5 日與 vs_MA20 含此近似值"
   },
   "regime": {
     "base_5d_pullback": 57.25,
     "vxn": {
-      "regime": "VXN>=28（高波動）",
-      "pullback_5d": 72.35,
-      "vs_base": 15.1
+      "regime": "VXN 18-28（中波動）",
+      "pullback_5d": 61.55,
+      "vs_base": 4.3
     },
     "trend": {
-      "regime": "NDX 在 MA200 之下（空頭結構）",
-      "pullback_5d": 73.68,
-      "vs_base": 16.4
+      "regime": "NDX 在 MA200 之上（多頭結構）",
+      "pullback_5d": 53.66,
+      "vs_base": -3.6
     },
     "ma20_ext": {
-      "regime": "距 MA20 -3% 以下（深跌）",
-      "pullback_5d": 73.31,
-      "vs_base": 16.1,
-      "ext_pct": -3.72
+      "regime": "距 MA20 +/-3% 內（正常）",
+      "pullback_5d": 53.48,
+      "vs_base": -3.8,
+      "ext_pct": -1.25
     },
-    "regime_avg_5d": 73.1,
-    "regime_avg_vs_base": 15.8,
+    "regime_avg_5d": 56.2,
+    "regime_avg_vs_base": -1.0,
     "horizon_1d": {
       "base_1d_pullback": 29.02,
       "vxn": {
-        "pullback_1d": 45.83,
-        "vs_base": 16.8
+        "pullback_1d": 32.03,
+        "vs_base": 3.0
       },
       "trend": {
-        "pullback_1d": 48.18,
-        "vs_base": 19.2
+        "pullback_1d": 24.85,
+        "vs_base": -4.2
       },
       "ma20_ext": {
-        "pullback_1d": 47.59,
-        "vs_base": 18.6
+        "pullback_1d": 26.2,
+        "vs_base": -2.8
       },
-      "regime_avg_1d": 47.2,
-      "regime_avg_vs_base": 18.2
+      "regime_avg_1d": 27.7,
+      "regime_avg_vs_base": -1.3
     }
   },
   "amplitude": {
-    "as_of": "2026-11-10",
-    "amp_forecast_pct": 1.528,
-    "amp_forecast_pts": 424.0,
+    "as_of": "2026-11-11",
+    "amp_forecast_pct": 1.413,
+    "amp_forecast_pts": 401.0,
     "band_50_pct": [
-      1.173,
-      1.978
+      1.083,
+      1.826
     ],
-    "implied_daily_pct": 1.825,
-    "c": 0.837,
+    "implied_daily_pct": 1.684,
+    "c": 0.839,
     "c_window": 252,
     "realized_vs_implied_63d": 0.68,
-    "vol_pct_1y": 89.7,
-    "r0_rule27_ref_pct": 2.552,
-    "atr14_pct": 2.354,
-    "method": "A = c × ^VXN/√252；c 與 50% 區間 = 近 252 個已知交易日（隔日振幅÷隱含日波動）的中位數與 25/75 分位（Phase 3 V2b 核准）",
-    "stale": true,
-    "caveat": "⚠振幅序列末日 2026-11-10／^VXN 末日 2026-11-09 與指數 2026-11-10 不一致，本區塊不得當成當日引用"
+    "vol_pct_1y": 72.6,
+    "r0_rule27_ref_pct": 2.531,
+    "atr14_pct": 2.352,
+    "method": "A = c × ^VXN/√252；c 與 50% 區間 = 近 252 個已知交易日（隔日振幅÷隱含日波動）的中位數與 25/75 分位（Phase 3 V2b 核准）"
   },
   "recent_5": [
-    {
-      "date": "2026-11-04",
-      "open": 28346.81,
-      "high": 28829.66,
-      "low": 28276.22,
-      "close": 28437.17,
-      "volume": 9953250000
-    },
     {
       "date": "2026-11-05",
       "open": 28078.19,
@@ -128,31 +118,64 @@
       "high": 27990.34,
       "low": 27421.18,
       "close": 27740.79,
-      "volume": 1519246000
+      "volume": 8145710000
+    },
+    {
+      "date": "2026-11-11",
+      "open": 28267.33,
+      "high": 28593.52,
+      "low": 28102.75,
+      "close": 28374.25,
+      "volume": 1564286000
     }
   ],
   "symbol": "NDX",
-  "wilder_rsi": 40.0,
+  "wilder_rsi": 45.96,
   "rsi_method_divergence": {
     "flag": false,
-    "cutler_chg": -3.69,
-    "wilder_chg": -1.11
+    "cutler_chg": 10.2,
+    "wilder_chg": 5.96
   },
   "sector_daily": {
-    "as_of": "2026-11-10",
+    "as_of": "2026-11-11",
     "SOXX": null,
     "SMH": null,
     "XLV": null,
     "^TNX": {
-      "close": 4.983,
-      "prev_close": 4.864,
-      "change_pct": 2.45
+      "close": 4.998,
+      "prev_close": 4.983,
+      "change_pct": 0.3
     },
     "stale": [
       "SOXX",
       "SMH",
       "XLV"
     ],
-    "caveat": "⚠SOXX、SMH、XLV 缺 2026-11-09 或 2026-11-10 的日線收盤（抓不到或未對齊指數），該代號為 null，不得以 0 或中性代入"
+    "caveat": "⚠SOXX、SMH、XLV 缺 2026-11-10 或 2026-11-11 的日線收盤（抓不到或未對齊指數），該代號為 null，不得以 0 或中性代入"
+  },
+  "semis_daily": {
+    "as_of": "2026-11-11",
+    "basis": "^SOX",
+    "close": 10564.11,
+    "prev_close": 9998.33,
+    "change_pct": 5.66,
+    "chg_5d_pct": 2.88,
+    "vs_ma20_pct": -1.72,
+    "vs_ma200_pct": -2.76,
+    "vs_index_pp": 3.38,
+    "read": "半導體領漲（領先指數 ≥1.0pp）",
+    "alt": {
+      "SOXX": {
+        "close": 155.41,
+        "change_pct": 6.02,
+        "tail_source": "30m_approx"
+      },
+      "SMH": {
+        "close": 507.23,
+        "change_pct": 4.88,
+        "tail_source": "30m_approx"
+      }
+    },
+    "missing": []
   }
 }
