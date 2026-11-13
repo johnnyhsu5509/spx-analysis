@@ -644,6 +644,19 @@
    "basis_date": "2026-11-11",
    "pullback_prob": 50,
    "bias": "中性",
+   "actual_date": "2026-11-12",
+   "actual_pct": -0.3,
+   "actual_dir": "flat",
+   "grade": "hit",
+   "phase": "Phase 3（方向恆 50）",
+   "note": "11/12 開 27,954（−1.48% 跳空，NVDA CEO 辭職）＝09:30 棒低 27,941（全日低，在 MA200 28,029 之下約 0.3%、未破 11/10 低 27,421）→ 一路回補，11:00 棒高 28,549（全日高，站上 0.382 回撤 28,422）→ 午後逐步回落 → 收 28,289.19（**−0.30%**，日內 57.3%）→ 依 ±0.4% 判定為 **flat**。Phase 3 方向恆 50 中性；平盤日 Brier 排除不計。\n\n【盤型】跳空開低、開盤即全日低、早盤強力回補缺口並站上 0.382 回撤，午後回吐約 260 點，收在 MA200 之上 +0.93%。全日 608 點。^NDX 量 19.1 億＝20 日均 89.1 億的 21%（rule36 殘值）。"
+  },
+  {
+   "report_date": "2026-11-13",
+   "basis_close": 28289.19,
+   "basis_date": "2026-11-12",
+   "pullback_prob": 50,
+   "bias": "中性",
    "actual_date": null,
    "actual_pct": null,
    "actual_dir": null,
@@ -652,12 +665,12 @@
   }
  ],
  "summary": {
-  "as_of": "2026-11-12",
-  "graded": 50,
-  "hits": 16,
+  "as_of": "2026-11-13",
+  "graded": 51,
+  "hits": 17,
   "half": 30,
   "miss": 4,
-  "rolling_direction_score_pct": 62.0,
+  "rolling_direction_score_pct": 62.7,
   "gap_days": [
    "2026-08-27",
    "2026-08-31",
@@ -670,11 +683,11 @@
    "2026-09-28",
    "2026-10-26"
   ],
-  "sample_caveat": "n=50。62.0% ＝ (16 hit + 30 half×0.5 + 4 miss) / 50。always-neutral 基準 65.0%（依 audit_20261002 須並列）。Phase 3 起方向恆 50＝報法等同 always-neutral。",
+  "sample_caveat": "n=51。62.7% ＝ (17 hit + 30 half×0.5 + 4 miss) / 51。always-neutral 基準 65.7%（依 audit_20261002 須並列）。Phase 3 起方向恆 50＝報法等同 always-neutral。",
   "brier": {
-   "as_of": "2026-11-12",
+   "as_of": "2026-11-13",
    "included": 35,
-   "excluded_flat": 15,
+   "excluded_flat": 16,
    "per_entry": [
     {
      "report_date": "2026-08-18",
@@ -975,6 +988,12 @@
      "p": 0.5,
      "outcome": 0,
      "brier": 0.25
+    },
+    {
+     "report_date": "2026-11-12",
+     "p": 0.5,
+     "outcome": null,
+     "brier": null
     }
    ],
    "mean_brier": 0.2475,
@@ -987,7 +1006,7 @@
   "data_correction_note": "【2026-08-28 收盤價修正】Yahoo 已恢復該日日線，官方收盤 **29,433.43**，先前使用的 30 分 K 回補值為 29,430.20（差 3.23 點）。影響核對：8/28 的 actual_pct 由 -0.71% 修為 **-0.70%**，仍 ≤ -0.4%、仍判 down、仍為 miss，grade 與 brier 皆不變。P&L 帳本的 8/28 兩筆單以 High/Low 判定，不涉及 Close，亦不變。**當時的揭露（記錄兩個數字並標明差異）現已證實為正確做法。**",
   "audit_20261002": "**基準線對照（2026-10-02 稽核）**：依本帳計分規則，「每天都報中性」的基準分數為 **72.7%**（22 筆：flat 10／up 4／down 8），系統 **65.9%**，**低於無腦基準 6.8pp**。改看「方向判斷遇方向日」：9 筆對 6 筆＝66.7%（樣本太小）；Brier 0.2395 vs 基準 0.25。**往後引用滾動分數時須並列 always-neutral 基準**。",
   "gap_codex_coverage": "gap day 中 9/11、9/14、9/17、9/21、9/25、9/28 六日，Codex 第二意見系統有前瞻預測，存於 Codex 自己的追蹤帳；依「不同系統不合併計分」原則**不併入本帳**。8/27、8/31、9/8 兩套系統皆無預測。",
-  "always_neutral_baseline_pct": 65.0,
+  "always_neutral_baseline_pct": 65.7,
   "gap_note_20261026": "**10/26 為 gap day**：10/23 收盤未產出報告（10/24 排程未執行），10/26（NDX +1.09%，Anthropic IPO 申請帶動晶片反彈）無預測可判，不計入任何統計。SPX 系統同日同樣列 gap day。"
  },
  "amp_track": {
@@ -1232,19 +1251,32 @@
     "r0_log_err": 0.3665,
     "in_band": true,
     "note": "實際約 1.77%（491 點），落在 50% 區間 1.16–1.95% 內（前 2 筆高於上緣後回到區間內）。不調整 A"
+   },
+   {
+    "report_date": "2026-11-12",
+    "eval_date": "2026-11-12",
+    "A_pct": 1.413,
+    "band_lo": 1.083,
+    "band_hi": 1.826,
+    "r0_ref_pct": 2.531,
+    "actual_range_pct": 2.143,
+    "log_err": 0.4165,
+    "r0_log_err": 0.1664,
+    "in_band": false,
+    "note": "實際約 2.14%（608 點），為 A 1.41% 的 1.52 倍，**超出 50% 區間上緣 1.83%**：開盤跳空 −1.48% 本身就用掉約 1.0A（NVDA CEO 辭職，前一日已註記「實際振幅可能超出區間」）。近 4 筆中 3 筆高於上緣，未滿 60 筆不回報。不調整 A"
    }
   ],
   "summary": {
-   "graded": 18,
-   "mean_log_err": 0.4158,
-   "mean_r0_log_err": 0.4168,
-   "band_coverage_pct": 38.9,
-   "above_band": 7,
+   "graded": 19,
+   "mean_log_err": 0.4159,
+   "mean_r0_log_err": 0.4036,
+   "band_coverage_pct": 36.8,
+   "above_band": 8,
    "below_band": 4,
    "gap_days": [
     "2026-10-26"
    ],
-   "as_of": "2026-11-12"
+   "as_of": "2026-11-13"
   }
  },
  "position_gate": {
