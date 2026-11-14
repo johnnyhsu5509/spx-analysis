@@ -19,8 +19,10 @@ RUNNER = os.path.join(TESTS, "stubs", "run.py")
 BASELINE_REF = os.environ.get("BASELINE_REF", "origin/main")
 # check_es 的比對基準固定在 WEEKEND_CLOSED（todo6，25a2bbe）加入前；用 origin/main 會變成新版比新版
 ES_BASELINE_REF = os.environ.get("ES_BASELINE_REF", "ea73cd7d0205e81a4e5b3a6e527784082b81b16b")
-MODULES = ("fetch_today.py", "check_es.py", "guard.py", "gap_fix.py", "yf_compat.py", "wilder.py", "cme_session.py")
-OUTPUTS = ("today_data.txt", "ndx_today_data.txt", "es_check.txt", "ndx_es_check.txt")
+MODULES = ("fetch_today.py", "check_es.py", "check_open30.py", "guard.py", "gap_fix.py", "yf_compat.py", "wilder.py",
+           "cme_session.py")
+OUTPUTS = ("today_data.txt", "ndx_today_data.txt", "es_check.txt", "ndx_es_check.txt",
+           "open30_check.txt", "ndx_open30_check.txt")
 sys.path.insert(0, SCRIPTS)
 
 Result = collections.namedtuple("Result", "code out err files")
@@ -127,6 +129,21 @@ def es_fixture():
 ES_FILES = {"scripts/today_data.txt": {"trade_date": "2026-10-22", "close": 7663.43, "symbol": "SPX"},
             "scripts/ndx_today_data.txt": {"trade_date": "2026-10-22", "close": 29400.12, "symbol": "NDX"}}
 
+OPEN30_TICKERS = (("^GSPC", 6800.0), ("^NDX", 25000.0), ("^IXIC", 23000.0), ("SOXX", 300.0), ("QQQE", 95.0))
+
+
+def open30_fixture(last_day, days=4):
+    """check_open30.py 用：截至 last_day（紐約日期）的 days 個交易日 30m K，每日 09:30 ET 起 13 根，逐根上漲。"""
+    ds = pd.bdate_range(end=last_day, periods=days)
+    idx = pd.DatetimeIndex([ts for d in ds for ts in
+                            pd.date_range("%s 09:30" % d.date(), periods=13, freq="30min", tz="America/New_York")])
+    intra = {}
+    for t, p0 in OPEN30_TICKERS:
+        c = [p0 * (1 + 0.0005 * i) for i in range(len(idx))]
+        intra[t] = pd.DataFrame({"Open": [x * 0.999 for x in c], "High": [x * 1.001 for x in c],
+                                 "Low": [x * 0.998 for x in c], "Close": c, "Volume": 1000}, index=idx)
+    return {"daily": {}, "intraday": intra, "quote": {"^VIX": (18.0, 18.5), "^VXN": (24.0, 24.5)}}
+
 
 def ref_wilder(closes, n=14):
     """Wilder 原始定義的逐筆實作（獨立於 scripts/wilder.py），回傳對齊 closes[n:] 的 list。"""
@@ -181,8 +198,9 @@ def _baseline(vol_key, buckets):
     }
 
 
-def run(script, fx, args=(), ref=None, now_utc=None, files=None):
+def run(script, fx, args=(), ref=None, now_utc=None, files=None, local_tz=None):
     """在全新暫存樹執行一次。ref=None 用工作目錄版本，否則用該 git ref 的版本。
+    local_tz：假時鐘的本機時區（預設台北；"UTC" 模擬 GitHub Actions）。
     files：執行前寫入的 {相對路徑: 內容}。回傳 Result(code, out, err, files={輸出檔名: 文字})。"""
     with tempfile.TemporaryDirectory() as root:
         for m in MODULES:
@@ -199,8 +217,11 @@ def run(script, fx, args=(), ref=None, now_utc=None, files=None):
             pickle.dump(fx, f)
         env = dict(os.environ, YF_FIXTURE=fxp, PYTHONIOENCODING="utf-8")
         env.pop("FAKE_NOW_UTC", None)
+        env.pop("FAKE_LOCAL_TZ", None)
         if now_utc:
             env["FAKE_NOW_UTC"] = now_utc
+        if local_tz:
+            env["FAKE_LOCAL_TZ"] = local_tz
         p = subprocess.run([sys.executable, RUNNER, os.path.join(root, "scripts", script)] + list(args),
                            cwd=root, env=env, capture_output=True, encoding="utf-8", timeout=180)
         outs = {}
