@@ -4872,7 +4872,7 @@
   },
   {
    "report_date": "2026-11-13",
-   "eval_date": "pending(2026-11-13 US close)",
+   "eval_date": "2026-11-13",
    "basis_close": 7592.4,
    "thresholds": {
     "A_pct": 0.913,
@@ -4884,12 +4884,37 @@
     "note": "Phase 3：掛單幾何以 A 為單位（rule64）"
    },
    "trades_pending": [],
+   "structure_note": "**Phase 3 預設休眠（rule65）：本日無已核准的方向 edge → 不掛實單。**影子單兩張另記 shadow_ledger",
+   "ohlc": {
+    "o": 7616.85,
+    "h": 7621.78,
+    "l": 7499.4,
+    "c": 7561.67
+   },
+   "results": [],
+   "day_weighted_bp": 0.0,
+   "day_note": "**0bp（rule65 預設不掛），累積維持 -1.88bp。**discretionary_log 不新增"
+  },
+  {
+   "report_date": "2026-11-17",
+   "eval_date": "pending(2026-11-17 US close)",
+   "basis_close": 7416.59,
+   "thresholds": {
+    "A_pct": 1.119,
+    "A_pts": 82.99,
+    "band_50_pct": [
+     0.81,
+     1.445
+    ],
+    "note": "Phase 3：掛單幾何以 A 為單位（rule64）"
+   },
+   "trades_pending": [],
    "structure_note": "**Phase 3 預設休眠（rule65）：本日無已核准的方向 edge → 不掛實單。**影子單兩張另記 shadow_ledger"
   }
  ],
  "summary": {
-  "as_of": "2026-11-13",
-  "days_evaluated": 82,
+  "as_of": "2026-11-17",
+  "days_evaluated": 83,
   "trades_total": 142,
   "trades_filled": 47,
   "filled_win": 17,
@@ -4907,9 +4932,10 @@
    "2026-09-21",
    "2026-09-25",
    "2026-09-28",
-   "2026-10-26"
+   "2026-10-26",
+   "2026-11-16"
   ],
-  "honest_read": "11/12 rule65 預設不掛，**0bp，累積維持 -1.88bp**（82 日）。Phase 3 起主帳無實單日記 0bp；績效比較看 shadow_ledger 與 amp_track。",
+  "honest_read": "11/13 rule65 預設不掛，**0bp，累積維持 -1.88bp**（83 日）。11/16 為 gap day（無預測留存）。Phase 3 起主帳無實單日記 0bp；績效比較看 shadow_ledger 與 amp_track。",
   "fill_rate_pct": 33.1,
   "filled_flat": 5,
   "count_note": "win10+loss12+flat2=24 與 filled=25 差1筆,為2026-08-18之前既有的分類遺漏(彼時已存在,非本次新增);entries陣列僅保留部分明細故無法回溯重算,照實標記不平帳,不以調整數字掩蓋",
@@ -4956,26 +4982,26 @@
   "verdict_rule": "累積 6 個月後判定：t>2、扣成本後仍為正、並排除漂移",
   "pending": [
    {
-    "report_date": "2026-11-13",
-    "basis_close": 7592.4,
+    "report_date": "2026-11-17",
+    "basis_close": 7416.59,
     "side": "long",
     "order": "limit_buy",
-    "limit": 7564.67,
+    "limit": 7383.39,
     "k": 0.4,
     "s": 0.5,
-    "A_pts": 69.32,
+    "A_pts": 82.99,
     "stop_rule": "成交價 − s×A",
     "exit": "隔日收盤"
    },
    {
-    "report_date": "2026-11-13",
-    "basis_close": 7592.4,
+    "report_date": "2026-11-17",
+    "basis_close": 7416.59,
     "side": "short",
     "order": "limit_sell",
-    "limit": 7620.13,
+    "limit": 7449.79,
     "k": 0.4,
     "s": 0.5,
-    "A_pts": 69.32,
+    "A_pts": 82.99,
     "stop_rule": "成交價 + s×A",
     "exit": "隔日收盤"
    }
@@ -5596,19 +5622,52 @@
     "pnl_pts": 52.95,
     "pnl_A": 0.816,
     "note": "11:00 K 高 7,652.76 觸及掛價 7,645.35 成交；停損 7,677.81 未觸及，收盤 7,592.40 平倉"
+   },
+   {
+    "report_date": "2026-11-13",
+    "eval_date": "2026-11-13",
+    "side": "long",
+    "limit": 7564.67,
+    "A_pts": 69.32,
+    "filled": true,
+    "fill": 7564.67,
+    "fill_type": "limit",
+    "stop": 7530.01,
+    "stop_hit": true,
+    "exit": 7530.01,
+    "pnl_pts": -34.66,
+    "pnl_A": -0.5,
+    "note": "掛 7,564.67；開 7,616.85 高於掛價，盤中回落以掛價成交；之後下探低 7,499.40，觸停損 7,530.01 ＝ −0.5A"
+   },
+   {
+    "report_date": "2026-11-13",
+    "eval_date": "2026-11-13",
+    "side": "short",
+    "limit": 7620.13,
+    "A_pts": 69.32,
+    "filled": true,
+    "fill": 7620.13,
+    "fill_type": "limit",
+    "stop": 7654.79,
+    "stop_hit": false,
+    "exit": 7561.67,
+    "pnl_pts": 58.46,
+    "pnl_A": 0.843,
+    "note": "掛 7,620.13；開 7,616.85 未達，盤中高 7,621.78 觸價成交；未觸停損 7,654.79，收盤 7,561.67 平倉 ＝ 約 +0.84A"
    }
   ],
   "summary": {
-   "evaluated_days": 19,
-   "filled_long": 9,
-   "filled_short": 12,
-   "mean_pnl_A_long": -0.203,
-   "mean_pnl_A_short": -0.099,
-   "cum_pnl_A": -3.023,
+   "evaluated_days": 20,
+   "filled_long": 10,
+   "filled_short": 13,
+   "mean_pnl_A_long": -0.233,
+   "mean_pnl_A_short": -0.027,
+   "cum_pnl_A": -2.68,
    "gap_days": [
-    "2026-10-26"
+    "2026-10-26",
+    "2026-11-16"
    ],
-   "as_of": "2026-11-13"
+   "as_of": "2026-11-17"
   }
  }
 }
