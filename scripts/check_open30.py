@@ -6,6 +6,7 @@ import json
 import os
 import sys
 from datetime import datetime
+from zoneinfo import ZoneInfo
 
 OUT_DIR = os.path.dirname(os.path.abspath(__file__))
 
@@ -41,7 +42,9 @@ INDEX, LABEL = CFG["index"], CFG["label"]
 VOL_TICK, VOL_KEY = CFG["vol"]
 OUTFILE = CFG["outfile"]
 
-result = {"checked_at": datetime.now().strftime("%Y-%m-%d %H:%M")}
+# 「今日」一律以紐約日期為準（台北日期、本機時區都不可靠：台北上午＝紐約前一日晚上）
+NY_TODAY = datetime.now(ZoneInfo("America/New_York")).date()
+result = {"checked_at": datetime.now().strftime("%Y-%m-%d %H:%M"), "ny_today": str(NY_TODAY)}
 
 
 def bars_30m(ticker, period="10d"):
@@ -130,11 +133,24 @@ try:
 except Exception:
     pass
 
+# 資料狀態：FAILED（抓取失敗）／NOT_TODAY（最新 30m K 不是紐約今日）／OK
+if result.get("error") or not result.get("bars_30m"):
+    result["data_status"] = "FAILED"
+elif today != NY_TODAY:
+    result["data_status"] = "NOT_TODAY"
+    result["data_status_note"] = ("session_date 不是紐約今日（%s）：今日尚未開盤、休市或資料未更新；"
+                                  "以上為 %s 的資料，不可當作今日開盤確認" % (NY_TODAY, today))
+else:
+    result["data_status"] = "OK"
+
 with open(os.path.join(OUT_DIR, OUTFILE), "w", encoding="utf-8") as f:
     json.dump(result, f, ensure_ascii=False, indent=2)
 
-# 原版寫完就靜默結束，抓取失敗時無從察覺；補上狀態行（不改動 JSON 內容）
-if result.get("error") or not result.get("bars_30m"):
+if result["data_status"] == "FAILED":
     print("CHECK_OPEN30 FAILED (%s): %s" % (LABEL, result.get("error", "no bars returned")))
+    sys.exit(1)
+if result["data_status"] == "NOT_TODAY":
+    print("CHECK_OPEN30 NOT_TODAY (%s): session_date=%s, NY today=%s (not open yet / holiday / data not updated)"
+          % (LABEL, result.get("session_date"), NY_TODAY))
     sys.exit(1)
 print("OK %s session_date=%s first_30m=%s" % (LABEL, result.get("session_date"), result.get("first_30m_direction")))
