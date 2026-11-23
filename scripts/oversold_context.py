@@ -13,7 +13,7 @@ prc-010 的方向規則核准門檻（walk-forward、BH、扣成本後 95% 區�
 事件（episode）：訊號日之間相隔 >= 20 個交易日才算新事件；以每個事件的第一個訊號日計，
   避免同一段崩跌的連續訊號日重複計數。另附「所有訊號日」版本供對照（樣本高度相關）。
 結果：之後 5／20／60 個交易日的收盤報酬；之後 20／60 日內相對訊號日收盤的最大跌幅；
-  之後 20 日內是否再創收盤新低（低於訊號日收盤）。基準＝全樣本所有交易日的同一統計。
+  之後 20 日內收盤是否曾跌破訊號日收盤。基準＝全樣本所有交易日的同一統計。
 
 用法：python3 scripts/oversold_context.py --symbol ndx|spx [--asof YYYY-MM-DD]
 輸出：docs/ndx_oversold_context.json 或 docs/oversold_context.json（UTF-8），stdout 只印 ASCII。
@@ -96,7 +96,7 @@ def stats(sub):
             'p10_pct': round(s.quantile(0.10) * 100, 2), 'worst_pct': round(s.min() * 100, 2),
         }
     s = sub['newlow20'].dropna()
-    out['new_close_low_within_20d_pct'] = None if s.empty else round(s.astype(float).mean() * 100, 1)
+    out['close_below_signal_within_20d_pct'] = None if s.empty else round(s.astype(float).mean() * 100, 1)
     return out
 
 

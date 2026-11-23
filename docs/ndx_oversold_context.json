@@ -1,0 +1,256 @@
+{
+ "symbol": "NDX",
+ "purpose": "超跌情境條件統計：描述性參考，不是已核准的方向規則；不改 direction 50、不改部位水位、不產生交易指令",
+ "asof": "2026-11-20",
+ "sample": {
+  "from": "2002-01-28",
+  "to": "2026-11-20",
+  "days": 6246
+ },
+ "condition": {
+  "dist_ma200_le_pct": -10.0,
+  "vol_index": "^VXN",
+  "vol_pct_1y_ge": 95.0,
+  "episode_gap_days": 20,
+  "defined_on": "2026-11-23，跑結果前定義"
+ },
+ "today": {
+  "close": 25028.98,
+  "ma200": 28073.3,
+  "dist_pct": -10.84,
+  "vol": 45.25,
+  "vol_pct_1y": 100.0,
+  "dist_pctile_in_history": 7.12,
+  "condition_met": true
+ },
+ "episodes": {
+  "stats": {
+   "n": 14,
+   "fwd5": {
+    "n": 13,
+    "median_pct": 1.24,
+    "mean_pct": 2.09,
+    "win_rate_pct": 69.2,
+    "p10_pct": -0.84,
+    "p90_pct": 6.03
+   },
+   "fwd20": {
+    "n": 13,
+    "median_pct": 4.5,
+    "mean_pct": 2.13,
+    "win_rate_pct": 69.2,
+    "p10_pct": -10.13,
+    "p90_pct": 13.39
+   },
+   "fwd60": {
+    "n": 13,
+    "median_pct": 8.87,
+    "mean_pct": 5.75,
+    "win_rate_pct": 61.5,
+    "p10_pct": -17.06,
+    "p90_pct": 27.29
+   },
+   "mdd20": {
+    "n": 13,
+    "median_pct": -2.71,
+    "p10_pct": -13.58,
+    "worst_pct": -23.78
+   },
+   "mdd60": {
+    "n": 13,
+    "median_pct": -3.71,
+    "p10_pct": -17.98,
+    "worst_pct": -36.51
+   },
+   "close_below_signal_within_20d_pct": 92.3
+  },
+  "list": [
+   {
+    "date": "2002-07-11",
+    "dist_pct": -28.2,
+    "fwd20_pct": -5.1,
+    "fwd60_pct": -18.3,
+    "mdd60_pct": -18.3
+   },
+   {
+    "date": "2006-07-13",
+    "dist_pct": -10.2,
+    "fwd20_pct": 1.2,
+    "fwd60_pct": 14.0,
+    "mdd60_pct": -1.8
+   },
+   {
+    "date": "2008-01-23",
+    "dist_pct": -10.2,
+    "fwd20_pct": -1.3,
+    "fwd60_pct": 6.2,
+    "mdd60_pct": -6.5
+   },
+   {
+    "date": "2008-03-14",
+    "dist_pct": -13.2,
+    "fwd20_pct": 4.5,
+    "fwd60_pct": 15.1,
+    "mdd60_pct": -1.6
+   },
+   {
+    "date": "2008-09-17",
+    "dist_pct": -13.5,
+    "fwd20_pct": -23.8,
+    "fwd60_pct": -27.7,
+    "mdd60_pct": -36.5
+   },
+   {
+    "date": "2011-08-19",
+    "dist_pct": -10.8,
+    "fwd20_pct": 13.3,
+    "fwd60_pct": 14.9,
+    "mdd60_pct": 0.3
+   },
+   {
+    "date": "2016-02-08",
+    "dist_pct": -11.1,
+    "fwd20_pct": 7.7,
+    "fwd60_pct": 8.9,
+    "mdd60_pct": -0.3
+   },
+   {
+    "date": "2018-12-19",
+    "dist_pct": -10.2,
+    "fwd20_pct": 7.0,
+    "fwd60_pct": 15.9,
+    "mdd60_pct": -7.0
+   },
+   {
+    "date": "2020-03-12",
+    "dist_pct": -11.2,
+    "fwd20_pct": 13.4,
+    "fwd60_pct": 36.3,
+    "mdd60_pct": -3.7
+   },
+   {
+    "date": "2022-02-23",
+    "dist_pct": -10.4,
+    "fwd20_pct": 6.9,
+    "fwd60_pct": -12.1,
+    "mdd60_pct": -12.1
+   },
+   {
+    "date": "2022-04-22",
+    "dist_pct": -11.7,
+    "fwd20_pct": -11.4,
+    "fwd60_pct": -6.9,
+    "mdd60_pct": -16.7
+   },
+   {
+    "date": "2022-10-10",
+    "dist_pct": -17.6,
+    "fwd20_pct": 0.5,
+    "fwd60_pct": -1.7,
+    "mdd60_pct": -2.3
+   },
+   {
+    "date": "2025-04-04",
+    "dist_pct": -14.3,
+    "fwd20_pct": 14.8,
+    "fwd60_pct": 30.1,
+    "mdd60_pct": -1.8
+   },
+   {
+    "date": "2026-11-20",
+    "dist_pct": -10.8,
+    "fwd20_pct": null,
+    "fwd60_pct": null,
+    "mdd60_pct": null
+   }
+  ]
+ },
+ "all_signal_days": {
+  "stats": {
+   "n": 108,
+   "fwd5": {
+    "n": 107,
+    "median_pct": 1.1,
+    "mean_pct": 0.78,
+    "win_rate_pct": 60.7,
+    "p10_pct": -7.42,
+    "p90_pct": 8.6
+   },
+   "fwd20": {
+    "n": 107,
+    "median_pct": 1.29,
+    "mean_pct": 0.7,
+    "win_rate_pct": 55.1,
+    "p10_pct": -12.25,
+    "p90_pct": 13.7
+   },
+   "fwd60": {
+    "n": 107,
+    "median_pct": 5.48,
+    "mean_pct": 4.0,
+    "win_rate_pct": 57.9,
+    "p10_pct": -19.06,
+    "p90_pct": 24.03
+   },
+   "mdd20": {
+    "n": 107,
+    "median_pct": -4.18,
+    "p10_pct": -20.43,
+    "worst_pct": -28.1
+   },
+   "mdd60": {
+    "n": 107,
+    "median_pct": -10.02,
+    "p10_pct": -26.93,
+    "worst_pct": -38.01
+   },
+   "close_below_signal_within_20d_pct": 84.1
+  },
+  "note": "連續訊號日高度相關，n 不代表獨立樣本"
+ },
+ "baseline_all_days": {
+  "n": 6246,
+  "fwd5": {
+   "n": 6241,
+   "median_pct": 0.48,
+   "mean_pct": 0.27,
+   "win_rate_pct": 57.9,
+   "p10_pct": -3.3,
+   "p90_pct": 3.5
+  },
+  "fwd20": {
+   "n": 6226,
+   "median_pct": 1.65,
+   "mean_pct": 1.11,
+   "win_rate_pct": 63.3,
+   "p10_pct": -5.96,
+   "p90_pct": 7.12
+  },
+  "fwd60": {
+   "n": 6186,
+   "median_pct": 4.26,
+   "mean_pct": 3.44,
+   "win_rate_pct": 70.4,
+   "p10_pct": -8.1,
+   "p90_pct": 14.21
+  },
+  "mdd20": {
+   "n": 6226,
+   "median_pct": -2.12,
+   "p10_pct": -8.57,
+   "worst_pct": -28.7
+  },
+  "mdd60": {
+   "n": 6186,
+   "median_pct": -3.86,
+   "p10_pct": -14.31,
+   "worst_pct": -45.88
+  },
+  "close_below_signal_within_20d_pct": 82.5
+ },
+ "caveats": [
+  "事件數少（見 episodes.stats.n），中位數與勝率的不確定性很大，未做顯著性檢定",
+  "描述性統計，未做 walk-forward、未做多重檢定，不符合 prc-010 方向規則核准門檻",
+  "樣本含長期上漲漂移，正報酬有一部分是漂移，不是超跌本身的效果"
+ ]
+}

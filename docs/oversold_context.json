@@ -1,0 +1,312 @@
+{
+ "symbol": "SPX",
+ "purpose": "超跌情境條件統計：描述性參考，不是已核准的方向規則；不改 direction 50、不改部位水位、不產生交易指令",
+ "asof": "2026-11-20",
+ "sample": {
+  "from": "1990-12-28",
+  "to": "2026-11-20",
+  "days": 9040
+ },
+ "condition": {
+  "dist_ma200_le_pct": -5.0,
+  "vol_index": "^VIX",
+  "vol_pct_1y_ge": 95.0,
+  "episode_gap_days": 20,
+  "defined_on": "2026-11-23，跑結果前定義"
+ },
+ "today": {
+  "close": 6910.39,
+  "ma200": 7348.58,
+  "dist_pct": -5.96,
+  "vol": 35.89,
+  "vol_pct_1y": 100.0,
+  "dist_pctile_in_history": 10.22,
+  "condition_met": true
+ },
+ "episodes": {
+  "stats": {
+   "n": 22,
+   "fwd5": {
+    "n": 21,
+    "median_pct": 0.25,
+    "mean_pct": -0.8,
+    "win_rate_pct": 57.1,
+    "p10_pct": -9.32,
+    "p90_pct": 4.44
+   },
+   "fwd20": {
+    "n": 21,
+    "median_pct": 1.26,
+    "mean_pct": 1.49,
+    "win_rate_pct": 61.9,
+    "p10_pct": -3.61,
+    "p90_pct": 7.24
+   },
+   "fwd60": {
+    "n": 21,
+    "median_pct": 6.68,
+    "mean_pct": 3.84,
+    "win_rate_pct": 66.7,
+    "p10_pct": -7.68,
+    "p90_pct": 14.85
+   },
+   "mdd20": {
+    "n": 21,
+    "median_pct": -3.57,
+    "p10_pct": -13.1,
+    "worst_pct": -24.61
+   },
+   "mdd60": {
+    "n": 21,
+    "median_pct": -6.52,
+    "p10_pct": -14.45,
+    "worst_pct": -36.91
+   },
+   "close_below_signal_within_20d_pct": 76.2
+  },
+  "list": [
+   {
+    "date": "1991-01-09",
+    "dist_pct": -6.6,
+    "fwd20_pct": 15.0,
+    "fwd60_pct": 20.5,
+    "mdd60_pct": 0.3
+   },
+   {
+    "date": "1998-08-31",
+    "dist_pct": -9.6,
+    "fwd20_pct": 9.6,
+    "fwd60_pct": 23.6,
+    "mdd60_pct": 0.2
+   },
+   {
+    "date": "2000-10-12",
+    "dist_pct": -8.0,
+    "fwd20_pct": 5.3,
+    "fwd60_pct": -2.2,
+    "mdd60_pct": -4.9
+   },
+   {
+    "date": "2001-03-12",
+    "dist_pct": -15.6,
+    "fwd20_pct": -3.6,
+    "fwd60_pct": 7.6,
+    "mdd60_pct": -6.5
+   },
+   {
+    "date": "2001-09-07",
+    "dist_pct": -13.0,
+    "fwd20_pct": 1.1,
+    "fwd60_pct": 6.7,
+    "mdd60_pct": -11.1
+   },
+   {
+    "date": "2002-07-15",
+    "dist_pct": -16.3,
+    "fwd20_pct": -1.5,
+    "fwd60_pct": -13.0,
+    "mdd60_pct": -14.5
+   },
+   {
+    "date": "2007-11-26",
+    "dist_pct": -5.2,
+    "fwd20_pct": 6.3,
+    "fwd60_pct": -3.8,
+    "mdd60_pct": -6.9
+   },
+   {
+    "date": "2008-01-17",
+    "dist_pct": -10.5,
+    "fwd20_pct": 1.3,
+    "fwd60_pct": 0.1,
+    "mdd60_pct": -4.5
+   },
+   {
+    "date": "2008-03-10",
+    "dist_pct": -13.0,
+    "fwd20_pct": 7.2,
+    "fwd60_pct": 8.2,
+    "mdd60_pct": 0.3
+   },
+   {
+    "date": "2008-09-15",
+    "dist_pct": -11.6,
+    "fwd20_pct": -15.9,
+    "fwd60_pct": -25.5,
+    "mdd60_pct": -36.9
+   },
+   {
+    "date": "2010-06-07",
+    "dist_pct": -5.1,
+    "fwd20_pct": -2.1,
+    "fwd60_pct": -0.1,
+    "mdd60_pct": -2.7
+   },
+   {
+    "date": "2011-08-04",
+    "dist_pct": -6.7,
+    "fwd20_pct": 0.4,
+    "fwd60_pct": 7.1,
+    "mdd60_pct": -8.4
+   },
+   {
+    "date": "2015-08-21",
+    "dist_pct": -5.1,
+    "fwd20_pct": -0.2,
+    "fwd60_pct": 4.2,
+    "mdd60_pct": -5.2
+   },
+   {
+    "date": "2016-01-08",
+    "dist_pct": -6.6,
+    "fwd20_pct": -3.6,
+    "fwd60_pct": 7.5,
+    "mdd60_pct": -4.8
+   },
+   {
+    "date": "2018-12-17",
+    "dist_pct": -7.7,
+    "fwd20_pct": 2.8,
+    "fwd60_pct": 10.9,
+    "mdd60_pct": -7.7
+   },
+   {
+    "date": "2020-03-09",
+    "dist_pct": -10.0,
+    "fwd20_pct": -3.0,
+    "fwd60_pct": 13.7,
+    "mdd60_pct": -18.5
+   },
+   {
+    "date": "2022-02-23",
+    "dist_pct": -5.2,
+    "fwd20_pct": 5.5,
+    "fwd60_pct": -7.7,
+    "mdd60_pct": -7.7
+   },
+   {
+    "date": "2022-04-26",
+    "dist_pct": -7.1,
+    "fwd20_pct": -5.6,
+    "fwd60_pct": -5.1,
+    "mdd60_pct": -12.2
+   },
+   {
+    "date": "2022-06-13",
+    "dist_pct": -15.5,
+    "fwd20_pct": 1.4,
+    "fwd60_pct": 6.8,
+    "mdd60_pct": -2.2
+   },
+   {
+    "date": "2022-09-27",
+    "dist_pct": -13.7,
+    "fwd20_pct": 5.8,
+    "fwd60_pct": 6.3,
+    "mdd60_pct": -1.9
+   },
+   {
+    "date": "2025-04-03",
+    "dist_pct": -6.3,
+    "fwd20_pct": 5.4,
+    "fwd60_pct": 14.9,
+    "mdd60_pct": -7.7
+   },
+   {
+    "date": "2026-11-20",
+    "dist_pct": -6.0,
+    "fwd20_pct": null,
+    "fwd60_pct": null,
+    "mdd60_pct": null
+   }
+  ]
+ },
+ "all_signal_days": {
+  "stats": {
+   "n": 258,
+   "fwd5": {
+    "n": 257,
+    "median_pct": 1.73,
+    "mean_pct": 1.08,
+    "win_rate_pct": 64.2,
+    "p10_pct": -5.19,
+    "p90_pct": 6.84
+   },
+   "fwd20": {
+    "n": 257,
+    "median_pct": 4.09,
+    "mean_pct": 3.34,
+    "win_rate_pct": 73.2,
+    "p10_pct": -7.38,
+    "p90_pct": 13.3
+   },
+   "fwd60": {
+    "n": 257,
+    "median_pct": 6.98,
+    "mean_pct": 5.61,
+    "win_rate_pct": 73.2,
+    "p10_pct": -10.64,
+    "p90_pct": 20.34
+   },
+   "mdd20": {
+    "n": 257,
+    "median_pct": -2.79,
+    "p10_pct": -15.97,
+    "worst_pct": -28.35
+   },
+   "mdd60": {
+    "n": 257,
+    "median_pct": -5.26,
+    "p10_pct": -20.2,
+    "worst_pct": -40.05
+   },
+   "close_below_signal_within_20d_pct": 78.2
+  },
+  "note": "連續訊號日高度相關，n 不代表獨立樣本"
+ },
+ "baseline_all_days": {
+  "n": 9040,
+  "fwd5": {
+   "n": 9035,
+   "median_pct": 0.33,
+   "mean_pct": 0.2,
+   "win_rate_pct": 57.8,
+   "p10_pct": -2.45,
+   "p90_pct": 2.64
+  },
+  "fwd20": {
+   "n": 9020,
+   "median_pct": 1.22,
+   "mean_pct": 0.8,
+   "win_rate_pct": 63.9,
+   "p10_pct": -4.3,
+   "p90_pct": 5.3
+  },
+  "fwd60": {
+   "n": 8980,
+   "median_pct": 3.03,
+   "mean_pct": 2.34,
+   "win_rate_pct": 70.5,
+   "p10_pct": -6.32,
+   "p90_pct": 9.74
+  },
+  "mdd20": {
+   "n": 9020,
+   "median_pct": -1.61,
+   "p10_pct": -6.52,
+   "worst_pct": -30.94
+  },
+  "mdd60": {
+   "n": 8980,
+   "median_pct": -2.93,
+   "p10_pct": -11.52,
+   "worst_pct": -42.15
+  },
+  "close_below_signal_within_20d_pct": 83.1
+ },
+ "caveats": [
+  "事件數少（見 episodes.stats.n），中位數與勝率的不確定性很大，未做顯著性檢定",
+  "描述性統計，未做 walk-forward、未做多重檢定，不符合 prc-010 方向規則核准門檻",
+  "樣本含長期上漲漂移，正報酬有一部分是漂移，不是超跌本身的效果"
+ ]
+}
