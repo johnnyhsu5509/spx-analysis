@@ -8,7 +8,7 @@
 import argparse
 import os
 
-from mech_lib import eval_session, ld, log_err, md, mean_hu, next_bday, shadow_fill, sv
+from mech_lib import a2_summary, eval_session, ld, log_err, md, mean_hu, next_bday, shadow_fill, sv
 
 K_ENTRY, S_STOP, DIR_TH = 0.2, 0.5, 0.4
 FILES = ('ndx_track_record.json', 'ndx_pnl_ledger.json')
@@ -96,6 +96,7 @@ def build(docs, td, nar=None, report_date=None):
                 band_coverage_pct=round(sum(x['in_band'] for x in ae) / len(ae) * 100, 1),
                 above_band=sum(x['actual_range_pct'] > x['band_hi'] for x in ae),
                 below_band=sum(x['actual_range_pct'] < x['band_lo'] for x in ae), as_of=rep)
+    asum['a2_shadow'] = a2_summary(ae)
     if gaps:
         asum['gap_days'] = asum.get('gap_days', []) + gaps
 

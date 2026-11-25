@@ -79,6 +79,39 @@ def log_err(actual, ref):
     return round(abs(math.log(actual / ref)), 4)
 
 
+A2_FROM = '2026-11-23'
+A2_DEF = 'A2 = √(A × r0)，r0＝近 5 日均振幅；50% 區間＝A 的區間依 A2/A 同比例縮放。2026-11-23 登記的候選，只記影子帳、不上 headline'
+
+
+def a2_forecast(a_pct, r0_pct, lo, hi):
+    a2 = round(math.sqrt(a_pct * r0_pct), 3)
+    return {'a2_pct': a2, 'a2_band_lo': round(lo * a2 / a_pct, 3), 'a2_band_hi': round(hi * a2 / a_pct, 3)}
+
+
+def a2_grade(e):
+    """振幅帳一筆補上 A2 的判定（只用該筆自己的 A、r0、區間、實際值，可重算）。"""
+    f = a2_forecast(e['A_pct'], e['r0_ref_pct'], e['band_lo'], e['band_hi'])
+    act = e['actual_range_pct']
+    return {**f, 'a2_log_err': log_err(act, f['a2_pct']), 'a2_in_band': f['a2_band_lo'] <= act <= f['a2_band_hi']}
+
+
+def a2_stats(es):
+    n = len(es)
+    if not n:
+        return {'n': 0}
+    return {'n': n, **{f'mean_log_err_{k}': round(sum(x[f] for x in es) / n, 4) for k, f in (('A', 'log_err'), ('r0', 'r0_log_err'), ('A2', 'a2_log_err'))},
+            'coverage_A_pct': round(sum(x['in_band'] for x in es) / n * 100, 1), 'coverage_A2_pct': round(sum(x['a2_in_band'] for x in es) / n * 100, 1)}
+
+
+def a2_summary(entries):
+    for e in entries:
+        if 'a2_pct' not in e:
+            e.update(a2_grade(e), a2_backfilled=e['report_date'] < A2_FROM)
+    return {'definition': A2_DEF, 'registered': A2_FROM, 'verdict_rule': '前瞻樣本滿 60 筆才比較 A、r0、A2 的平均 log_err 與區間覆蓋率；之前不下結論',
+            'forward': a2_stats([e for e in entries if e['report_date'] >= A2_FROM]),
+            'backfill_in_sample': a2_stats([e for e in entries if e['report_date'] < A2_FROM])}
+
+
 def merge(dst, src, shallow, deep=()):
     """src 的頂層鍵整段取代；shallow 列出的鍵只覆蓋給到的子鍵，deep 列出的鍵再往下一層。"""
     for k, v in src.items():

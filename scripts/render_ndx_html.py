@@ -54,6 +54,17 @@ def render(ledgers, td, nar, head):
     top = [banner_html(la)] if la.get('summary_line') and la.get('amp_hit_rate') else []
     o = top + [f'<header>\n  <span class="badge">NASDAQ-100 · NDX</span>\n  <h1>{H["title"]}</h1>\n'
          f'  <div class="sub">報告日 {rep}（台北）｜資料基準 {day} 美股收盤｜Phase 3：主輸出＝隔日振幅預報，方向恆 50</div>\n</header>']
+    ch, fu = la.get('changes'), la.get('futures') or {}
+    if ch:
+        items = ch['items'] or ['無狀態變化']
+        o.append(f'<div class="box info">\n  <h4>今日變化（對照 {md(ch["vs"])} 那一份）</h4>\n  <ul>\n' + '\n'.join(f'<li>{x}</li>' for x in items) + '\n  </ul>\n</div>')
+    if 'implied_open_in_A' in fu:
+        nq = fu.get('nq') or {}
+        txt = ('期貨隱含開盤：資料缺（NQ 在資料日之後沒有新盤）' if fu['implied_open_in_A'] is None else
+               f"期貨隱含開盤：NQ {nq['last']:,.2f}（{nq['last_date']} 讀數）對資料日結算 {sg(nq['chg_pct'], 2, '%')} ＝ <b>{sg(fu['implied_open_in_A'], 2, ' A')}</b>"
+               f"（現貨約 {fu['implied_open_approx']:,.0f}）" + ('｜<b>|距離| ≥ 1.0A：開盤已用掉一整天的預期振幅</b>' if abs(fu['implied_open_in_A']) >= 1 else '')
+               + '。報告產出時的讀數、近似值，只描述波動，不是方向指令')
+        o.append(f'<div class="box warn">\n  {txt}\n</div>')
     br = la['breadth']['chg_1d_pct']
     o.append('<div class="kpi">\n' + '\n'.join([
         k('隔日振幅預報 A', f'{hu(A, 2):.2f}%', 'nu', f"約 ±{round(Ap)} 點｜50% 區間 {hu(am['band_lo'], 2):.2f}–{hu(am['band_hi'], 2):.2f}%"),
@@ -98,6 +109,13 @@ def render(ledgers, td, nar, head):
     o.append('<h2>三、波動尺度與主輸出</h2>')
     o.append(f"<div class=\"mono\">隔日振幅預報：A = {hu(A, 2):.2f}%（約 ±{round(Ap)} 點）｜50% 區間 {hu(am['band_lo'], 2):.2f}–{hu(am['band_hi'], 2):.2f}%｜c = {am['c']:.2f}（近 63 日實際÷隱含 {am['realized_vs_implied_63d']:.2f}）\n"
              f"方向：50（方向無 edge，bias 中性）\nATR14 {vs['atr14_pct']:.2f}%｜近 5 日均振幅 {vs['range5_pct']:.2f}%｜A_NDX ÷ A_SPX = {hu(A, 2):.2f} ÷ {hu(vs['spx_A_pct'], 2):.2f} = {vs['A_ratio_ndx_spx']:.2f}</div>")
+    a2s = asum.get('a2_shadow')
+    if a2s and 'a2_pct' in am:
+        fw = a2s['forward']
+        stat = (f"前瞻 n={fw['n']}：平均 log_err A {fw['mean_log_err_A']:.3f}／r0 {fw['mean_log_err_r0']:.3f}／A2 {fw['mean_log_err_A2']:.3f}｜覆蓋率 A {fw['coverage_A_pct']}%／A2 {fw['coverage_A2_pct']}%"
+                if fw['n'] else '前瞻 n=0')
+        o.append(f"<div class=\"mono\">候選 A2（影子記帳，不是正式預報；{a2s['registered']} 登記）：{hu(am['a2_pct'], 2):.2f}%｜50% 區間 {hu(am['a2_band_lo'], 2):.2f}–{hu(am['a2_band_hi'], 2):.2f}%\n"
+                 f"{stat}（滿 60 筆才比較，之前不下結論）</div>")
     o.append(f'<div class="box warn">\n  {H["amp_warn"]}\n</div>')
     rc, cc = la['regime_check'], la['spx_cross_check']
     h1, h5 = rc['h1d'], rc['h5d']

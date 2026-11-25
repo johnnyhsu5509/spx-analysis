@@ -98,6 +98,18 @@ repo 與 SPX 系統共用：`https://github.com/johnnyhsu5509/spx-analysis`
 
 > **忘記加 `--symbol ndx` 會寫到 SPX 的 `today_data.txt`。** 每次執行後核對輸出檔名與 `symbol` 欄位是否為 `NDX`。
 
+### Step 1.2 — 輔助數據（2026-11-23 起用共用腳本，不再每天複製 `_ndx_aux_MMDD.py`）
+
+執行 `python3 {repo}\scripts\ndx_aux.py`（預設讀 `scripts\ndx_today_data.txt` 與 `docs\last_analysis.json`，寫 `scripts\ndx_aux.json`）。這個檔直接當 `daily_run.py` 的 `--aux`：
+
+- `volatility_scale`／`breadth`／`sector`／`macro`：原樣搬進 `ndx_last_analysis.json`
+- `facts`：跳空、收盤位置、量比（含 rule36 是否觸發、QQQ 量比）、均線斜率、連續天數（MA200 之下第幾日、MA20<MA50 第幾日、VXN≥28 第幾日）、費波回撤位、60 日新高低、宏觀前值與漲跌、30 分 K。**敘事裡用到這些數字時一律抄這裡，不得手算**
+- `futures`：NQ／ES 最新價對資料日結算的漲跌，換算成幾個 A（報告頁首自動顯示「期貨隱含開盤」一行；|距離| ≥ 1.0A 會標示）
+- `spx_news`：SPX 同一資料日的新聞檢索（Step 1.6 用）；SPX 還沒跑就是 null
+- 每條序列都截到資料日為止（週日晚間期貨盤的新列不會被當成資料日的值）；`facts.stale` 列出沒更新到資料日的序列，**有列出的就在資料註記寫明，不得當成當日值**
+
+排程執行順序：`fetch_today.py --symbol ndx` → `check_duplicate.py --symbol ndx` → `ndx_aux.py` → 新聞檢索 → 寫敘事 JSON（格式照 `scripts\_ndx_narrative_*.json` 最近一份）→ `daily_run.py --symbol ndx --docs docs --today scripts\ndx_today_data.txt --aux scripts\ndx_aux.json --narrative 檔`（先不加 `--out` 試跑，再加 `--out docs` 正式寫入）→ commit、push。
+
 ### Step 1.4 —【硬規則・rule33】指標口徑一致性
 
 **所有指標一律以 `fetch_today.py` 的輸出為準，禁止臨場自行計算或改用其他演算法。**
@@ -131,7 +143,9 @@ repo 與 SPX 系統共用：`https://github.com/johnnyhsu5509/spx-analysis`
 
 ### Step 1.6 —【硬規則・rule49】新聞檢索，在 Step 3 之前完成
 
-**執行一次 web search，確認當日有無 rule2／rule4 適用的事件。** 這一步不是「可選補充」，是硬規則。
+**確認當日有無 rule2／rule4 適用的事件。** 這一步不是「可選補充」，是硬規則。
+
+**先讀共用檢索（2026-11-23 起）**：`ndx_aux.json` 的 `spx_news` 不是 null 時（SPX 已用同一個資料日跑過），當日行情歸因、地緣、政策、能源直接沿用那一份，**不重複搜尋**；NDX 只補做一次「科技權值股」搜尋，固定用「{英文月份} {日} {年} Nasdaq 100 Nvidia Apple Microsoft stocks close」這個模板（日期寫完整，避免搜到舊聞）。`spx_news` 是 null 時，照下面的清單完整搜尋一次。兩種情況都要在 `news_check_rule49` 寫明用了哪一種、搜到的報導日期是不是資料日；沒搜到當日報導就照實寫，並以 Python 收盤數字核對沿用的歸因。
 
 搜尋內容至少涵蓋：
 - **當日行情歸因**：「why did stocks move {日期}」或「Nasdaq / stock market {日期}」
@@ -174,7 +188,7 @@ repo 與 SPX 系統共用：`https://github.com/johnnyhsu5509/spx-analysis`
 - **Brier score 同步更新**：brier=(拉回機率/100 − outcome)²，outcome：跌=1、漲=0、平=排除不計。基準=0.25
 - **報拉回機率的紀律**：~~有把握時敢報 <35% 或 >75%~~ → **Phase 3（2026-10-16）起一律報 50**，只有引用已核准方向規則才可偏離（見 Step 4b）
 - **P&L 模擬帳本同步更新**：用今日 NDX OHLC 機械判定上次策略表的成交/出場，追加至 `{repo}\docs\ndx_pnl_ledger.json`，重算累積 weighted_bp；同時把本次新策略表以 trades_pending 寫入供明日判定（Phase 3 預設休眠後 trades_pending 通常為空，影子單另寫 shadow_ledger）
-- **【Phase 3・2026-10-16 起】振幅帳 `amp_track`（ndx_track_record.json）每日必更新**：對前一份報告的振幅預報，用今日 OHLC 判定並追加 {report_date, A_pct, band_lo, band_hi, r0_ref_pct, actual_range_pct＝(今日高−今日低)/前收×100, log_err＝|ln(actual/A)|, r0_log_err＝|ln(actual/r0)|, in_band}；summary 重算平均 log_err、r0_log_err（舊算法基準）與 50% 區間覆蓋率（目標 45–55%）。累積 60 筆後 log_err 不比 r0 小、或覆蓋率長期 <40%／>60%，要回報用戶。方向帳照舊計分（方向恆 50 → 方向分數等於永遠中性、Brier 恆 0.25，屬預期）
+- **【Phase 3・2026-10-16 起】振幅帳 `amp_track`（ndx_track_record.json）每日必更新**：對前一份報告的振幅預報，用今日 OHLC 判定並追加 {report_date, A_pct, band_lo, band_hi, r0_ref_pct, actual_range_pct＝(今日高−今日低)/前收×100, log_err＝|ln(actual/A)|, r0_log_err＝|ln(actual/r0)|, in_band}；summary 重算平均 log_err、r0_log_err（舊算法基準）與 50% 區間覆蓋率（目標 45–55%）。累積 60 筆後 log_err 不比 r0 小、或覆蓋率長期 <40%／>60%，要回報用戶。**候選 A2 影子帳（2026-11-23 登記）**：A2＝√(A×r0)、區間同比例縮放，由腳本自動記在每筆的 `a2_*` 與 `summary.a2_shadow`，報告第三區自動多一行；**A2 只是影子記帳，不得取代 A、不得寫進 headline 或摘要行**；前瞻樣本（report_date ≥ 2026-11-23）滿 60 筆才比較，之前不下結論。方向帳照舊計分（方向恆 50 → 方向分數等於永遠中性、Brier 恆 0.25，屬預期）
 - **【Phase 3・2026-10-16 起】影子帳 `shadow_ledger`（ndx_pnl_ledger.json）每日必更新**（規則見 Step 5c）：判定前一份報告的兩張影子單，**只寫 shadow_ledger，不進 P&L 主帳**；主帳在無實單日記 0bp
 
 偏差分析：未命中的原因。若發現系統性錯誤 → 寫入 system_rules。
@@ -203,7 +217,7 @@ repo 與 SPX 系統共用：`https://github.com/johnnyhsu5509/spx-analysis`
 
 5. **纏論**：當前筆方向、中樞區間、段結構、頂/底背馳
 
-6. **艾略特波浪**：波段位置、費波回撤位、推動浪目標、**多情景評估**（列 2–3 個方案並給機率）
+6. **艾略特波浪**：波段位置、費波回撤位（讀 `ndx_aux.json` 的 `facts.fib`）、推動浪目標、**多情景評估**（列 2–3 個方案，**不寫百分比**——2026-11-23 起取消：這些機率沒有回測也沒有計分，和「方向恆 50、不用數字表達偏見」相衝突）
 
 ### Step 3.5 — 波動尺度校正（NDX 專屬，必做）
 
@@ -403,6 +417,8 @@ python3 scripts\phase3_fields.py --symbol ndx --docs docs --today scripts\ndx_to
 更新：{repo}\docs\ndx_last_analysis.json（含本次全部預測，供明天回測）
 git add + commit + push（PowerShell 用分號串接，不能用 &&）
 ```
+
+**今日變化（2026-11-23 起）**：`daily_run.py` 自動比對前一份報告，把狀態變化（水位切換、收盤穿越 MA20／MA50、均線交叉、進出布林通道、RSI 進出 30／70、VXN 換檔、60 日新高低、A 的變化）寫進 `ndx_last_analysis.json` 的 `changes`，並顯示在頁首；不要手寫。
 
 **頁面頂端摘要行（2026-11-04 Phase 3 修正起，每份 JSON 與 HTML 都要有）**：一行寫「資料日、方向、A、關鍵價位／MA200、預報日是否事件日」。
 - JSON：`ndx_last_analysis.json` 的 `summary_line`（另有 `position_level`、`amp_hit_rate`、`event_day`）。HTML：放在頁面最上方（`<div class="wrap">` 之後），同一區塊第二行是振幅命中率（NDX 自己的 `amp_track`，A 的 50% 區間，n 未達 60 筆標「無統計意義」）。

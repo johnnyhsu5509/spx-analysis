@@ -10,7 +10,7 @@ SPX 的 A、VIX、regime 直接讀 SPX 當天的 last_analysis.json；SPX 當天
 import argparse
 import os
 
-from mech_lib import amp_hit_rate, ld, md, merge, next_bday, position_state, summary_line, sv
+from mech_lib import a2_forecast, amp_hit_rate, ld, md, merge, next_bday, position_state, summary_line, sv
 
 K_SHADOW = 0.2
 SHALLOW = ('amplitude', 'volatility_scale', 'breadth', 'sector', 'macro', 'regime_check', 'spx_cross_check', 'predictions', 'backtest_prev', 'position_level')
@@ -19,6 +19,41 @@ TECH = ('ma5', 'ma20', 'ma50', 'ma200', 'rsi', 'wilder_rsi', 'macd_hist', 'macd_
 
 def band_pos(x, lo, hi):
     return '區間內' if lo <= x <= hi else '低於區間' if x < lo else '高於區間'
+
+
+def zone(x, cuts):
+    return sum(x >= c for c in cuts)
+
+
+def changes(old, td, plv, a_pct, facts):
+    """和前一份報告比，哪些狀態變了。兩邊的指標都是 fetch_today 的輸出（rule33），這裡只比大小。"""
+    ot, oc, C = old.get('technicals') or {}, old.get('close'), td['close']
+    out = []
+    if plv['switched_today']:
+        out.append(f"部位水位切換：{'半倉 → 正常' if plv['state'] == '正常' else '正常 → 半倉'}（t+1 美股收盤執行）")
+    if oc is not None:
+        for k in ('ma20', 'ma50'):
+            if k in ot and (oc > ot[k]) != (C > td[k]):
+                out.append(f"收盤{'站上' if C > td[k] else '跌破'} {k.upper()} {td[k]:,.0f}")
+        for a, b in (('ma20', 'ma50'), ('ma20', 'ma200'), ('ma50', 'ma200')):
+            if a in ot and b in ot and (ot[a] > ot[b]) != (td[a] > td[b]):
+                out.append(f"{a.upper()} {'上穿' if td[a] > td[b] else '下穿'} {b.upper()}（{td[a]:,.0f} vs {td[b]:,.0f}）")
+        if 'bb_lower' in ot:
+            was, now = zone(oc, (ot['bb_lower'], ot['bb_upper'])), zone(C, (td['bb_lower'], td['bb_upper']))
+            if was != now:
+                out.append(('收盤跌出布林下軌', '收盤回到布林通道內', '收盤突破布林上軌')[now] + f"（下軌 {td['bb_lower']:,.0f}／上軌 {td['bb_upper']:,.0f}）")
+        if 'rsi' in ot and zone(ot['rsi'], (30, 70)) != zone(td['rsi'], (30, 70)):
+            out.append(f"RSI（Cutler）{ot['rsi']} → {td['rsi']}：" + ('進入 30 以下', '回到 30–70', '進入 70 以上')[zone(td['rsi'], (30, 70))])
+        if old.get('vxn') is not None and zone(old['vxn'], (18, 28)) != zone(td['vxn'], (18, 28)):
+            out.append(f"VXN {old['vxn']} → {td['vxn']}：轉為" + ('低波動檔（<18）', '中波動檔（18–28）', '高波動檔（≥28）')[zone(td['vxn'], (18, 28))])
+    if facts.get('low_60d'):
+        out.append(f"創 60 日新低 {td['low']:,.0f}")
+    if facts.get('high_60d'):
+        out.append(f"創 60 日新高 {td['high']:,.0f}")
+    oa = (old.get('amplitude') or {}).get('A_pct')
+    if oa:
+        out.append(f"振幅預報 A {oa:.2f}% → {a_pct:.2f}%")
+    return {'vs': old.get('data_basis', '')[:10], 'items': out}
 
 
 def build(docs, ledgers, td, aux, spx, nar=None, report_date=None):
@@ -116,6 +151,12 @@ def build(docs, ledgers, td, aux, spx, nar=None, report_date=None):
         'amp_hit_rate': amp_hit_rate(tr['amp_track']['entries']),
     }
     merge(n, nar.get('last_analysis', {}), SHALLOW, deep=('spx_cross_check',))
+    n['amplitude'].update(a2_forecast(n['amplitude']['A_pct'], n['amplitude']['r0_ref_pct'], n['amplitude']['band_lo'], n['amplitude']['band_hi']),
+                          a2_note='候選 A2（影子記帳，不是正式預報）')
+    n['changes'] = changes(old, td, plv, am['amp_forecast_pct'], aux.get('facts') or {})
+    for k in ('facts', 'futures'):
+        if aux.get(k):
+            n[k] = {x: v for x, v in aux[k].items() if x != 'bars30'}
     n['summary_line'] = summary_line('NDX', n, n['position_level'])
     n['system_rules_notes'] += nar.get('system_rules_notes_extra', [])
     report = {'trade_date': rep, 'eval_date': t, 'lim_l': lim_l, 'lim_s': lim_s, 'pos_pct': pos_pct, 'dist': dist, 'ratio': ratio, 'spxA': spxA,

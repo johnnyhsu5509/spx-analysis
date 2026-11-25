@@ -53,6 +53,7 @@ REASONS = {
     'R11': '方案 G 已接上流水線（2026-11-10）：記帳腳本改用 mech_lib.position_state（判定式與 position_level 相同、遇切換／半倉不停下），多一個 rise_to_reclaim_pct 欄位；歷史實跑沒有',
     'T9': '方案 G round4（2026-11-11）：SPX 摘要行的水位改寫成「SPX 自身水位…；科技籃倉位跟 NDX」，避免與頁首依 NDX 判定的動作句被讀成矛盾；歷史實跑寫「水位正常」',
     'T8': '影子單價位位數：實跑 11/05、11/09 的 rule65 寫 7713.5／7340.0（省略尾 0），腳本一律 2 位',
+    'R12': '2026-11-23 新增欄位（實跑當時還沒有）：今日變化 changes、候選 A2 影子帳（amplitude.a2_*、amp_track 的 a2_*）；facts／futures 只在 aux 有給時才寫入',
     'R8': '半分位取整：實跑 10/21 SPX 影子空單平均精確值 0.1225（n=2），寫成 0.122（Python round 看二進位表示而捨去）；腳本用精確十進位＋一般四捨五入得 0.123。11/04 NDX 的 -0.0095 帳本卻進位成 -0.01，帳本歷史本身兩個方向都有，差 0.001',
 }
 # (系統, 報告日起, 報告日迄, 檔案, 路徑 regex, 原因)；日期 None＝不限
@@ -72,6 +73,8 @@ KNOWN = [
     ('ndx', '2026-11-05', '2026-11-05', 'ndx_pnl_ledger.json', r'shadow_ledger\.summary\.drift_bench_mean_A', 'R10'),
     ('spx', None, None, 'last_analysis.json', r'position_level\.rise_to_reclaim_pct', 'R11'),
     ('ndx', None, None, 'ndx_last_analysis.json', r'position_level\.rise_to_reclaim_pct', 'R11'),
+    ('ndx', None, None, 'ndx_last_analysis.json', r'changes|amplitude\.a2_(pct|band_lo|band_hi|note)', 'R12'),
+    ('ndx', None, None, 'ndx_track_record.json', r'amp_track\.(entries\[\d+\]\.a2_\w+|summary\.a2_shadow)', 'R12'),
 ]
 TEMPLATE = [
     ('spx', 'track_record.json', r'summary\.brier\.note_latest', 'T1'),
@@ -198,7 +201,7 @@ class LedgerReplayTest(unittest.TestCase):
         ndx = [r for r in self.results['ndx'] if r['report_date'] == '2026-10-27'][0]
         for r, files in ((spx, ('track_record.json', 'pnl_ledger.json')), (ndx, ('ndx_track_record.json', 'ndx_pnl_ledger.json'))):
             self.assertEqual((r['eval_date'], r['trade_date']), ('2026-10-23', '2026-10-26'))
-            self.assertEqual([d for d in r['diffs'] if d[0] in files and numeric(d[1:])], [])
+            self.assertEqual([d for d in r['diffs'] if d[0] in files and numeric(d[1:]) and '.a2_' not in d[2]], [])  # a2_*：見 R12
         self.assertEqual(spx['mech']['track_record.json']['summary']['gap_days'][-1], '2026-10-26')
         self.assertEqual(ndx['mech']['ndx_track_record.json']['amp_track']['summary']['gap_days'], ['2026-10-26'])
 
