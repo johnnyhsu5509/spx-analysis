@@ -48,6 +48,7 @@ SYMBOLS = {
         "breadth": ("QQQE", "QQQ"),
         "breadth_note": "QQQE(等權NDX)/QQQ(市值權重);升=廣度好,降=窄化。科技股權重極集中,窄化時指數強度打折更明顯",
         "sector": ("SOXX", "SMH", "XLV", "^TNX"),
+        "vol_fallback": "https://cdn.cboe.com/api/global/us_indices/daily_prices/VXN_History.csv",
         "pullback_txt": "-1.00%",
         "default_c": {"BASE_5D": 57.14,
                       "vxn": {"vxn_lt18": 40.36, "vxn_18_28": 61.47, "vxn_ge28": 72.35},
@@ -206,6 +207,44 @@ def _breadth(index_day=None):
         return None
 
 
+VOL_NOTES = []
+
+
+def _vol_fallback(vol, index_day):
+    """Yahoo 的波動指數日線沒更新到指數資料日時，用編製單位 Cboe 的官方每日歷史檔補上缺的日子
+    （2026-11-26 核准；500 個交易日收盤逐日比對與 Yahoo 完全相同）。
+    只在設定有 vol_fallback 的標的（NDX 的 ^VXN）啟用；抓不到或官方檔也沒有該日就原樣返回，
+    下游照舊標 stale。"""
+    url = CFG.get("vol_fallback")
+    try:
+        have = vol.dropna(subset=["Close"])
+        last = str(have.index[-1].date()) if len(have) else ""
+        if not url or not index_day or last >= index_day:
+            return vol
+        import urllib.request
+        req = urllib.request.Request(url, headers={"User-Agent": "Mozilla/5.0"})
+        txt = urllib.request.urlopen(req, timeout=25).read().decode("utf-8")
+        c = pd.read_csv(io.StringIO(txt))
+        c.index = pd.to_datetime(c["DATE"], format="%m/%d/%Y")
+        c = c[(c.index.strftime("%Y-%m-%d") > last) & (c.index.strftime("%Y-%m-%d") <= index_day)]
+        c = c.dropna(subset=["CLOSE"])
+        if c.empty or str(c.index[-1].date()) != index_day:
+            return vol
+        add = pd.DataFrame({"Open": c["OPEN"], "High": c["HIGH"], "Low": c["LOW"], "Close": c["CLOSE"]},
+                           index=c.index).astype(float)
+        if getattr(have.index, "tz", None) is not None:
+            add.index = add.index.tz_localize(have.index.tz)
+        days = [str(d.date()) for d in add.index]
+        if not VOL_NOTES:
+            VOL_NOTES.extend(days)
+            print("[vol] %s daily last=%s on Yahoo; %s filled from Cboe official history"
+                  % (CFG["vol"], last, ",".join(days)))
+        return pd.concat([have, add]).sort_index()
+    except Exception as exc:
+        print("[vol] Cboe fallback failed: %r" % (exc,))
+        return vol
+
+
 def _amplitude(index_day, close):
     """隔日振幅預報（Phase 3 V2b，2026-10-15 Johnny 核准）。
     A = c × 波動指數/√252；c 與 50% 區間 = 近 252 個「已知結果」交易日的
@@ -221,6 +260,7 @@ def _amplitude(index_day, close):
                 df.columns = [c[0] if isinstance(c, tuple) else c for c in df.columns]
         idx, _ = gap_fix.patch_missing_days(idx, CFG["index"], log=print)
         vol, _ = gap_fix.patch_missing_days(vol, CFG["vol"], log=print)
+        vol = _vol_fallback(vol, index_day)
         idx = idx.dropna(subset=["Close"])
         c_, h_, l_ = idx["Close"].squeeze(), idx["High"].squeeze(), idx["Low"].squeeze()
         v_raw = vol["Close"].squeeze().dropna()
@@ -401,6 +441,7 @@ if raw_spx.empty:
           % (CFG["index"], OUTFILE))
     sys.exit(1)
 raw_vix = raw_vix.dropna(subset=["Close"])
+raw_vix = _vol_fallback(raw_vix, str(raw_spx.index[-1].date()))
 
 spx_close = raw_spx["Close"].squeeze()
 spx_open = raw_spx["Open"].squeeze()
@@ -565,6 +606,13 @@ if not spx_close.empty:
             "patched_days": GAP_NOTES,
             "note": "Yahoo 日線缺日已由 gap_fix.py 回補（依據：該日 30m 有資料 = 確實有交易）。"
                     "分析報告必須標明本次使用了回補資料。"
+        }
+    if VOL_NOTES:
+        result["vol_fallback"] = {
+            "source": "Cboe official daily history (VXN_History.csv)",
+            "days": list(VOL_NOTES),
+            "note": "Yahoo 的 %s 日線未更新到資料日，%s 的值取自 Cboe 官方每日歷史檔（編製單位）。"
+                    "分析報告的資料註記必須寫明。" % (CFG["vol"], "、".join(VOL_NOTES)),
         }
     # 每份輸出都蓋上 symbol，供下游 guard.require_symbol 驗證來源（兩套皆蓋）
     guard.stamp(result, CFG["label"])
