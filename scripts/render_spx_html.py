@@ -72,6 +72,9 @@ def render(ledgers, td, nar, head):
                  kpi(f'{md(t)} 收盤', f"{prev['actual_pct']:+.2f}%", CLS[d], f"{ev['c']:,.2f}（{d}）"),
                  kpi('方向判定', prev['grade'].upper(), 'nu', f"中性遇{DIRW[d]}｜Brier {bp['brier'] if bp['brier'] is not None else '排除'}"),
                  kpi('當日 P&amp;L', '0bp', 'nu', f"預設不掛｜累積 <b>{ps['cumulative_weighted_bp']}</b>")])]
+    ms = la.get('market_state')
+    if ms:
+        out.insert(len(top) + 1, '<div class="box info">\n  <h4>市場狀態（SPX 自己的價格；只是標籤，不是規則）</h4>\n  <ul>\n' + '\n'.join(f'<li>{ms[k]}</li>' for k in ('line', 'line_levels', 'note')) + '\n  </ul>\n  <p style="font-size:.85em;opacity:.8;margin:.6em 0 .2em">白話小抄</p>\n  <ul style="font-size:.85em;opacity:.8">\n' + '\n'.join(f'<li>{x}</li>' for x in ms['legend']) + '\n  </ul>\n</div>')
     out += [f'<div class="note">\n{x}\n</div>' for x in H['backtest_notes']]
     out.append(f"<h3>Phase 3 帳本：第 {at['graded']} 筆判定</h3>")
 

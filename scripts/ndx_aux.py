@@ -142,6 +142,20 @@ def regime_shadow(c, ma50, ma200):
                        '狀態不預測明天漲跌，只說明現在的風險環境：熊市狀態下壞情況會深很多']}
 
 
+def market_state(c):
+    """只有狀態標籤、不含影子水位（SPX 報告用，2026-11-26）。定義同 regime_shadow；歷史統計只在 NDX 上驗證過。"""
+    r = regime_shadow(c, c.rolling(50).mean(), c.rolling(200).mean())
+    lg = r['legend']
+    for k in ('shadow_target_pct', 'shadow_since', 'line_shadow'):
+        r.pop(k)
+    bear, bull = round(r['high_1y'] * 0.8), round(max(r['ma200'] * (1 + BUF), r['high_1y'] * 0.92))
+    r['levels'] = {'bear_if_close_le': bear, 'bull_if_close_gt': bull}
+    r['line_levels'] = f"狀態轉熊市：收盤 ≤ {bear:,}（距高點 −20%）或 200 日線下彎｜狀態回多頭：收盤 > {bull:,}（站上 200 日線 2% 以上且距高點不到 8%）"
+    r['note'] = '定義與 NDX 報告相同，由 SPX 自己的價格重播得出；狀態描述風險環境，不預測方向。歷史統計只在 NDX 上驗證過，SPX 尚未回測'
+    r['legend'] = [lg[0], lg[1], lg[4], '和 NDX 報告的狀態並排看：兩邊都轉弱＝整個大盤在跌；只有 NDX 轉弱＝主要是科技股在跌']
+    return r
+
+
 def build(td, spx=None):
     if td.get('symbol') != 'NDX':
         raise SystemExit('today_data 不是 NDX')

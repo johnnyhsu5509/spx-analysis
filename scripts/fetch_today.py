@@ -245,6 +245,18 @@ def _vol_fallback(vol, index_day):
         return vol
 
 
+def _market_state(index_day, close):
+    """SPX 自己的市場狀態標籤（2026-11-26；定義同 ndx_aux.regime_shadow，不含影子水位）。失敗回 None，不擋主流程。"""
+    try:
+        import ndx_aux
+        c = ndx_aux.cut(ndx_aux.dl(CFG["index"], '400d'), index_day)['Close']
+        if str(c.index[-1].date()) != index_day or abs(float(c.iloc[-1]) - close) > 0.01:
+            return None
+        return ndx_aux.market_state(c)
+    except Exception:
+        return None
+
+
 def _amplitude(index_day, close):
     """隔日振幅預報（Phase 3 V2b，2026-10-15 Johnny 核准）。
     A = c × 波動指數/√252；c 與 50% 區間 = 近 252 個「已知結果」交易日的
@@ -614,6 +626,10 @@ if not spx_close.empty:
             "note": "Yahoo 的 %s 日線未更新到資料日，%s 的值取自 Cboe 官方每日歷史檔（編製單位）。"
                     "分析報告的資料註記必須寫明。" % (CFG["vol"], "、".join(VOL_NOTES)),
         }
+    if SYM == "spx":
+        ms = _market_state(str(raw_spx.index[-1].date()), close)
+        if ms:
+            result["market_state"] = ms
     # 每份輸出都蓋上 symbol，供下游 guard.require_symbol 驗證來源（兩套皆蓋）
     guard.stamp(result, CFG["label"])
     # todo3：Wilder RSI 與 Cutler（rsi 欄位）背離旗標，一律附加在既有欄位之後

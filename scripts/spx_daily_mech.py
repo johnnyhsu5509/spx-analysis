@@ -176,6 +176,9 @@ def build(docs, td, nar=None, report_date=None):
                          'r0_ref_pct': amp['r0_rule27_ref_pct'], 'c': amp['c'], 'vol_pct_1y': amp['vol_pct_1y'],
                          'realized_vs_implied_63d': amp['realized_vs_implied_63d'], 'note': ''},
               direction={'prob': 50, 'bias': '中性', 'rule': None, 'note': 'Phase 3 恆 50；目前無方向規則達 rule63 門檻'})
+    la.pop('market_state', None)
+    if td.get('market_state'):
+        la['market_state'] = td['market_state']
     pr = la.setdefault('predictions', {})
     pr['geometry_A'] = {'A_pts': A_pts, 'rows': [{'k': k, 'long': round(C - k * A_pts, 1), 'short': round(C + k * A_pts, 1)} for k in (0.2, 0.4, 0.6, 0.8)],
                         'fill_rates_2014_2026': pr.get('geometry_A', {}).get('fill_rates_2014_2026')}
