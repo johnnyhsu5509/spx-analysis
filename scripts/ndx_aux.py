@@ -83,6 +83,60 @@ def fib(h, l, day):
     return {'kind': kind, 'high': round(hi, 2), 'high_date': str(hi_d.date()), 'low': round(lo, 2), 'low_date': str(lo_d.date()), **lv}
 
 
+BUF = 0.02
+
+
+def regime_shadow(c, ma50, ma200):
+    """市場狀態標籤＋影子水位（2026-11-26 核准「加進報告當影子記錄」；回測見 100_Todo/projects/ndx_regime_staged_backtest_20261126）。
+    只讀價格、從頭重播，不存狀態、不寫帳本；不取代 prc-014 的現行水位。
+    影子水位：收盤 < MA200×0.98 → 50%，收盤 > MA200×1.02 → 100%，中間維持前一日；50% 期間若收盤在 MA200 下且
+    （MA200 低於 20 日前 或 MA50 < MA200）→ 25%。
+    狀態：熊市＝收盤在 MA200 下且（MA200 低於 20 日前 或 距一年高 ≤ −20%）；多頭＝收盤 > MA200×1.02 且距一年高 > −8%；其餘為修正。"""
+    hi = c.rolling(252, min_periods=60).max()
+    dd = (c / hi - 1) * 100
+    half, state, rows = None, None, []
+    for i in range(len(c)):
+        m, x = ma200.iloc[i], float(c.iloc[i])
+        if m != m:
+            continue
+        m = float(m)
+        down = m < float(ma200.iloc[i - 20]) if ma200.iloc[i - 20] == ma200.iloc[i - 20] else False
+        death = float(ma50.iloc[i]) < m
+        if half is None:
+            half, state = x < m, ('修正' if x < m or dd.iloc[i] <= -10 else '多頭')
+        if x < m * (1 - BUF):
+            half = True
+        elif x > m * (1 + BUF):
+            half = False
+        pct = 25 if (half and x < m and (down or death)) else 50 if half else 100
+        if x < m and (down or dd.iloc[i] <= -20):
+            state = '熊市'
+        elif x > m * (1 + BUF) and dd.iloc[i] > -8:
+            state = '多頭'
+        elif x < m or dd.iloc[i] <= -10 or state == '熊市':
+            state = '修正'
+        rows.append((str(c.index[i].date()), state, pct, down, death))
+    day, state, pct, down, death = rows[-1]
+    since = next(r[0] for k, r in enumerate(rows) if all(q[1] == state for q in rows[k:]))
+    psince = next(r[0] for k, r in enumerate(rows) if all(q[2] == pct for q in rows[k:]))
+    x, m, h = float(c.iloc[-1]), float(ma200.iloc[-1]), float(hi.iloc[-1])
+    slope = (m / float(ma200.iloc[-21]) - 1) * 100
+    gap = (float(ma50.iloc[-1]) / m - 1) * 100
+    f = lambda v: f'{v:,.0f}'
+    md = lambda d: f'{int(d[5:7])}/{int(d[8:10])}'
+    line = (f"市場狀態：{state}（自 {md(since)}）｜距一年高點 {dd.iloc[-1]:+.1f}%、距 200 日線 {(x / m - 1) * 100:+.1f}%、"
+            f"200 日線{'下彎' if down else '仍上升'}（20 日 {slope:+.1f}%）、50 日線{'已跌破' if death else '高於'} 200 日線（{gap:+.1f}%）")
+    line2 = (f"影子水位（往下一段＋2% 緩衝，只記錄、不是現行規則）：{pct}%（自 {md(psince)}）｜"
+             f"減到 25%：收盤在 200 日線下且 200 日線下彎或 50 日線跌破 200 日線｜加回 100%：收盤 > {f(m * (1 + BUF))}｜"
+             f"狀態轉熊市：收盤 ≤ {f(h * 0.8)}（距高點 −20%）或 200 日線下彎")
+    return {'as_of': day, 'state': state, 'state_since': since, 'shadow_target_pct': pct, 'shadow_since': psince,
+            'dd_from_1y_high_pct': round(float(dd.iloc[-1]), 2), 'high_1y': round(h, 2), 'ma200': round(m, 2),
+            'ma200_20d_chg_pct': round(slope, 2), 'ma200_falling': bool(down), 'ma50_vs_ma200_pct': round(gap, 2), 'death_cross': bool(death),
+            'levels': {'bear_if_close_le': round(h * 0.8), 'shadow_100_if_close_gt': round(m * (1 + BUF)), 'shadow_50_if_close_lt': round(m * (1 - BUF))},
+            'line': line, 'line_shadow': line2,
+            'note': '固定定義、由價格重播得出；狀態描述風險環境，不預測方向（歷史上熊市狀態之後 60 日上漲仍占 61%，但最差一成為 −24.5%）。影子水位不取代現行部位水位（prc-014）'}
+
+
 def build(td, spx=None):
     if td.get('symbol') != 'NDX':
         raise SystemExit('today_data 不是 NDX')
@@ -171,6 +225,11 @@ def build(td, spx=None):
     else:
         futures['implied_open_in_A'] = None
     facts['stale'] = stale
+    try:
+        shadow = regime_shadow(c, ma[50], ma[200])
+    except Exception as ex:
+        shadow = None
+        stale.append(f'regime_shadow:{type(ex).__name__}')
     if vsrc:
         facts['vxn_source'] = {'source': 'Cboe official daily history (VXN_History.csv)', 'days': vsrc}
     br, sm, sd = td.get('breadth') or {}, td.get('semis_daily') or {}, td.get('sector_daily') or {}
@@ -184,7 +243,7 @@ def build(td, spx=None):
                     'tail_source': 'daily' if br.get('as_of') == day else f"stale:{br.get('as_of')}"},
         'sector': {'sox_close': sm.get('close'), 'sox_chg_pct': sm.get('change_pct'), 'sox_5d_pct': sm.get('chg_5d_pct'),
                    'soxx_chg_pct': (sd.get('SOXX') or {}).get('change_pct'), 'smh_chg_pct': (sd.get('SMH') or {}).get('change_pct')},
-        'macro': macro, 'facts': facts, 'futures': futures, 'spx_news': news,
+        'macro': macro, 'facts': facts, 'futures': futures, 'spx_news': news, 'regime_shadow': shadow,
     }
 
 

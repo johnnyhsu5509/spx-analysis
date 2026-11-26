@@ -58,6 +58,9 @@ def render(ledgers, td, nar, head):
     if ch:
         items = ch['items'] or ['無狀態變化']
         o.append(f'<div class="box info">\n  <h4>今日變化（對照 {md(ch["vs"])} 那一份）</h4>\n  <ul>\n' + '\n'.join(f'<li>{x}</li>' for x in items) + '\n  </ul>\n</div>')
+    rs = la.get('regime_shadow')
+    if rs:
+        o.append('<div class="box info">\n  <h4>市場狀態與影子水位（影子記錄，不是現行規則）</h4>\n  <ul>\n' + '\n'.join(f'<li>{rs[k]}</li>' for k in ('line', 'line_shadow', 'note')) + '\n  </ul>\n</div>')
     if 'implied_open_in_A' in fu:
         nq = fu.get('nq') or {}
         txt = ('期貨隱含開盤：資料缺（NQ 在資料日之後沒有新盤）' if fu['implied_open_in_A'] is None else

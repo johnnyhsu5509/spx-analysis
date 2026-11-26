@@ -154,6 +154,8 @@ def build(docs, ledgers, td, aux, spx, nar=None, report_date=None):
     n['amplitude'].update(a2_forecast(n['amplitude']['A_pct'], n['amplitude']['r0_ref_pct'], n['amplitude']['band_lo'], n['amplitude']['band_hi']),
                           a2_note='候選 A2（影子記帳，不是正式預報）')
     n['changes'] = changes(old, td, plv, am['amp_forecast_pct'], aux.get('facts') or {})
+    if aux.get('regime_shadow'):
+        n['regime_shadow'] = aux['regime_shadow']
     for k in ('facts', 'futures'):
         if aux.get(k):
             n[k] = {x: v for x, v in aux[k].items() if x != 'bars30'}
