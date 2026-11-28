@@ -8,6 +8,7 @@ import cme_session
 import json
 import os
 from datetime import datetime, timezone
+from zoneinfo import ZoneInfo
 
 OUT_DIR = os.path.dirname(os.path.abspath(__file__))
 
@@ -49,25 +50,28 @@ FUT2, FUT2_KEY = CFG["fut2"]
 VOL_TICK, VOL_KEY, VOL_LO, VOL_HI = CFG["vol"]
 OUTFILE = CFG["outfile"]
 
-now = datetime.now()
-result = {"checked_at": now.strftime("%Y-%m-%d %H:%M")}
+NY = ZoneInfo("America/New_York")
+now_utc = datetime.now(timezone.utc)
+now_ny = now_utc.astimezone(NY)
+result = {"checked_at": now_utc.astimezone(ZoneInfo("Asia/Taipei")).isoformat(sep=" ", timespec="minutes")}
 
-# ---- 時段標示（台灣時間，美國夏令）----
+# ---- 時段標示（紐約時間，夏令/冬令由 zoneinfo 處理；不看本機時區）----
+# 分界即原台北 06/15/21/21:30/04 點在美國夏令下的紐約時刻。
 # 亞洲盤=薄量易反轉，只供參考；US_PREOPEN/REGULAR 才是可執行讀數
-h = now.hour
-if 6 <= h < 15:
-    session, s_note = "ASIA_THIN", "亞洲薄盤：流動性低、反轉率高，僅供參考，21:00後須複查再執行"
-elif 15 <= h < 21:
+hm = (now_ny.hour, now_ny.minute)
+if (3, 0) <= hm < (9, 0):
     session, s_note = "EUROPE", "歐洲盤：中等可信度，開盤前再確認"
-elif h == 21 and now.minute < 30:
+elif (9, 0) <= hm < (9, 30):
     session, s_note = "US_PREOPEN", "美股開盤前：高可信度讀數"
-elif (h >= 21) or (h < 4):
+elif (9, 30) <= hm < (16, 0):
     session, s_note = "US_REGULAR", "美股盤中：即時讀數"
-else:
+elif (16, 0) <= hm < (18, 0):
     session, s_note = "US_AFTERHOURS", "美股盤後：反映當日收盤後動向"
-if cme_session.weekend_closed(datetime.now(timezone.utc)):
+else:
+    session, s_note = "ASIA_THIN", "亞洲薄盤：流動性低、反轉率高，僅供參考，紐約 09:00（台北夏令 21:00／冬令 22:00）後須複查再執行"
+if cme_session.weekend_closed(now_utc):
     session, s_note = "WEEKEND_CLOSED", "CME 週末休市（週五 17:00 至週日 18:00 ET）：此為前一交易日結算值，非即時"
-result["session"] = {"label": session, "note": s_note}
+result["session"] = {"label": session, "note": s_note, "ny_time": now_ny.strftime("%Y-%m-%d %H:%M %Z")}
 
 
 def get_last_prev(ticker):
@@ -160,13 +164,14 @@ except Exception:
 try:
     slast, sprev = get_last_prev("SOXX")
     soxx_pct = round((slast - sprev) / sprev * 100, 2)
-    stale = session in ("ASIA_THIN", "EUROPE")
+    live = session == "US_REGULAR"   # ETF 只在紐約 09:30-16:00 有即時報價
     entry = {"last": round(slast, 2), "change_pct": soxx_pct}
-    if stale:
-        entry["note"] = "ETF無夜盤，此為前一交易日資料（非即時）"
+    if not live:
+        entry["stale"] = True
+        entry["note"] = "ETF無夜盤，非紐約 09:30–16:00 正規時段：此為最近一次收盤資料（非即時），不計算背離"
     result["soxx_semis"] = entry
-    # 類股 vs 大盤背離（僅美盤時段有意義）
-    if not stale and es_pct is not None:
+    # 類股 vs 大盤背離（僅美股盤中有意義）
+    if live and es_pct is not None:
         div = round(soxx_pct - es_pct, 2)
         result[CFG["semi_key"]] = {
             "divergence_pp": div,
